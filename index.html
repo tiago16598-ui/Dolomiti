@@ -833,6 +833,27 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   .add-loc-btn:hover{border-color:var(--amber); color:var(--amber-deep);}
   .add-loc-btn:disabled{opacity:0.5;}
+  .loc-search-row{display:flex; gap:8px;}
+  .loc-search-input{
+    flex:1; min-width:0; padding:10px 12px; border:1px solid var(--line); border-radius:10px;
+    font-family:inherit; font-size:0.85rem; color:var(--ink); background:var(--paper);
+  }
+  .loc-search-input:focus-visible{outline:2px solid var(--amber); outline-offset:1px;}
+  .loc-search-btn{
+    flex:none; padding:10px 14px; border-radius:10px; border:1px solid var(--amber);
+    background:var(--amber); color:#fff; font-size:0.82rem; font-weight:600; cursor:pointer;
+  }
+  .loc-search-btn:disabled{opacity:0.5; cursor:default;}
+  .loc-results{display:flex; flex-direction:column; gap:6px; margin-top:8px;}
+  .loc-result-item{
+    text-align:left; width:100%; padding:9px 11px; border:1px solid var(--line); border-radius:10px;
+    background:var(--paper); cursor:pointer; font-size:0.82rem; color:var(--ink);
+  }
+  .loc-result-item:hover{border-color:var(--amber); background:var(--amber-soft);}
+  .loc-result-item .r-name{display:block; font-weight:600;}
+  .loc-result-item .r-addr{display:block; font-size:0.72rem; color:var(--ink-soft); margin-top:2px;}
+  .loc-status{font-family:'JetBrains Mono', monospace; font-size:0.74rem; color:var(--ink-soft); margin-top:8px;}
+  .loc-status.error{color:var(--rose-deep);}
 
   /* ALOJAMENTO */
   .base-card{
@@ -849,14 +870,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .reach li span:last-child{font-family:'JetBrains Mono', monospace; color:var(--ink-soft);}
 
   /* MAPA */
-  .pin-banner{
-    display:flex; align-items:center; justify-content:space-between; gap:10px;
-    background:var(--amber-soft); border:1px solid var(--amber); color:var(--amber-deep);
-    border-radius:10px; padding:10px 12px; font-size:0.8rem; margin-bottom:10px;
-  }
-  .pin-banner[hidden]{ display:none; }
-  .pin-banner span{flex:1;}
-  .pin-banner button{border:none; background:var(--amber-deep); color:#fff; padding:6px 10px; border-radius:8px; font-size:0.72rem; cursor:pointer; flex:none;}
   #map{width:100%; height:48vh; min-height:300px; border-radius:var(--radius); border:1px solid var(--line); background:#E4E7DC;}
   .legend{display:flex; flex-direction:column; gap:8px; margin-top:14px; font-family:'JetBrains Mono', monospace; font-size:0.76rem; color:var(--ink-soft);}
   .legend .dot{display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:8px;}
@@ -939,7 +952,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
             <div class="extra-block locations-block">
               <div class="extra-label">As tuas localizações</div>
               <div class="loc-list" data-day="0"></div>
-              <button class="add-loc-btn" data-day="0" data-mode="map">📍 Adicionar no mapa</button>
+              <div class="loc-search-row">
+                <input type="text" class="loc-search-input" data-day="0" placeholder="Pesquisar local ou morada…">
+                <button class="loc-search-btn" data-day="0">Procurar</button>
+              </div>
+              <div class="loc-results" data-day="0"></div>
               <button class="add-loc-btn" data-day="0" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
             </div>
           </div>
@@ -967,7 +984,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
             <div class="extra-block locations-block">
               <div class="extra-label">As tuas localizações</div>
               <div class="loc-list" data-day="1"></div>
-              <button class="add-loc-btn" data-day="1" data-mode="map">📍 Adicionar no mapa</button>
+              <div class="loc-search-row">
+                <input type="text" class="loc-search-input" data-day="1" placeholder="Pesquisar local ou morada…">
+                <button class="loc-search-btn" data-day="1">Procurar</button>
+              </div>
+              <div class="loc-results" data-day="1"></div>
               <button class="add-loc-btn" data-day="1" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
             </div>
           </div>
@@ -994,7 +1015,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
             <div class="extra-block locations-block">
               <div class="extra-label">As tuas localizações</div>
               <div class="loc-list" data-day="2"></div>
-              <button class="add-loc-btn" data-day="2" data-mode="map">📍 Adicionar no mapa</button>
+              <div class="loc-search-row">
+                <input type="text" class="loc-search-input" data-day="2" placeholder="Pesquisar local ou morada…">
+                <button class="loc-search-btn" data-day="2">Procurar</button>
+              </div>
+              <div class="loc-results" data-day="2"></div>
               <button class="add-loc-btn" data-day="2" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
             </div>
           </div>
@@ -1021,7 +1046,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
             <div class="extra-block locations-block">
               <div class="extra-label">As tuas localizações</div>
               <div class="loc-list" data-day="3"></div>
-              <button class="add-loc-btn" data-day="3" data-mode="map">📍 Adicionar no mapa</button>
+              <div class="loc-search-row">
+                <input type="text" class="loc-search-input" data-day="3" placeholder="Pesquisar local ou morada…">
+                <button class="loc-search-btn" data-day="3">Procurar</button>
+              </div>
+              <div class="loc-results" data-day="3"></div>
               <button class="add-loc-btn" data-day="3" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
             </div>
           </div>
@@ -1047,7 +1076,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
             <div class="extra-block locations-block">
               <div class="extra-label">As tuas localizações</div>
               <div class="loc-list" data-day="4"></div>
-              <button class="add-loc-btn" data-day="4" data-mode="map">📍 Adicionar no mapa</button>
+              <div class="loc-search-row">
+                <input type="text" class="loc-search-input" data-day="4" placeholder="Pesquisar local ou morada…">
+                <button class="loc-search-btn" data-day="4">Procurar</button>
+              </div>
+              <div class="loc-results" data-day="4"></div>
               <button class="add-loc-btn" data-day="4" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
             </div>
           </div>
@@ -1073,7 +1106,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
             <div class="extra-block locations-block">
               <div class="extra-label">As tuas localizações</div>
               <div class="loc-list" data-day="5"></div>
-              <button class="add-loc-btn" data-day="5" data-mode="map">📍 Adicionar no mapa</button>
+              <div class="loc-search-row">
+                <input type="text" class="loc-search-input" data-day="5" placeholder="Pesquisar local ou morada…">
+                <button class="loc-search-btn" data-day="5">Procurar</button>
+              </div>
+              <div class="loc-results" data-day="5"></div>
               <button class="add-loc-btn" data-day="5" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
             </div>
           </div>
@@ -1094,7 +1131,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
             <div class="extra-block locations-block">
               <div class="extra-label">As tuas localizações</div>
               <div class="loc-list" data-day="6"></div>
-              <button class="add-loc-btn" data-day="6" data-mode="map">📍 Adicionar no mapa</button>
+              <div class="loc-search-row">
+                <input type="text" class="loc-search-input" data-day="6" placeholder="Pesquisar local ou morada…">
+                <button class="loc-search-btn" data-day="6">Procurar</button>
+              </div>
+              <div class="loc-results" data-day="6"></div>
               <button class="add-loc-btn" data-day="6" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
             </div>
           </div>
@@ -1144,10 +1185,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <!-- MAPA -->
     <section class="screen" id="screen-mapa">
       <p class="section-lede">Todas as paragens agrupadas por dia — sem voltas para trás.</p>
-      <div class="pin-banner" id="pinBanner" hidden>
-        <span id="pinBannerText"></span>
-        <button id="cancelPin">Cancelar</button>
-      </div>
       <div id="map" role="img" aria-label="Mapa do roteiro"><div id="mapFallback" style="padding:16px; font-family:JetBrains Mono, monospace; font-size:0.78rem; color:#5C685D;">A carregar mapa…</div></div>
       <div class="legend">
         <span><span class="dot ink"></span>Viagem Salzburg / bases</span>
@@ -1239,9 +1276,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
   var screens = document.querySelectorAll('.screen');
   var subtitleEl = document.getElementById('tabSubtitle');
   var mapInited = false;
-  var pendingDayForLocation = null;
-  var pinBanner = document.getElementById('pinBanner');
-  var pinBannerText = document.getElementById('pinBannerText');
 
   function activateTab(targetId){
     tabs.forEach(function(t){ t.classList.toggle('active', t.dataset.target === targetId); });
@@ -1376,16 +1410,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
     var day = btn.dataset.day;
     var mode = btn.dataset.mode;
 
-    if (mode === 'map'){
-      pendingDayForLocation = day;
-      activateTab('screen-mapa');
-      pinBanner.hidden = false;
-      pinBannerText.textContent = 'Toca no mapa para colocares o pin do Dia ' + day + '.';
-    }
-
     if (mode === 'geo'){
       if (!navigator.geolocation){
-        alert('Este browser não suporta geolocalização. Tenta adicionar através do mapa.');
+        alert('Este browser não suporta geolocalização. Tenta pesquisar o local pelo nome.');
         return;
       }
       var original = btn.textContent;
@@ -1399,14 +1426,73 @@ svg.leaflet-image-layer.leaflet-interactive path {
       }, function(){
         btn.disabled = false;
         btn.textContent = original;
-        alert('Não foi possível obter a localização. Tenta adicionar através do mapa.');
+        alert('Não foi possível obter a localização. Tenta pesquisar o local pelo nome.');
       }, { timeout: 8000 });
     }
   });
 
-  document.getElementById('cancelPin').addEventListener('click', function(){
-    pendingDayForLocation = null;
-    pinBanner.hidden = true;
+  /* ---------- Search-based add (geocoding) ---------- */
+  // Uses OpenStreetMap's free Nominatim search — no API key needed.
+  // Works best when this page is hosted online (https). Opened as a local
+  // file, some browsers (notably Safari) block this network request; use
+  // "A minha localização atual" as a fallback in that case.
+  function geocodeSearch(query){
+    var viewbox = '9.5,48.2,14.5,45.5'; // loose box covering Salzburg + the Dolomites, used only to bias results
+    var url = 'https://nominatim.openstreetmap.org/search?format=json&limit=5&addressdetails=1'
+      + '&viewbox=' + viewbox + '&bounded=0&q=' + encodeURIComponent(query);
+    return fetch(url, { headers: { 'Accept-Language': 'pt' } }).then(function(r){
+      if (!r.ok) throw new Error('network');
+      return r.json();
+    });
+  }
+  function runLocationSearch(day, input, resultsBox){
+    var query = input.value.trim();
+    if (!query) return;
+    var searchBtn = document.querySelector('.loc-search-btn[data-day="'+day+'"]');
+    if (searchBtn){ searchBtn.disabled = true; }
+    resultsBox.innerHTML = '<div class="loc-status">A procurar…</div>';
+    geocodeSearch(query).then(function(data){
+      if (searchBtn){ searchBtn.disabled = false; }
+      if (!data || !data.length){
+        resultsBox.innerHTML = '<div class="loc-status error">Nada encontrado. Tenta um nome mais específico.</div>';
+        return;
+      }
+      resultsBox.innerHTML = '';
+      data.slice(0, 5).forEach(function(place){
+        var short = place.display_name.split(',').slice(0, 3).join(', ');
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'loc-result-item';
+        btn.innerHTML = '<span class="r-name">' + escapeHtml(place.name || short) + '</span>'
+          + '<span class="r-addr">' + escapeHtml(short) + '</span>';
+        btn.addEventListener('click', function(){
+          addLocation(day, place.name || short, parseFloat(place.lat), parseFloat(place.lon));
+          resultsBox.innerHTML = '<div class="loc-status">✓ Adicionado.</div>';
+          input.value = '';
+          setTimeout(function(){ resultsBox.innerHTML = ''; }, 1400);
+        });
+        resultsBox.appendChild(btn);
+      });
+    }).catch(function(){
+      if (searchBtn){ searchBtn.disabled = false; }
+      resultsBox.innerHTML = '<div class="loc-status error">Não foi possível pesquisar agora. Verifica a ligação à internet (esta pesquisa também pode falhar se a página estiver aberta como ficheiro local em vez de publicada online) — em alternativa usa "A minha localização atual".</div>';
+    });
+  }
+  document.addEventListener('click', function(e){
+    var sbtn = e.target.closest ? e.target.closest('.loc-search-btn') : null;
+    if (!sbtn) return;
+    var day = sbtn.dataset.day;
+    var input = document.querySelector('.loc-search-input[data-day="'+day+'"]');
+    var resultsBox = document.querySelector('.loc-results[data-day="'+day+'"]');
+    if (input && resultsBox) runLocationSearch(day, input, resultsBox);
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('loc-search-input')){
+      e.preventDefault();
+      var day = e.target.dataset.day;
+      var resultsBox = document.querySelector('.loc-results[data-day="'+day+'"]');
+      if (resultsBox) runLocationSearch(day, e.target, resultsBox);
+    }
   });
 
   /* ---------- Reset ---------- */
@@ -1491,21 +1577,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
     // Existing custom locations from previous sessions
     loadLocations().forEach(function(loc){ addCustomMarkerToMap(loc); });
-
-    // Tap-to-pin for adding a new location
-    map.on('click', function(e){
-      if (pendingDayForLocation === null) return;
-      var day = pendingDayForLocation;
-      var name = window.prompt('Nome para este local (Dia '+day+'):');
-      if (name){
-        addLocation(day, name, e.latlng.lat, e.latlng.lng);
-        pinBannerText.textContent = '✓ Adicionado ao Dia ' + day + '.';
-        setTimeout(function(){ pinBanner.hidden = true; }, 1400);
-      } else {
-        pinBanner.hidden = true;
-      }
-      pendingDayForLocation = null;
-    });
   }
 </script>
 
