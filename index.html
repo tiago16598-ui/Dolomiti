@@ -746,18 +746,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
     text-transform:uppercase; color:var(--ink-soft); margin-top:2px;
   }
 
-  /* SHARE BAR */
-  .sharebar{
-    display:flex; align-items:center; justify-content:space-between; gap:10px;
-    background:var(--teal-soft); color:var(--teal-deep); border-bottom:1px solid var(--line);
-    padding:9px 16px; font-size:0.76rem;
-  }
-  .sharebar span{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-  .sharebar button{
-    flex:none; border:none; background:var(--teal-deep); color:#fff; padding:6px 11px;
-    border-radius:100px; font-size:0.72rem; font-weight:600; cursor:pointer;
-  }
-
   .screens{flex:1; overflow:hidden; position:relative;}
   .screen{
     position:absolute; inset:0;
@@ -930,11 +918,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="subtitle" id="tabSubtitle">Roteiro · 7 dias</div>
     </div>
   </header>
-
-  <div class="sharebar" id="shareBar">
-    <span id="shareBarText">A preparar…</span>
-    <button id="shareBtn">🔗 Copiar link</button>
-  </div>
 
   <main class="screens">
 
@@ -1338,32 +1321,26 @@ svg.leaflet-image-layer.leaflet-interactive path {
   nextBtn.addEventListener('click', function(){ if (currentDay < maxDay) showDay(currentDay + 1); });
   showDay(0);
 
-  /* ---------- Shared storage (jsonblob.com) — always on, same data for everyone ---------- */
-  // HARDCODED_TRIP_ID is the permanent shared storage ID. While it's null, the app is in
-  // "setup mode": the very first visit creates the storage and shows its ID so it can be
-  // baked in here — after that one-time step, every visit to this page (any URL, no
-  // parameters needed) reads and writes the same shared data automatically.
-  var HARDCODED_TRIP_ID = null;
+  /* ---------- Shared storage (Supabase) — always on, same data for everyone, no setup ---------- */
+  // Every visitor to this page reads and writes the same two tables. No trip ID,
+  // no URL parameter, no first-time setup — it's simply always shared.
+  var SUPABASE_URL = 'https://kfmzhvrjayzlfckvjuuo.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbXpodnJqYXl6bGZja3ZqdXVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3NTExODksImV4cCI6MjEwMjMyNzE4OX0.1NJ_XMoiGW7pdE0dvKLMyciVVoL9zItTpP-vYFJKEBU';
 
   var SHARED = { notes: {}, locations: [] };
   var sharedReady = false;
-  var tripId = null;
-  var shareBar = document.getElementById('shareBar');
-  var shareBarText = document.getElementById('shareBarText');
-  var shareBtn = document.getElementById('shareBtn');
 
   function escapeHtml(s){
     var d = document.createElement('div');
     d.textContent = s;
     return d.innerHTML;
   }
-  function localCacheKey(){ return 'dolomiti_shared_cache_' + (tripId || 'none'); }
   function loadLocalCache(){
-    try { return JSON.parse(localStorage.getItem(localCacheKey()) || 'null'); }
+    try { return JSON.parse(localStorage.getItem('dolomiti_shared_cache') || 'null'); }
     catch (e) { return null; }
   }
   function saveLocalCache(){
-    try { localStorage.setItem(localCacheKey(), JSON.stringify(SHARED)); } catch (e) {}
+    try { localStorage.setItem('dolomiti_shared_cache', JSON.stringify(SHARED)); } catch (e) {}
   }
   function normalizeShared(data){
     var d = (data && typeof data === 'object') ? data : {};
@@ -1371,31 +1348,29 @@ svg.leaflet-image-layer.leaflet-interactive path {
     if (!Array.isArray(d.locations)) d.locations = [];
     return d;
   }
-  function createSharedTrip(){
-    return fetch('https://jsonblob.com/api/jsonBlob', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ notes: {}, locations: [] })
-    }).then(function(r){
-      var loc = r.headers.get('Location');
-      if (!loc) throw new Error('no blob id returned');
-      return loc.split('/').pop();
-    });
+  function sbHeaders(extra){
+    var h = {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+      'Content-Type': 'application/json'
+    };
+    if (extra) for (var k in extra) h[k] = extra[k];
+    return h;
   }
-  function fetchSharedTrip(id){
-    return fetch('https://jsonblob.com/api/jsonBlob/' + id).then(function(r){
-      if (!r.ok) throw new Error('fetch failed');
-      return r.json();
+  function fetchAllShared(){
+    return Promise.all([
+      fetch(SUPABASE_URL + '/rest/v1/dolomiti_notes?select=day,text', { headers: sbHeaders() })
+        .then(function(r){ if (!r.ok) throw new Error('notes fetch failed'); return r.json(); }),
+      fetch(SUPABASE_URL + '/rest/v1/dolomiti_locations?select=id,day,name,lat,lng&order=created_at.asc', { headers: sbHeaders() })
+        .then(function(r){ if (!r.ok) throw new Error('locations fetch failed'); return r.json(); })
+    ]).then(function(results){
+      var notes = {};
+      results[0].forEach(function(row){ notes[row.day] = row.text; });
+      var locations = results[1].map(function(l){
+        return { id: l.id, day: String(l.day), name: l.name, lat: l.lat, lng: l.lng };
+      });
+      return { notes: notes, locations: locations };
     });
-  }
-  function pushSharedTrip(){
-    saveLocalCache();
-    if (!tripId || tripId === 'local') return Promise.resolve();
-    return fetch('https://jsonblob.com/api/jsonBlob/' + tripId, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(SHARED)
-    }).catch(function(){ /* offline — local cache already saved, will sync on next successful push */ });
   }
   function renderAllFromShared(){
     for (var d = 0; d <= 6; d++){
@@ -1412,69 +1387,32 @@ svg.leaflet-image-layer.leaflet-interactive path {
     }
   }
   function setShareBarBase(msg){
-    if (!shareBarText) return;
-    shareBarText.dataset.base = msg;
-    shareBarText.textContent = msg;
+    console.log('[Dolomiti]', msg);
   }
-  function copyShareLink(){
-    var url = window.location.href;
-    if (navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(url).then(function(){ flashShareBarText('✓ Link copiado!'); })
-        .catch(function(){ window.prompt('Copia este link:', url); });
-    } else {
-      window.prompt('Copia este link:', url);
-    }
-  }
-  function flashShareBarText(msg){
-    var original = shareBarText.dataset.base || shareBarText.textContent;
-    shareBarText.dataset.base = original;
-    shareBarText.textContent = msg;
-    setTimeout(function(){ shareBarText.textContent = shareBarText.dataset.base; }, 1600);
-  }
-  if (shareBtn) shareBtn.addEventListener('click', copyShareLink);
 
   function initSharedStorage(){
-    // Final state: a permanent shared ID is baked into the file — always use it,
-    // no URL parameters, no per-visitor setup, same data for absolutely everyone.
-    if (HARDCODED_TRIP_ID){
-      tripId = HARDCODED_TRIP_ID;
-      setShareBarBase('A carregar dados partilhados…');
-      return fetchSharedTrip(tripId).then(function(data){
-        SHARED = normalizeShared(data);
-        sharedReady = true;
-        saveLocalCache();
-        renderAllFromShared();
-        setShareBarBase('Roteiro partilhado — as alterações ficam visíveis para toda a gente.');
-      }).catch(function(){
-        SHARED = normalizeShared(loadLocalCache());
-        sharedReady = true;
-        renderAllFromShared();
-        setShareBarBase('⚠ Sem ligação ao armazenamento partilhado — a mostrar a última cópia guardada neste aparelho.');
-      });
-    }
-
-    // Setup mode (one-time only): create the permanent shared storage and surface
-    // its ID so it can be hardcoded above — after that, this branch never runs again.
-    setShareBarBase('A preparar espaço partilhado…');
-    return createSharedTrip().then(function(id){
-      tripId = id;
-      SHARED = { notes: {}, locations: [] };
+    return fetchAllShared().then(function(data){
+      SHARED = normalizeShared(data);
       sharedReady = true;
+      saveLocalCache();
       renderAllFromShared();
-      setShareBarBase('⚙ Configuração pendente — envia este código: ' + id);
+      setShareBarBase('Roteiro partilhado — as alterações ficam sempre visíveis para toda a gente.');
     }).catch(function(){
-      tripId = 'local';
       SHARED = normalizeShared(loadLocalCache());
       sharedReady = true;
       renderAllFromShared();
-      setShareBarBase('⚠ Não foi possível criar o espaço partilhado — a guardar só neste aparelho.');
+      setShareBarBase('⚠ Sem ligação ao armazenamento partilhado — a mostrar a última cópia guardada neste aparelho.');
     });
   }
 
-
   function saveNoteForDay(day, text){
     SHARED.notes[day] = text;
-    pushSharedTrip();
+    saveLocalCache();
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_notes?on_conflict=day', {
+      method: 'POST',
+      headers: sbHeaders({ 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
+      body: JSON.stringify([{ day: Number(day), text: text, updated_at: new Date().toISOString() }])
+    }).catch(function(){ /* offline — local cache already saved */ });
   }
   var noteTimers = {};
   document.addEventListener('input', function(e){
@@ -1506,19 +1444,28 @@ svg.leaflet-image-layer.leaflet-interactive path {
   function addLocation(day, name, lat, lng){
     var loc = { id: Date.now()+'-'+Math.floor(Math.random()*1000), day: String(day), name: name, lat: lat, lng: lng };
     SHARED.locations.push(loc);
-    pushSharedTrip();
+    saveLocalCache();
     renderDayLocations(day);
     if (window.__map) addCustomMarkerToMap(loc);
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_locations', {
+      method: 'POST',
+      headers: sbHeaders({ 'Prefer': 'return=minimal' }),
+      body: JSON.stringify([{ id: loc.id, day: Number(day), name: name, lat: lat, lng: lng }])
+    }).catch(function(){ /* offline — local cache already saved */ });
     return loc;
   }
   function removeLocation(id){
     SHARED.locations = SHARED.locations.filter(function(l){ return l.id !== id; });
-    pushSharedTrip();
+    saveLocalCache();
     if (window.__customMarkers && window.__customMarkers[id]){
       window.__map.removeLayer(window.__customMarkers[id]);
       delete window.__customMarkers[id];
     }
     for (var d = 0; d <= 6; d++){ renderDayLocations(d); }
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_locations?id=eq.' + encodeURIComponent(id), {
+      method: 'DELETE',
+      headers: sbHeaders({ 'Prefer': 'return=minimal' })
+    }).catch(function(){});
   }
   initSharedStorage();
 
@@ -1624,7 +1571,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
   document.getElementById('resetBtn').addEventListener('click', function(){
     if (!confirm('Isto apaga todas as notas e localizações partilhadas — para ti E para quem tiver este link. Continuar?')) return;
     SHARED = { notes: {}, locations: [] };
-    pushSharedTrip();
+    saveLocalCache();
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_notes?day=gte.0', { method: 'DELETE', headers: sbHeaders({ 'Prefer': 'return=minimal' }) }).catch(function(){});
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_locations?day=gte.0', { method: 'DELETE', headers: sbHeaders({ 'Prefer': 'return=minimal' }) }).catch(function(){});
     document.querySelectorAll('.notes-input').forEach(function(ta){ ta.value = ''; });
     for (var d = 0; d <= 6; d++){ renderDayLocations(d); }
     if (window.__map && window.__customMarkers){
