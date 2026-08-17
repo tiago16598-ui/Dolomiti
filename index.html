@@ -787,12 +787,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   .block.am{border-left-color:var(--rose);}
   .block.pm{border-left-color:var(--teal);}
+  .block.custom{border-left-color:var(--amber);}
   .block .tag{
     font-family:'JetBrains Mono', monospace; font-size:0.64rem; letter-spacing:0.09em; text-transform:uppercase;
     display:inline-block; padding:2px 8px; border-radius:100px; margin-bottom:8px;
   }
   .block.am .tag{background:var(--rose-soft); color:var(--rose-deep);}
   .block.pm .tag{background:var(--teal-soft); color:var(--teal-deep);}
+  .block.custom .tag{background:var(--amber-soft); color:var(--amber-deep);}
+  .block-top{display:flex; align-items:flex-start; justify-content:space-between; gap:8px;}
   .block h4{font-size:1.02rem; font-weight:600; margin-bottom:5px;}
   .block p{margin:0; font-size:0.87rem; color:var(--ink-soft); line-height:1.5;}
   .block .note{
@@ -819,14 +822,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
     padding:10px 12px; font-family:'Inter',sans-serif; font-size:0.87rem; color:var(--ink); background:var(--paper);
   }
   .notes-input:focus-visible{outline:2px solid var(--rose); outline-offset:1px;}
-  .loc-list{display:flex; flex-direction:column; gap:6px; margin-bottom:9px;}
+  .loc-list{display:flex; flex-direction:column;}
   .loc-empty{font-size:0.78rem; color:var(--ink-soft); font-style:italic; margin-bottom:9px;}
-  .loc-item{
-    display:flex; align-items:center; justify-content:space-between; gap:8px;
-    background:var(--amber-soft); border:1px solid var(--amber); border-radius:10px; padding:8px 10px; font-size:0.82rem;
+  .loc-remove{
+    border:none; background:none; color:var(--amber-deep); font-size:1.2rem; line-height:1;
+    cursor:pointer; padding:0 2px; flex:none;
   }
-  .loc-item .loc-name{color:var(--amber-deep); font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-  .loc-remove{border:none; background:none; color:var(--amber-deep); font-size:1.1rem; line-height:1; cursor:pointer; padding:2px 6px; flex:none;}
   .add-loc-btn{
     width:100%; padding:11px; border:1px dashed var(--line); border-radius:10px; background:none;
     color:var(--ink-soft); font-size:0.82rem; font-weight:600; cursor:pointer;
@@ -864,10 +865,28 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .base-card h3{font-size:1.3rem; margin-top:6px;}
   .base-card .nights{margin-top:3px; font-family:'JetBrains Mono', monospace; font-size:0.78rem; color:var(--rose-deep);}
   .base-card.two .nights{color:var(--teal-deep);}
+  .base-card.car{border-style:dashed;}
+  .base-card.car .base-no{color:var(--amber-deep);}
   .base-card p{color:var(--ink-soft); font-size:0.87rem; margin-top:10px;}
   .reach{list-style:none; margin:14px 0 0; padding:0; display:grid; gap:7px;}
   .reach li{display:flex; justify-content:space-between; font-size:0.8rem; border-top:1px solid var(--line); padding-top:7px;}
   .reach li span:last-child{font-family:'JetBrains Mono', monospace; color:var(--ink-soft);}
+  .booking-link{margin-top:14px; padding-top:12px; border-top:1px dashed var(--line);}
+  .booking-link-view{
+    display:inline-block; margin-bottom:9px; font-size:0.85rem; font-weight:600;
+    color:var(--teal-deep); text-decoration:none;
+  }
+  .booking-link-view[hidden]{ display:none; }
+  .booking-link-edit-row{display:flex; gap:8px;}
+  .booking-link-input{
+    flex:1; min-width:0; padding:9px 11px; border:1px solid var(--line); border-radius:10px;
+    font-family:inherit; font-size:0.82rem; color:var(--ink); background:var(--paper);
+  }
+  .booking-link-input:focus-visible{outline:2px solid var(--teal); outline-offset:1px;}
+  .booking-link-save{
+    flex:none; padding:9px 13px; border-radius:10px; border:1px solid var(--teal);
+    background:var(--teal); color:#fff; font-size:0.78rem; font-weight:600; cursor:pointer;
+  }
 
   /* MAPA */
   #map{width:100%; height:48vh; min-height:300px; border-radius:var(--radius); border:1px solid var(--line); background:#E4E7DC;}
@@ -889,6 +908,85 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .reset-link{
     display:block; margin-top:6px; text-align:center; font-family:'JetBrains Mono', monospace; font-size:0.72rem;
     color:var(--ink-soft); text-decoration:underline; background:none; border:none; cursor:pointer; width:100%; padding:12px;
+  }
+
+  /* CUSTOS */
+  .whoami-row{
+    font-size:0.85rem; color:var(--ink-soft); margin-bottom:16px; background:var(--paper);
+    border:1px solid var(--line); border-radius:10px; padding:10px 13px;
+  }
+  .whoami-row strong{color:var(--ink);}
+  .whoami-row button{
+    float:right; border:none; background:none; color:var(--teal-deep); font-size:0.78rem;
+    font-weight:600; cursor:pointer; text-decoration:underline;
+  }
+  .cost-summary{margin-bottom:18px;}
+  .cost-empty{font-size:0.85rem; color:var(--ink-soft); font-style:italic;}
+  .cost-total-row{
+    display:flex; justify-content:space-between; align-items:center; font-size:0.9rem;
+    padding:9px 0; border-bottom:1px solid var(--line);
+  }
+  .cost-total-row.total{font-weight:700; font-size:1.05rem; border-bottom:2px solid var(--ink);}
+  .cost-total-row span:last-child{font-family:'JetBrains Mono', monospace;}
+  .cost-settle{
+    margin-top:12px; padding:12px 14px; border-radius:10px; background:var(--rose-soft); color:var(--rose-deep);
+    font-size:0.9rem; font-weight:600;
+  }
+  .cost-settle.even{background:var(--teal-soft); color:var(--teal-deep);}
+  .cost-add-row{display:flex; gap:8px; margin-bottom:10px;}
+  .cost-desc-input{
+    flex:1; min-width:0; padding:10px 12px; border:1px solid var(--line); border-radius:10px;
+    font-family:inherit; font-size:0.85rem; color:var(--ink); background:var(--paper);
+  }
+  .cost-amount-input{
+    width:88px; flex:none; padding:10px 12px; border:1px solid var(--line); border-radius:10px;
+    font-family:inherit; font-size:0.85rem; color:var(--ink); background:var(--paper);
+  }
+  .cost-desc-input:focus-visible, .cost-amount-input:focus-visible{outline:2px solid var(--teal); outline-offset:1px;}
+  .cost-add-btn{
+    width:100%; padding:11px; border-radius:10px; border:1px solid var(--teal); margin-bottom:18px;
+    background:var(--teal); color:#fff; font-size:0.85rem; font-weight:600; cursor:pointer;
+  }
+  .cost-list{display:flex; flex-direction:column; gap:8px;}
+  .cost-item{
+    display:flex; align-items:center; gap:10px; background:var(--paper); border:1px solid var(--line);
+    border-radius:10px; padding:11px 12px; box-shadow:var(--shadow);
+  }
+  .cost-item-main{flex:1; min-width:0;}
+  .cost-item-desc{display:block; font-size:0.88rem; color:var(--ink); font-weight:600;}
+  .cost-item-who{display:block; font-size:0.74rem; color:var(--ink-soft); margin-top:2px;}
+  .cost-item-amount{flex:none; font-family:'JetBrains Mono', monospace; font-size:0.9rem; color:var(--ink);}
+  .cost-remove{flex:none; border:none; background:none; color:var(--rose-deep); font-size:1.2rem; line-height:1; cursor:pointer; padding:0 2px;}
+
+  /* RESERVAS */
+  .resv-add-row{display:flex; gap:8px; margin-bottom:10px;}
+  .resv-add-input{
+    flex:1; min-width:0; padding:10px 12px; border:1px solid var(--line); border-radius:10px;
+    font-family:inherit; font-size:0.85rem; color:var(--ink); background:var(--paper);
+  }
+  .resv-add-input:focus-visible{outline:2px solid var(--teal); outline-offset:1px;}
+  .resv-add-btn{
+    flex:none; padding:10px 14px; border-radius:10px; border:1px solid var(--teal);
+    background:var(--teal); color:#fff; font-size:0.82rem; font-weight:600; cursor:pointer;
+  }
+  .resv-list{display:flex; flex-direction:column; gap:8px;}
+  .resv-empty{font-size:0.85rem; color:var(--ink-soft); font-style:italic;}
+  .resv-item{
+    display:flex; align-items:center; gap:10px; background:var(--paper); border:1px solid var(--line);
+    border-radius:10px; padding:11px 12px; box-shadow:var(--shadow);
+  }
+  .resv-check{
+    flex:none; width:22px; height:22px; border-radius:50%; border:2px solid var(--teal);
+    background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  .resv-check svg{width:13px; height:13px; opacity:0; stroke:#fff;}
+  .resv-item.done .resv-check{background:var(--teal);}
+  .resv-item.done .resv-check svg{opacity:1;}
+  .resv-title{flex:1; font-size:0.9rem; color:var(--ink); word-break:break-word;}
+  .resv-item.done .resv-title{color:var(--ink-soft); text-decoration:line-through;}
+  .resv-remove{
+    flex:none; border:none; background:none; color:var(--rose-deep); font-size:1.2rem; line-height:1;
+    cursor:pointer; padding:0 2px;
   }
 
   .section-lede{font-size:0.87rem; color:var(--ink-soft); margin-bottom:16px;}
@@ -926,13 +1024,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p class="section-lede">Manhã a rosa = trilho/miradouro principal. Tarde a verde = a parte tranquila do dia.</p>
 
       <div class="day-selector" id="daySelector">
-        <button class="day-chip active" data-day="0">D0</button>
-        <button class="day-chip" data-day="1">D1</button>
-        <button class="day-chip" data-day="2">D2</button>
-        <button class="day-chip" data-day="3">D3</button>
-        <button class="day-chip" data-day="4">D4</button>
-        <button class="day-chip" data-day="5">D5</button>
-        <button class="day-chip" data-day="6">D6</button>
+        <button class="day-chip active" data-day="0">Dom 6</button>
+        <button class="day-chip" data-day="1">Seg 7</button>
+        <button class="day-chip" data-day="2">Ter 8</button>
+        <button class="day-chip" data-day="3">Qua 9</button>
+        <button class="day-chip" data-day="4">Qui 10</button>
+        <button class="day-chip" data-day="5">Sex 11</button>
+        <button class="day-chip" data-day="6">Sáb 12</button>
       </div>
 
       <div id="dayPanels">
@@ -958,6 +1056,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
               </div>
               <div class="loc-results" data-day="0"></div>
               <button class="add-loc-btn" data-day="0" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
+            </div>
+            <div class="extra-block reservations-block">
+              <div class="extra-label">Reservas a fazer</div>
+              <div class="resv-list" data-day="0"></div>
+              <div class="resv-add-row">
+                <input type="text" class="resv-add-input" data-day="0" placeholder="Nova reserva…">
+                <button class="resv-add-btn" data-day="0">Adicionar</button>
+              </div>
             </div>
           </div>
         </article>
@@ -991,6 +1097,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
               <div class="loc-results" data-day="1"></div>
               <button class="add-loc-btn" data-day="1" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
             </div>
+            <div class="extra-block reservations-block">
+              <div class="extra-label">Reservas a fazer</div>
+              <div class="resv-list" data-day="1"></div>
+              <div class="resv-add-row">
+                <input type="text" class="resv-add-input" data-day="1" placeholder="Nova reserva…">
+                <button class="resv-add-btn" data-day="1">Adicionar</button>
+              </div>
+            </div>
           </div>
         </article>
 
@@ -1021,6 +1135,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
               </div>
               <div class="loc-results" data-day="2"></div>
               <button class="add-loc-btn" data-day="2" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
+            </div>
+            <div class="extra-block reservations-block">
+              <div class="extra-label">Reservas a fazer</div>
+              <div class="resv-list" data-day="2"></div>
+              <div class="resv-add-row">
+                <input type="text" class="resv-add-input" data-day="2" placeholder="Nova reserva…">
+                <button class="resv-add-btn" data-day="2">Adicionar</button>
+              </div>
             </div>
           </div>
         </article>
@@ -1053,6 +1175,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
               <div class="loc-results" data-day="3"></div>
               <button class="add-loc-btn" data-day="3" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
             </div>
+            <div class="extra-block reservations-block">
+              <div class="extra-label">Reservas a fazer</div>
+              <div class="resv-list" data-day="3"></div>
+              <div class="resv-add-row">
+                <input type="text" class="resv-add-input" data-day="3" placeholder="Nova reserva…">
+                <button class="resv-add-btn" data-day="3">Adicionar</button>
+              </div>
+            </div>
           </div>
         </article>
 
@@ -1082,6 +1212,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
               </div>
               <div class="loc-results" data-day="4"></div>
               <button class="add-loc-btn" data-day="4" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
+            </div>
+            <div class="extra-block reservations-block">
+              <div class="extra-label">Reservas a fazer</div>
+              <div class="resv-list" data-day="4"></div>
+              <div class="resv-add-row">
+                <input type="text" class="resv-add-input" data-day="4" placeholder="Nova reserva…">
+                <button class="resv-add-btn" data-day="4">Adicionar</button>
+              </div>
             </div>
           </div>
         </article>
@@ -1113,6 +1251,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
               <div class="loc-results" data-day="5"></div>
               <button class="add-loc-btn" data-day="5" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
             </div>
+            <div class="extra-block reservations-block">
+              <div class="extra-label">Reservas a fazer</div>
+              <div class="resv-list" data-day="5"></div>
+              <div class="resv-add-row">
+                <input type="text" class="resv-add-input" data-day="5" placeholder="Nova reserva…">
+                <button class="resv-add-btn" data-day="5">Adicionar</button>
+              </div>
+            </div>
           </div>
         </article>
 
@@ -1138,6 +1284,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
               <div class="loc-results" data-day="6"></div>
               <button class="add-loc-btn" data-day="6" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
             </div>
+            <div class="extra-block reservations-block">
+              <div class="extra-label">Reservas a fazer</div>
+              <div class="resv-list" data-day="6"></div>
+              <div class="resv-add-row">
+                <input type="text" class="resv-add-input" data-day="6" placeholder="Nova reserva…">
+                <button class="resv-add-btn" data-day="6">Adicionar</button>
+              </div>
+            </div>
           </div>
         </article>
 
@@ -1156,7 +1310,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="base-card">
         <div class="base-no">Base 01</div>
         <h3>Cortina d'Ampezzo</h3>
-        <div class="nights">3 noites — Dias 0, 1 e 2</div>
+        <div class="nights">3 noites — 6 a 8 de setembro</div>
         <p>Capital das Dolomitas orientais. Nenhum trajeto passa de 45 minutos.</p>
         <ul class="reach">
           <li><span>Cadini di Misurina</span><span>~30 min</span></li>
@@ -1165,12 +1319,19 @@ svg.leaflet-image-layer.leaflet-interactive path {
           <li><span>Passo Giau</span><span>~30 min</span></li>
           <li><span>Lago di Braies</span><span>~55 min</span></li>
         </ul>
+        <div class="booking-link">
+          <a class="booking-link-view" data-base="base1" href="#" target="_blank" rel="noopener" hidden>🔗 Ver detalhes da reserva ↗</a>
+          <div class="booking-link-edit-row">
+            <input type="url" class="booking-link-input" data-base="base1" placeholder="Link da reserva (Booking, email, etc.)">
+            <button class="booking-link-save" data-base="base1">Guardar</button>
+          </div>
+        </div>
       </div>
 
       <div class="base-card two">
         <div class="base-no">Base 02</div>
         <h3>Ortisei · Val Gardena</h3>
-        <div class="nights">3 noites — Dias 3, 4 e 5</div>
+        <div class="nights">3 noites — 9 a 11 de setembro</div>
         <p>Ponto de partida clássico para o lado ocidental das Dolomitas.</p>
         <ul class="reach">
           <li><span>Seceda</span><span>~5 min</span></li>
@@ -1179,6 +1340,26 @@ svg.leaflet-image-layer.leaflet-interactive path {
           <li><span>Lago di Carezza</span><span>~35 min</span></li>
           <li><span>Passo Gardena</span><span>~25 min</span></li>
         </ul>
+        <div class="booking-link">
+          <a class="booking-link-view" data-base="base2" href="#" target="_blank" rel="noopener" hidden>🔗 Ver detalhes da reserva ↗</a>
+          <div class="booking-link-edit-row">
+            <input type="url" class="booking-link-input" data-base="base2" placeholder="Link da reserva (Booking, email, etc.)">
+            <button class="booking-link-save" data-base="base2">Guardar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="base-card car">
+        <div class="base-no">Transporte</div>
+        <h3>Aluguer de carro</h3>
+        <p>Guarda aqui o link da confirmação do aluguer, para o teres à mão.</p>
+        <div class="booking-link">
+          <a class="booking-link-view" data-base="car" href="#" target="_blank" rel="noopener" hidden>🔗 Ver detalhes da reserva ↗</a>
+          <div class="booking-link-edit-row">
+            <input type="url" class="booking-link-input" data-base="car" placeholder="Link da reserva do carro">
+            <button class="booking-link-save" data-base="car">Guardar</button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1188,8 +1369,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div id="map" role="img" aria-label="Mapa do roteiro"><div id="mapFallback" style="padding:16px; font-family:JetBrains Mono, monospace; font-size:0.78rem; color:#5C685D;">A carregar mapa…</div></div>
       <div class="legend">
         <span><span class="dot ink"></span>Viagem Salzburg / bases</span>
-        <span><span class="dot rose"></span>Zona este — Cortina (Dias 1–2)</span>
-        <span><span class="dot teal"></span>Zona oeste — Ortisei (Dias 3–5)</span>
+        <span><span class="dot rose"></span>Zona este — Cortina (7–8 set)</span>
+        <span><span class="dot teal"></span>Zona oeste — Ortisei (9–11 set)</span>
         <span><span class="dot amber"></span>As tuas localizações</span>
       </div>
     </section>
@@ -1232,6 +1413,26 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <button class="reset-link" id="resetBtn">Limpar notas e localizações partilhadas (afeta toda a gente com o link)</button>
     </section>
 
+    <!-- CUSTOS -->
+    <section class="screen" id="screen-custos">
+      <p class="section-lede">Custos partilhados da viagem — cada um regista o que pagou.</p>
+
+      <div class="whoami-row">
+        A registar custos como <strong id="whoamiName">—</strong>
+        <button id="whoamiChange">mudar</button>
+      </div>
+
+      <div class="cost-summary" id="costSummary"></div>
+
+      <div class="cost-add-row">
+        <input type="text" class="cost-desc-input" id="costDescInput" placeholder="Descrição (ex: jantar, gasolina)">
+        <input type="number" class="cost-amount-input" id="costAmountInput" placeholder="€" step="0.01" min="0" inputmode="decimal">
+      </div>
+      <button class="cost-add-btn" id="costAddBtn">Adicionar custo</button>
+
+      <div class="cost-list" id="costList"></div>
+    </section>
+
   </main>
 
   <nav class="tabbar">
@@ -1246,6 +1447,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button class="tab" data-target="screen-mapa">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
       <span>MAPA</span>
+    </button>
+    <button class="tab" data-target="screen-custos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5c0-1 1-1.8 2.5-1.8s2.5.7 2.5 1.7c0 2.3-5 1.1-5 3.4 0 1 1 1.7 2.5 1.7s2.5-.8 2.5-1.8"/></svg>
+      <span>CUSTOS</span>
     </button>
     <button class="tab" data-target="screen-notas">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14v16l-3-2-2 2-2-2-2 2-2-2-3 2Z"/><path d="M8 9h8M8 13h5"/></svg>
@@ -1327,7 +1532,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   var SUPABASE_URL = 'https://kfmzhvrjayzlfckvjuuo.supabase.co';
   var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbXpodnJqYXl6bGZja3ZqdXVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3NTExODksImV4cCI6MjEwMjMyNzE4OX0.1NJ_XMoiGW7pdE0dvKLMyciVVoL9zItTpP-vYFJKEBU';
 
-  var SHARED = { notes: {}, locations: [] };
+  var DAY_LABELS = ['Dom 6 set', 'Seg 7 set', 'Ter 8 set', 'Qua 9 set', 'Qui 10 set', 'Sex 11 set', 'Sáb 12 set'];
+  var SHARED = { notes: {}, locations: [], reservations: [], bookingLinks: {}, costs: [] };
   var sharedReady = false;
 
   function escapeHtml(s){
@@ -1346,6 +1552,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
     var d = (data && typeof data === 'object') ? data : {};
     if (!d.notes || typeof d.notes !== 'object') d.notes = {};
     if (!Array.isArray(d.locations)) d.locations = [];
+    if (!Array.isArray(d.reservations)) d.reservations = [];
+    if (!d.bookingLinks || typeof d.bookingLinks !== 'object') d.bookingLinks = {};
+    if (!Array.isArray(d.costs)) d.costs = [];
     return d;
   }
   function sbHeaders(extra){
@@ -1362,22 +1571,42 @@ svg.leaflet-image-layer.leaflet-interactive path {
       fetch(SUPABASE_URL + '/rest/v1/dolomiti_notes?select=day,text', { headers: sbHeaders() })
         .then(function(r){ if (!r.ok) throw new Error('notes fetch failed'); return r.json(); }),
       fetch(SUPABASE_URL + '/rest/v1/dolomiti_locations?select=id,day,name,lat,lng&order=created_at.asc', { headers: sbHeaders() })
-        .then(function(r){ if (!r.ok) throw new Error('locations fetch failed'); return r.json(); })
+        .then(function(r){ if (!r.ok) throw new Error('locations fetch failed'); return r.json(); }),
+      fetch(SUPABASE_URL + '/rest/v1/dolomiti_reservations?select=id,day,title,done&order=created_at.asc', { headers: sbHeaders() })
+        .then(function(r){ if (!r.ok) throw new Error('reservations fetch failed'); return r.json(); }),
+      fetch(SUPABASE_URL + '/rest/v1/dolomiti_booking_links?select=base_id,url', { headers: sbHeaders() })
+        .then(function(r){ if (!r.ok) throw new Error('booking links fetch failed'); return r.json(); }),
+      fetch(SUPABASE_URL + '/rest/v1/dolomiti_costs?select=id,description,amount,paid_by&order=created_at.asc', { headers: sbHeaders() })
+        .then(function(r){ if (!r.ok) throw new Error('costs fetch failed'); return r.json(); })
     ]).then(function(results){
       var notes = {};
       results[0].forEach(function(row){ notes[row.day] = row.text; });
       var locations = results[1].map(function(l){
         return { id: l.id, day: String(l.day), name: l.name, lat: l.lat, lng: l.lng };
       });
-      return { notes: notes, locations: locations };
+      var reservations = results[2].map(function(r){
+        return { id: r.id, day: String(r.day), title: r.title, done: !!r.done };
+      });
+      var bookingLinks = {};
+      results[3].forEach(function(row){ bookingLinks[row.base_id] = row.url || ''; });
+      var costs = results[4].map(function(c){
+        return { id: c.id, description: c.description, amount: Number(c.amount), paid_by: c.paid_by };
+      });
+      return { notes: notes, locations: locations, reservations: reservations, bookingLinks: bookingLinks, costs: costs };
     });
   }
   function renderAllFromShared(){
     for (var d = 0; d <= 6; d++){
       renderDayLocations(d);
+      renderDayReservations(d);
       var ta = document.querySelector('.notes-input[data-day="'+d+'"]');
       if (ta) ta.value = SHARED.notes[d] || '';
     }
+    renderBookingLink('base1');
+    renderBookingLink('base2');
+    renderBookingLink('car');
+    renderCostList();
+    renderCostSummary();
     if (window.__map){
       if (window.__customMarkers){
         Object.keys(window.__customMarkers).forEach(function(id){ window.__map.removeLayer(window.__customMarkers[id]); });
@@ -1437,8 +1666,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
       return;
     }
     container.innerHTML = items.map(function(l){
-      return '<div class="loc-item"><span class="loc-name">'+escapeHtml(l.name)+'</span>'
-        + '<button class="loc-remove" data-id="'+l.id+'" aria-label="Remover">×</button></div>';
+      return '<div class="block custom">'
+        + '<div class="block-top">'
+        +   '<span class="tag">A tua localização</span>'
+        +   '<button class="loc-remove" data-id="'+l.id+'" aria-label="Remover">×</button>'
+        + '</div>'
+        + '<h4>'+escapeHtml(l.name)+'</h4>'
+        + '<p>Adicionada por ti · aparece também no mapa</p>'
+        + '</div>';
     }).join('');
   }
   function addLocation(day, name, lat, lng){
@@ -1467,6 +1702,239 @@ svg.leaflet-image-layer.leaflet-interactive path {
       headers: sbHeaders({ 'Prefer': 'return=minimal' })
     }).catch(function(){});
   }
+
+  function renderDayReservations(day){
+    var container = document.querySelector('.resv-list[data-day="'+day+'"]');
+    if (!container) return;
+    var items = SHARED.reservations.filter(function(r){ return String(r.day) === String(day); });
+    if (!items.length){
+      container.innerHTML = '<div class="resv-empty">Sem reservas pendentes.</div>';
+      return;
+    }
+    container.innerHTML = items.map(function(r){
+      return '<div class="resv-item'+(r.done ? ' done' : '')+'">'
+        + '<button class="resv-check" data-id="'+r.id+'" aria-label="Marcar como feita">'
+        +   '<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 6"/></svg>'
+        + '</button>'
+        + '<span class="resv-title">'+escapeHtml(r.title)+'</span>'
+        + '<button class="resv-remove" data-id="'+r.id+'" aria-label="Remover">×</button>'
+        + '</div>';
+    }).join('');
+  }
+  function addReservation(day, title){
+    var res = { id: Date.now()+'-'+Math.floor(Math.random()*1000), day: String(day), title: title, done: false };
+    SHARED.reservations.push(res);
+    saveLocalCache();
+    renderDayReservations(day);
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_reservations', {
+      method: 'POST',
+      headers: sbHeaders({ 'Prefer': 'return=minimal' }),
+      body: JSON.stringify([{ id: res.id, day: Number(day), title: title, done: false }])
+    }).catch(function(){});
+  }
+  function toggleReservation(id){
+    var res = SHARED.reservations.filter(function(r){ return r.id === id; })[0];
+    if (!res) return;
+    res.done = !res.done;
+    saveLocalCache();
+    renderDayReservations(res.day);
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_reservations?id=eq.' + encodeURIComponent(id), {
+      method: 'PATCH',
+      headers: sbHeaders({ 'Prefer': 'return=minimal' }),
+      body: JSON.stringify({ done: res.done })
+    }).catch(function(){});
+  }
+  function removeReservation(id){
+    var res = SHARED.reservations.filter(function(r){ return r.id === id; })[0];
+    SHARED.reservations = SHARED.reservations.filter(function(r){ return r.id !== id; });
+    saveLocalCache();
+    if (res) renderDayReservations(res.day);
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_reservations?id=eq.' + encodeURIComponent(id), {
+      method: 'DELETE',
+      headers: sbHeaders({ 'Prefer': 'return=minimal' })
+    }).catch(function(){});
+  }
+  document.addEventListener('click', function(e){
+    var addBtn = e.target.closest ? e.target.closest('.resv-add-btn') : null;
+    if (addBtn){
+      var day = addBtn.dataset.day;
+      var input = document.querySelector('.resv-add-input[data-day="'+day+'"]');
+      if (input && input.value.trim()){
+        addReservation(day, input.value.trim());
+        input.value = '';
+      }
+      return;
+    }
+    var checkBtn = e.target.closest ? e.target.closest('.resv-check') : null;
+    if (checkBtn){ toggleReservation(checkBtn.dataset.id); return; }
+    var removeBtn = e.target.closest ? e.target.closest('.resv-remove') : null;
+    if (removeBtn){ removeReservation(removeBtn.dataset.id); return; }
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('resv-add-input')){
+      e.preventDefault();
+      var day = e.target.dataset.day;
+      if (e.target.value.trim()){
+        addReservation(day, e.target.value.trim());
+        e.target.value = '';
+      }
+    }
+  });
+
+  /* ---------- Booking links (Alojamento) ---------- */
+  function renderBookingLink(baseId){
+    var link = SHARED.bookingLinks[baseId] || '';
+    var viewEl = document.querySelector('.booking-link-view[data-base="'+baseId+'"]');
+    var inputEl = document.querySelector('.booking-link-input[data-base="'+baseId+'"]');
+    if (viewEl){
+      if (link){ viewEl.href = link; viewEl.hidden = false; } else { viewEl.hidden = true; }
+    }
+    if (inputEl && document.activeElement !== inputEl){ inputEl.value = link; }
+  }
+  function saveBookingLink(baseId, url){
+    SHARED.bookingLinks[baseId] = url;
+    saveLocalCache();
+    renderBookingLink(baseId);
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_booking_links?on_conflict=base_id', {
+      method: 'POST',
+      headers: sbHeaders({ 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
+      body: JSON.stringify([{ base_id: baseId, url: url, updated_at: new Date().toISOString() }])
+    }).catch(function(){});
+  }
+  document.addEventListener('click', function(e){
+    var saveBtn = e.target.closest ? e.target.closest('.booking-link-save') : null;
+    if (!saveBtn) return;
+    var baseId = saveBtn.dataset.base;
+    var input = document.querySelector('.booking-link-input[data-base="'+baseId+'"]');
+    if (input) saveBookingLink(baseId, input.value.trim());
+  });
+
+  /* ---------- Costs (Custos) — split & settle-up between whoever adds expenses ---------- */
+  function getMyName(){
+    try { return localStorage.getItem('dolomiti_my_name') || ''; } catch (e) { return ''; }
+  }
+  function setMyName(name){
+    try { localStorage.setItem('dolomiti_my_name', name); } catch (e) {}
+  }
+  function updateWhoamiDisplay(){
+    var el = document.getElementById('whoamiName');
+    if (el) el.textContent = getMyName() || '—';
+  }
+  function ensureMyName(){
+    var name = getMyName();
+    if (!name){
+      var entered = window.prompt('Como te chamas, para dividirmos os custos?');
+      if (entered && entered.trim()){ name = entered.trim(); setMyName(name); }
+    }
+    updateWhoamiDisplay();
+    return name;
+  }
+  var whoamiChangeBtn = document.getElementById('whoamiChange');
+  if (whoamiChangeBtn){
+    whoamiChangeBtn.addEventListener('click', function(){
+      var entered = window.prompt('Como te chamas?', getMyName());
+      if (entered && entered.trim()){ setMyName(entered.trim()); updateWhoamiDisplay(); }
+    });
+  }
+  updateWhoamiDisplay();
+
+  function renderCostList(){
+    var container = document.getElementById('costList');
+    if (!container) return;
+    if (!SHARED.costs.length){ container.innerHTML = ''; return; }
+    container.innerHTML = SHARED.costs.map(function(c){
+      return '<div class="cost-item">'
+        + '<div class="cost-item-main">'
+        +   '<span class="cost-item-desc">'+escapeHtml(c.description)+'</span>'
+        +   '<span class="cost-item-who">'+escapeHtml(c.paid_by)+'</span>'
+        + '</div>'
+        + '<span class="cost-item-amount">€'+c.amount.toFixed(2)+'</span>'
+        + '<button class="cost-remove" data-id="'+c.id+'" aria-label="Remover">×</button>'
+        + '</div>';
+    }).join('');
+  }
+  function renderCostSummary(){
+    var box = document.getElementById('costSummary');
+    if (!box) return;
+    var totals = {};
+    SHARED.costs.forEach(function(c){ totals[c.paid_by] = (totals[c.paid_by] || 0) + c.amount; });
+    var people = Object.keys(totals);
+    if (!people.length){
+      box.innerHTML = '<div class="cost-empty">Ainda sem custos registados.</div>';
+      return;
+    }
+    var total = people.reduce(function(s, p){ return s + totals[p]; }, 0);
+    var rows = people.map(function(p){
+      return '<div class="cost-total-row"><span>'+escapeHtml(p)+'</span><span>€'+totals[p].toFixed(2)+'</span></div>';
+    }).join('');
+
+    var settleHtml = '';
+    if (people.length === 2){
+      var a = people[0], b = people[1];
+      var diff = totals[a] - totals[b];
+      if (Math.abs(diff) < 0.01){
+        settleHtml = '<div class="cost-settle even">✓ Contas equilibradas.</div>';
+      } else {
+        var ower = diff < 0 ? a : b;
+        var receiver = diff < 0 ? b : a;
+        var amountOwed = Math.abs(diff) / 2;
+        settleHtml = '<div class="cost-settle">'+escapeHtml(ower)+' deve <strong>€'+amountOwed.toFixed(2)+'</strong> a '+escapeHtml(receiver)+'</div>';
+      }
+    } else if (people.length > 2){
+      var fair = total / people.length;
+      settleHtml = people.map(function(p){
+        var bal = totals[p] - fair;
+        if (bal > 0.01) return '<div class="cost-settle even">'+escapeHtml(p)+' deve receber €'+bal.toFixed(2)+'</div>';
+        if (bal < -0.01) return '<div class="cost-settle">'+escapeHtml(p)+' deve pagar €'+Math.abs(bal).toFixed(2)+'</div>';
+        return '';
+      }).join('');
+    }
+
+    box.innerHTML = '<div class="cost-total-row total"><span>Total gasto</span><span>€'+total.toFixed(2)+'</span></div>'
+      + rows + settleHtml;
+  }
+  function addCost(description, amount, paidBy){
+    var cost = { id: Date.now()+'-'+Math.floor(Math.random()*1000), description: description, amount: amount, paid_by: paidBy };
+    SHARED.costs.push(cost);
+    saveLocalCache();
+    renderCostList();
+    renderCostSummary();
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_costs', {
+      method: 'POST',
+      headers: sbHeaders({ 'Prefer': 'return=minimal' }),
+      body: JSON.stringify([{ id: cost.id, description: description, amount: amount, paid_by: paidBy }])
+    }).catch(function(){});
+  }
+  function removeCost(id){
+    SHARED.costs = SHARED.costs.filter(function(c){ return c.id !== id; });
+    saveLocalCache();
+    renderCostList();
+    renderCostSummary();
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_costs?id=eq.' + encodeURIComponent(id), {
+      method: 'DELETE',
+      headers: sbHeaders({ 'Prefer': 'return=minimal' })
+    }).catch(function(){});
+  }
+  var costAddBtn = document.getElementById('costAddBtn');
+  if (costAddBtn){
+    costAddBtn.addEventListener('click', function(){
+      var descInput = document.getElementById('costDescInput');
+      var amountInput = document.getElementById('costAmountInput');
+      var desc = descInput.value.trim();
+      var amount = parseFloat(amountInput.value);
+      if (!desc || isNaN(amount) || amount <= 0) return;
+      var name = ensureMyName();
+      if (!name) return;
+      addCost(desc, amount, name);
+      descInput.value = '';
+      amountInput.value = '';
+    });
+  }
+  document.addEventListener('click', function(e){
+    var rm = e.target.closest ? e.target.closest('.cost-remove') : null;
+    if (rm) removeCost(rm.dataset.id);
+  });
+
   initSharedStorage();
 
   document.addEventListener('click', function(e){
@@ -1569,13 +2037,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   /* ---------- Reset ---------- */
   document.getElementById('resetBtn').addEventListener('click', function(){
-    if (!confirm('Isto apaga todas as notas e localizações partilhadas — para ti E para quem tiver este link. Continuar?')) return;
-    SHARED = { notes: {}, locations: [] };
+    if (!confirm('Isto apaga todas as notas, localizações e reservas partilhadas — para ti E para quem tiver este link. Continuar?')) return;
+    SHARED = { notes: {}, locations: [], reservations: [] };
     saveLocalCache();
     fetch(SUPABASE_URL + '/rest/v1/dolomiti_notes?day=gte.0', { method: 'DELETE', headers: sbHeaders({ 'Prefer': 'return=minimal' }) }).catch(function(){});
     fetch(SUPABASE_URL + '/rest/v1/dolomiti_locations?day=gte.0', { method: 'DELETE', headers: sbHeaders({ 'Prefer': 'return=minimal' }) }).catch(function(){});
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_reservations?day=gte.0', { method: 'DELETE', headers: sbHeaders({ 'Prefer': 'return=minimal' }) }).catch(function(){});
     document.querySelectorAll('.notes-input').forEach(function(ta){ ta.value = ''; });
-    for (var d = 0; d <= 6; d++){ renderDayLocations(d); }
+    for (var d = 0; d <= 6; d++){ renderDayLocations(d); renderDayReservations(d); }
     if (window.__map && window.__customMarkers){
       Object.keys(window.__customMarkers).forEach(function(id){ window.__map.removeLayer(window.__customMarkers[id]); });
       window.__customMarkers = {};
@@ -1592,8 +2061,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   function addCustomMarkerToMap(loc){
     if (!window.__map) return;
+    var dayLabel = DAY_LABELS[Number(loc.day)] || ('Dia ' + loc.day);
     var m = L.marker([loc.lat, loc.lng], { icon: customIcon() }).addTo(window.__map)
-      .bindPopup('<strong>'+escapeHtml(loc.name)+'</strong><br>Dia '+loc.day+' · adicionado por ti');
+      .bindPopup('<strong>'+escapeHtml(loc.name)+'</strong><br>'+dayLabel+' · adicionado por ti');
     window.__customMarkers[loc.id] = m;
   }
 
@@ -1620,18 +2090,18 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
     var stops=[
       {p:salzburg,n:'Salzburg',note:'Partida / regresso',c:INK},
-      {p:cortina,n:"Cortina d'Ampezzo",note:'Base 1 — Dias 0,1,2',c:INK},
-      {p:cadini,n:'Cadini di Misurina',note:'Dia 1 · manhã',c:ROSE},
-      {p:braies,n:'Lago di Braies',note:'Dia 1 · tarde',c:ROSE},
-      {p:treCime,n:'Tre Cime di Lavaredo',note:'Dia 2 · manhã',c:ROSE},
-      {p:giau,n:'Passo Giau',note:'Dia 2 · tarde',c:ROSE},
-      {p:sorapis,n:'Lago di Sorapis',note:'Dia 3 · manhã',c:ROSE},
-      {p:gardena,n:'Passo Gardena',note:'Dia 3 · tarde',c:TEAL},
-      {p:ortisei,n:'Ortisei',note:'Base 2 — Dias 3,4,5',c:INK},
-      {p:seceda,n:'Seceda',note:'Dia 4 · manhã',c:TEAL},
-      {p:funes,n:'St. Magdalena',note:'Dia 4 · tarde',c:TEAL},
-      {p:siusi,n:'Alpe di Siusi',note:'Dia 5 · manhã',c:TEAL},
-      {p:carezza,n:'Lago di Carezza',note:'Dia 5 · tarde',c:TEAL}
+      {p:cortina,n:"Cortina d'Ampezzo",note:'Base 1 — 6 a 8 set',c:INK},
+      {p:cadini,n:'Cadini di Misurina',note:'Seg 7 set · manhã',c:ROSE},
+      {p:braies,n:'Lago di Braies',note:'Seg 7 set · tarde',c:ROSE},
+      {p:treCime,n:'Tre Cime di Lavaredo',note:'Ter 8 set · manhã',c:ROSE},
+      {p:giau,n:'Passo Giau',note:'Ter 8 set · tarde',c:ROSE},
+      {p:sorapis,n:'Lago di Sorapis',note:'Qua 9 set · manhã',c:ROSE},
+      {p:gardena,n:'Passo Gardena',note:'Qua 9 set · tarde',c:TEAL},
+      {p:ortisei,n:'Ortisei',note:'Base 2 — 9 a 11 set',c:INK},
+      {p:seceda,n:'Seceda',note:'Qui 10 set · manhã',c:TEAL},
+      {p:funes,n:'St. Magdalena',note:'Qui 10 set · tarde',c:TEAL},
+      {p:siusi,n:'Alpe di Siusi',note:'Sex 11 set · manhã',c:TEAL},
+      {p:carezza,n:'Lago di Carezza',note:'Sex 11 set · tarde',c:TEAL}
     ];
     stops.forEach(function(s){
       L.marker(s.p,{icon:icon(s.c)}).addTo(map).bindPopup('<strong>'+s.n+'</strong><br>'+s.note);
