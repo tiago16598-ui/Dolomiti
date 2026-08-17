@@ -9,9 +9,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#EEF0E7">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23232C24'/%3E%3Cpolygon points='50,22 80,74 20,74' fill='%23B8523E'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* Leaflet 1.9.4 — bundled inline so the map never depends on an external CDN load succeeding */
 /* required styles */
@@ -680,11 +677,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <style>
   :root{
     --bg: #EEF0E7;
-    --bg-deep: #E2E6D9;
+    --bg-deep: #E6E9DE;
     --paper: #F8F8F3;
+    --fill: #E9ECE1;
     --ink: #232C24;
-    --ink-soft: #5C685D;
-    --line: #CED3C2;
+    --ink-soft: #6B776C;
+    --ink-faint: #9AA39B;
+    --line: rgba(35,44,36,0.13);
     --rose: #B8523E;
     --rose-soft: #F1DCD2;
     --rose-deep: #8F3C2C;
@@ -694,10 +693,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
     --amber: #C99A2E;
     --amber-soft: #F3E7CE;
     --amber-deep: #8C6A18;
-    --shadow: 0 1px 2px rgba(35,44,36,0.05), 0 6px 18px rgba(35,44,36,0.08);
-    --radius: 14px;
+    --radius: 10px;
+    --radius-lg: 14px;
+    --tap: 44px;
     --safe-t: env(safe-area-inset-top, 0px);
     --safe-b: env(safe-area-inset-bottom, 0px);
+    --sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, monospace;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   @media (prefers-reduced-motion: reduce){
@@ -705,15 +707,20 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   html,body{margin:0; height:100%;}
   body{
-    background:#C9CEC0;
-    font-family:'Inter', sans-serif;
+    background:#D3D8CA;
+    font-family:var(--sans);
     color:var(--ink);
+    font-size:17px;
+    line-height:1.42;
+    letter-spacing:-0.01em;
+    -webkit-font-smoothing:antialiased;
     display:flex; justify-content:center;
     min-height:100dvh;
   }
-  h1,h2,h3,h4{font-family:'Fraunces', serif; margin:0; letter-spacing:-0.01em;}
-  button{font-family:inherit;}
-  :focus-visible{outline:2px solid var(--rose); outline-offset:2px;}
+  h1,h2,h3,h4{margin:0; font-weight:700; letter-spacing:-0.022em;}
+  button{font-family:inherit; font-size:17px; letter-spacing:-0.01em;}
+  input,textarea,select{font-family:inherit; letter-spacing:-0.01em;}
+  :focus-visible{outline:3px solid var(--teal); outline-offset:2px; border-radius:6px;}
 
   .device{
     width:100%; max-width:428px;
@@ -721,181 +728,218 @@ svg.leaflet-image-layer.leaflet-interactive path {
     background:var(--bg);
     display:flex; flex-direction:column;
     position:relative;
-    box-shadow:0 0 0 1px var(--line), 0 24px 70px rgba(20,26,20,0.28);
   }
   @media (min-width:429px){
-    body{ padding:28px 0; }
-    .device{ border-radius:34px; overflow:hidden; min-height:calc(100dvh - 56px); }
+    body{ padding:26px 0; }
+    .device{ border-radius:44px; overflow:hidden; min-height:calc(100dvh - 52px); box-shadow:0 20px 60px rgba(20,26,20,0.30); }
   }
 
+  /* NAVIGATION BAR — iOS large title */
   .appbar{
-    padding:calc(14px + var(--safe-t)) 20px 14px;
-    background:var(--bg);
-    border-bottom:1px solid var(--line);
+    padding:calc(10px + var(--safe-t)) 20px 12px;
+    background:rgba(238,240,231,0.82);
+    -webkit-backdrop-filter:saturate(180%) blur(20px);
+    backdrop-filter:saturate(180%) blur(20px);
+    border-bottom:0.5px solid var(--line);
     display:flex; align-items:center; gap:12px;
     position:sticky; top:0; z-index:20;
   }
   .appbar .mark{
-    width:34px; height:34px; border-radius:9px; background:var(--ink);
+    width:38px; height:38px; border-radius:9px; background:var(--ink);
     color:var(--rose); display:flex; align-items:center; justify-content:center;
     font-size:1.05rem; flex:none;
   }
-  .appbar .title{font-size:1.15rem; font-weight:600;}
+  .appbar .title{font-size:26px; font-weight:700; letter-spacing:-0.028em; line-height:1.15;}
   .appbar .subtitle{
-    font-family:'JetBrains Mono', monospace; font-size:0.68rem; letter-spacing:0.06em;
-    text-transform:uppercase; color:var(--ink-soft); margin-top:2px;
+    font-size:12px; letter-spacing:0.02em; color:var(--ink-soft); margin-top:1px; font-weight:400;
   }
 
   .screens{flex:1; overflow:hidden; position:relative;}
   .screen{
     position:absolute; inset:0;
     overflow-y:auto; -webkit-overflow-scrolling:touch;
-    padding:18px 20px calc(28px + var(--safe-b));
+    padding:16px 16px calc(28px + var(--safe-b));
     display:none;
   }
   .screen.active{display:block;}
 
+  /* Section footnote under the nav bar */
+  .section-lede{font-size:13px; color:var(--ink-soft); margin:0 4px 16px; line-height:1.38;}
+
+  /* DAY SELECTOR — scrollable pills */
   .day-selector{
-    display:flex; gap:8px; overflow-x:auto; padding-bottom:10px; margin-bottom:16px;
+    display:flex; gap:8px; overflow-x:auto; padding:2px 0 12px; margin-bottom:6px;
     scroll-snap-type:x proximity;
   }
   .day-selector::-webkit-scrollbar{display:none;}
   .day-chip{
     flex:none; scroll-snap-align:start;
-    font-family:'JetBrains Mono', monospace; font-weight:600; font-size:0.82rem;
-    border:1px solid var(--line); background:var(--paper); color:var(--ink-soft);
-    border-radius:100px; padding:9px 15px; cursor:pointer;
-    transition:background .15s, color .15s, border-color .15s;
+    min-height:36px; font-size:15px; font-weight:600;
+    border:none; background:var(--fill); color:var(--ink-soft);
+    border-radius:100px; padding:8px 15px; cursor:pointer;
+    transition:background .18s ease, color .18s ease;
   }
-  .day-chip.active{background:var(--ink); color:var(--bg); border-color:var(--ink);}
+  .day-chip.active{background:var(--ink); color:var(--bg);}
 
   .day-panel{display:none;}
-  .day-panel.active{display:block; animation:fadeIn .25s ease;}
-  @keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+  .day-panel.active{display:block; animation:fadeIn .22s ease;}
+  @keyframes fadeIn{from{opacity:0;} to{opacity:1;}}
 
-  .day-title-row{display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:4px;}
-  .day-title-row h2{font-size:1.35rem; font-weight:600;}
+  .day-title-row{display:flex; align-items:center; justify-content:space-between; gap:10px; margin:2px 4px 12px;}
+  .day-title-row h2{font-size:28px; font-weight:700; letter-spacing:-0.03em;}
   .day-base-pill{
-    font-family:'JetBrains Mono', monospace; font-size:0.62rem; letter-spacing:0.05em; text-transform:uppercase;
-    color:var(--ink-soft); border:1px solid var(--line); border-radius:100px; padding:3px 9px; white-space:nowrap;
+    font-size:12px; font-weight:600; letter-spacing:0.01em;
+    color:var(--ink-soft); background:var(--fill); border-radius:100px; padding:5px 10px; white-space:nowrap;
   }
 
+  /* GROUPED CARDS */
   .block{
-    background:var(--paper); border:1px solid var(--line); border-radius:var(--radius);
-    padding:16px 17px; box-shadow:var(--shadow); margin-top:12px;
-    border-left:3px solid var(--line);
+    background:var(--paper); border-radius:var(--radius-lg);
+    padding:14px 16px; margin-top:12px;
+    border-left:4px solid transparent;
   }
   .block.am{border-left-color:var(--rose);}
   .block.pm{border-left-color:var(--teal);}
+  .block.travel{border-left-color:var(--ink);}
   .block.custom{border-left-color:var(--amber);}
   .block .tag{
-    font-family:'JetBrains Mono', monospace; font-size:0.64rem; letter-spacing:0.09em; text-transform:uppercase;
-    display:inline-block; padding:2px 8px; border-radius:100px; margin-bottom:8px;
+    font-size:12px; font-weight:600; letter-spacing:0.01em;
+    display:inline-block; padding:4px 10px; border-radius:100px; margin-bottom:8px;
   }
   .block.am .tag{background:var(--rose-soft); color:var(--rose-deep);}
   .block.pm .tag{background:var(--teal-soft); color:var(--teal-deep);}
   .block.custom .tag{background:var(--amber-soft); color:var(--amber-deep);}
-  .block-top{display:flex; align-items:flex-start; justify-content:space-between; gap:8px;}
-  .block h4{font-size:1.02rem; font-weight:600; margin-bottom:5px;}
-  .block p{margin:0; font-size:0.87rem; color:var(--ink-soft); line-height:1.5;}
+  .block-top{display:flex; align-items:center; justify-content:space-between; gap:8px;}
+  .block h4{font-size:17px; font-weight:600; margin-bottom:3px;}
+  .block p{margin:0; font-size:15px; color:var(--ink-soft); line-height:1.4;}
   .loc-google-link{
-    display:inline-block; margin-top:10px; font-size:0.8rem; font-weight:600;
-    color:var(--amber-deep); text-decoration:none;
+    display:inline-flex; align-items:center; min-height:var(--tap); margin-top:2px;
+    font-size:15px; font-weight:500; color:var(--teal); text-decoration:none;
   }
+  .loc-google-link::after{content:'›'; margin-left:5px; font-size:19px; color:var(--ink-faint); line-height:1;}
   .block .note{
-    margin-top:9px; font-size:0.75rem; font-family:'JetBrains Mono', monospace;
-    color:var(--rose-deep); line-height:1.4;
+    margin-top:8px; font-size:13px; color:var(--rose-deep); line-height:1.36;
   }
 
-  .day-arrows{display:flex; gap:10px; margin-top:20px;}
+  /* STOP CARDS */
+  .stops-group-label{
+    font-size:13px; letter-spacing:0.01em; text-transform:uppercase;
+    color:var(--ink-soft); margin:0 4px 2px;
+  }
+  .stops-group-label.second{margin-top:26px;}
+  .stops-group-empty{
+    font-size:15px; color:var(--ink-soft); background:var(--paper);
+    border-radius:var(--radius-lg); padding:14px 16px; margin-top:12px;
+  }
+  .stop-card{margin-top:12px;}
+  .stop-top{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px;}
+  .stop-select{
+    -webkit-appearance:none; appearance:none;
+    font-size:15px; font-weight:600;
+    border:none; border-radius:100px; padding:8px 26px 8px 12px; min-height:36px;
+    background-color:var(--fill); color:var(--ink); cursor:pointer;
+    background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%236B776C' d='M4.5 6.5 8 10l3.5-3.5'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 8px center; background-size:14px;
+  }
+  .stop-period-select.am{background-color:var(--rose-soft); color:var(--rose-deep);}
+  .stop-period-select.pm{background-color:var(--teal-soft); color:var(--teal-deep);}
+  .stop-period-select.travel{background-color:var(--bg-deep); color:var(--ink);}
+  .stop-custom-badge{
+    font-size:12px; font-weight:600;
+    background:var(--amber-soft); color:var(--amber-deep); border-radius:100px; padding:5px 10px;
+  }
+  .stop-top-spacer{flex:1;}
+  .stop-remove{
+    border:none; background:none; color:var(--rose); font-size:22px; line-height:1; cursor:pointer;
+    width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex:none;
+  }
+  .stop-name{font-size:17px; font-weight:600; margin-bottom:10px; letter-spacing:-0.022em;}
+  .stop-desc-input{
+    width:100%; min-height:60px; resize:vertical; border:none; border-radius:var(--radius);
+    padding:11px 12px; font-size:15px; color:var(--ink); background:var(--fill); line-height:1.4;
+  }
+  .stop-warning-input{
+    width:100%; min-height:var(--tap); margin-top:8px; padding:11px 12px; border:none; border-radius:var(--radius);
+    font-size:15px; color:var(--rose-deep); background:var(--fill);
+  }
+  .stop-warning-input::placeholder, .stop-desc-input::placeholder{color:var(--ink-faint);}
+  .stop-promote{
+    display:flex; align-items:center; min-height:var(--tap); margin-top:2px;
+    border:none; background:none; color:var(--teal); font-size:15px; font-weight:500; cursor:pointer; padding:0;
+  }
+  .stop-add-btn{
+    width:100%; min-height:var(--tap); padding:12px; border:none; border-radius:var(--radius-lg);
+    background:var(--paper); color:var(--teal); font-size:16px; font-weight:600; cursor:pointer; margin-top:12px;
+  }
+  .stop-add-btn:active{background:var(--bg-deep);}
+
+  .day-arrows{display:flex; gap:10px; margin-top:22px;}
   .arrow-btn{
-    flex:1; padding:12px; border-radius:100px; border:1px solid var(--line);
-    background:var(--paper); color:var(--ink); font-size:0.85rem; font-weight:600; cursor:pointer;
+    flex:1; min-height:var(--tap); padding:12px; border-radius:var(--radius-lg); border:none;
+    background:var(--paper); color:var(--teal); font-size:16px; font-weight:600; cursor:pointer;
   }
-  .arrow-btn:disabled{opacity:0.35; cursor:default;}
+  .arrow-btn:disabled{color:var(--ink-faint);}
+  .arrow-btn:active:not(:disabled){background:var(--bg-deep);}
 
-  /* DAY EXTRAS: notes + locations */
-  .day-extra{margin-top:22px;}
-  .extra-block{margin-top:16px; padding-top:14px; border-top:1px dashed var(--line);}
+  /* GROUPED SECTIONS INSIDE A DAY */
+  .day-extra{margin-top:26px;}
+  .extra-block{margin-top:24px;}
   .extra-label{
-    font-family:'JetBrains Mono', monospace; font-size:0.62rem; letter-spacing:0.09em;
-    text-transform:uppercase; color:var(--ink-soft); margin-bottom:9px;
+    font-size:13px; font-weight:400; letter-spacing:0.01em; text-transform:uppercase;
+    color:var(--ink-soft); margin:0 4px 8px;
   }
   .notes-input{
-    width:100%; min-height:66px; resize:vertical; border:1px solid var(--line); border-radius:10px;
-    padding:10px 12px; font-family:'Inter',sans-serif; font-size:0.87rem; color:var(--ink); background:var(--paper);
+    width:100%; min-height:88px; resize:vertical; border:none; border-radius:var(--radius-lg);
+    padding:13px 15px; font-size:16px; color:var(--ink); background:var(--paper); line-height:1.42;
   }
-  .notes-input:focus-visible{outline:2px solid var(--rose); outline-offset:1px;}
-  .loc-list{display:flex; flex-direction:column;}
-  .loc-empty{font-size:0.78rem; color:var(--ink-soft); font-style:italic; margin-bottom:9px;}
-  .loc-remove{
-    border:none; background:none; color:var(--amber-deep); font-size:1.2rem; line-height:1;
-    cursor:pointer; padding:0 2px; flex:none;
-  }
-  .add-loc-btn{
-    width:100%; padding:11px; border:1px dashed var(--line); border-radius:10px; background:none;
-    color:var(--ink-soft); font-size:0.82rem; font-weight:600; cursor:pointer;
-  }
-  .add-loc-btn:hover{border-color:var(--amber); color:var(--amber-deep);}
-  .add-loc-btn:disabled{opacity:0.5;}
-  .loc-search-row{display:flex; gap:8px;}
-  .loc-search-input{
-    flex:1; min-width:0; padding:10px 12px; border:1px solid var(--line); border-radius:10px;
-    font-family:inherit; font-size:0.85rem; color:var(--ink); background:var(--paper);
-  }
-  .loc-search-input:focus-visible{outline:2px solid var(--amber); outline-offset:1px;}
-  .loc-search-btn{
-    flex:none; padding:10px 14px; border-radius:10px; border:1px solid var(--amber);
-    background:var(--amber); color:#fff; font-size:0.82rem; font-weight:600; cursor:pointer;
-  }
-  .loc-search-btn:disabled{opacity:0.5; cursor:default;}
-  .loc-results{display:flex; flex-direction:column; gap:6px; margin-top:8px;}
-  .loc-result-item{
-    text-align:left; width:100%; padding:9px 11px; border:1px solid var(--line); border-radius:10px;
-    background:var(--paper); cursor:pointer; font-size:0.82rem; color:var(--ink);
-  }
-  .loc-result-item:hover{border-color:var(--amber); background:var(--amber-soft);}
-  .loc-result-item .r-name{display:block; font-weight:600;}
-  .loc-result-item .r-addr{display:block; font-size:0.72rem; color:var(--ink-soft); margin-top:2px;}
-  .loc-status{font-family:'JetBrains Mono', monospace; font-size:0.74rem; color:var(--ink-soft); margin-top:8px;}
-  .loc-status.error{color:var(--rose-deep);}
+  .notes-input::placeholder{color:var(--ink-faint);}
 
   /* ALOJAMENTO */
   .base-card{
-    background:var(--paper); border:1px solid var(--line); border-radius:var(--radius);
-    padding:20px; box-shadow:var(--shadow); margin-bottom:16px;
+    background:var(--paper); border-radius:var(--radius-lg);
+    padding:18px 16px; margin-bottom:18px;
   }
-  .base-card .base-no{font-family:'JetBrains Mono', monospace; font-size:0.68rem; color:var(--ink-soft); letter-spacing:0.08em;}
-  .base-card h3{font-size:1.3rem; margin-top:6px;}
-  .base-card .nights{margin-top:3px; font-family:'JetBrains Mono', monospace; font-size:0.78rem; color:var(--rose-deep);}
-  .base-card.two .nights{color:var(--teal-deep);}
-  .base-card.car{border-style:dashed;}
+  .base-card .base-no{font-size:13px; color:var(--ink-soft); letter-spacing:0.01em;}
+  .base-card h3{font-size:22px; margin-top:3px; letter-spacing:-0.026em;}
+  .base-card .nights{margin-top:3px; font-size:15px; font-weight:500; color:var(--rose);}
+  .base-card.two .nights{color:var(--teal);}
   .base-card.car .base-no{color:var(--amber-deep);}
-  .base-card p{color:var(--ink-soft); font-size:0.87rem; margin-top:10px;}
-  .reach{list-style:none; margin:14px 0 0; padding:0; display:grid; gap:7px;}
-  .reach li{display:flex; justify-content:space-between; font-size:0.8rem; border-top:1px solid var(--line); padding-top:7px;}
-  .reach li span:last-child{font-family:'JetBrains Mono', monospace; color:var(--ink-soft);}
-  .booking-link{margin-top:14px; padding-top:12px; border-top:1px dashed var(--line);}
+  .base-card p{color:var(--ink-soft); font-size:15px; margin-top:8px; line-height:1.4;}
+  .reach{list-style:none; margin:14px 0 0; padding:0;}
+  .reach li{
+    display:flex; justify-content:space-between; gap:12px; font-size:16px;
+    border-top:0.5px solid var(--line); padding:11px 0 11px 0;
+  }
+  .reach li:first-child{border-top:none;}
+  .reach li span:last-child{color:var(--ink-soft);}
+  .booking-link{margin-top:12px; padding-top:12px; border-top:0.5px solid var(--line);}
   .booking-link-view{
-    display:inline-block; margin-bottom:9px; font-size:0.85rem; font-weight:600;
-    color:var(--teal-deep); text-decoration:none;
+    display:flex; align-items:center; min-height:var(--tap);
+    font-size:16px; font-weight:500; color:var(--teal); text-decoration:none;
   }
-  .booking-link-view[hidden]{ display:none; }
-  .booking-link-edit-row{display:flex; gap:8px;}
+  .booking-link-view::after{content:'›'; margin-left:auto; font-size:20px; color:var(--ink-faint);}
+  .booking-link-view[hidden]{display:none;}
+  .booking-link-edit-row{display:flex; gap:8px; align-items:center;}
   .booking-link-input{
-    flex:1; min-width:0; padding:9px 11px; border:1px solid var(--line); border-radius:10px;
-    font-family:inherit; font-size:0.82rem; color:var(--ink); background:var(--paper);
+    flex:1; min-width:0; min-height:var(--tap); padding:11px 12px; border:none; border-radius:var(--radius);
+    font-size:16px; color:var(--ink); background:var(--fill);
   }
-  .booking-link-input:focus-visible{outline:2px solid var(--teal); outline-offset:1px;}
+  .booking-link-input::placeholder{color:var(--ink-faint);}
   .booking-link-save{
-    flex:none; padding:9px 13px; border-radius:10px; border:1px solid var(--teal);
-    background:var(--teal); color:#fff; font-size:0.78rem; font-weight:600; cursor:pointer;
+    flex:none; min-height:var(--tap); padding:11px 16px; border-radius:var(--radius); border:none;
+    background:var(--teal); color:#fff; font-size:16px; font-weight:600; cursor:pointer;
   }
+  .booking-link-save:active{opacity:0.75;}
 
   /* MAPA */
-  #map{width:100%; height:48vh; min-height:300px; border-radius:var(--radius); border:1px solid var(--line); background:#E4E7DC;}
-  .legend{display:flex; flex-direction:column; gap:8px; margin-top:14px; font-family:'JetBrains Mono', monospace; font-size:0.76rem; color:var(--ink-soft);}
-  .legend .dot{display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:8px;}
+  #map{width:100%; height:52vh; min-height:320px; border-radius:var(--radius-lg); background:#E4E7DC;}
+  .legend{
+    display:flex; flex-direction:column; margin-top:16px; font-size:15px; color:var(--ink);
+    background:var(--paper); border-radius:var(--radius-lg); padding:0 15px;
+  }
+  .legend span{display:flex; align-items:center; padding:12px 0; border-top:0.5px solid var(--line);}
+  .legend span:first-child{border-top:none;}
+  .legend .dot{display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:12px; flex:none;}
   .legend .dot.rose{background:var(--rose);}
   .legend .dot.teal{background:var(--teal);}
   .legend .dot.ink{background:var(--ink);}
@@ -903,110 +947,127 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   /* NOTAS */
   .note-card{
-    background:var(--paper); border:1px solid var(--line); border-radius:var(--radius);
-    padding:17px; box-shadow:var(--shadow); margin-bottom:12px;
+    background:var(--paper); border-radius:var(--radius-lg);
+    padding:16px; margin-bottom:12px;
   }
-  .note-card .eyebrow{font-family:'JetBrains Mono', monospace; font-size:0.64rem; letter-spacing:0.09em; text-transform:uppercase; color:var(--rose-deep);}
-  .note-card h4{font-size:1rem; margin:6px 0 6px;}
-  .note-card p{margin:0; font-size:0.85rem; color:var(--ink-soft); line-height:1.5;}
+  .note-card .eyebrow{font-size:13px; letter-spacing:0.01em; text-transform:uppercase; color:var(--rose);}
+  .note-card h4{font-size:17px; margin:5px 0 5px;}
+  .note-card p{margin:0; font-size:15px; color:var(--ink-soft); line-height:1.42;}
   .reset-link{
-    display:block; margin-top:6px; text-align:center; font-family:'JetBrains Mono', monospace; font-size:0.72rem;
-    color:var(--ink-soft); text-decoration:underline; background:none; border:none; cursor:pointer; width:100%; padding:12px;
+    display:block; margin-top:14px; min-height:var(--tap); text-align:center; font-size:16px; font-weight:500;
+    color:var(--rose); text-decoration:none; background:var(--paper); border:none; border-radius:var(--radius-lg);
+    cursor:pointer; width:100%; padding:13px 16px;
   }
+  .reset-link:active{background:var(--bg-deep);}
 
   /* CUSTOS */
   .whoami-row{
-    font-size:0.85rem; color:var(--ink-soft); margin-bottom:16px; background:var(--paper);
-    border:1px solid var(--line); border-radius:10px; padding:10px 13px;
+    font-size:16px; color:var(--ink-soft); margin-bottom:18px; background:var(--paper);
+    border-radius:var(--radius-lg); padding:13px 15px; display:flex; align-items:center; gap:8px;
   }
-  .whoami-row strong{color:var(--ink);}
+  .whoami-row strong{color:var(--ink); font-weight:600;}
   .whoami-row button{
-    float:right; border:none; background:none; color:var(--teal-deep); font-size:0.78rem;
-    font-weight:600; cursor:pointer; text-decoration:underline;
+    margin-left:auto; border:none; background:none; color:var(--teal); font-size:16px;
+    font-weight:500; cursor:pointer; min-height:32px; padding:0 2px;
   }
-  .cost-summary{margin-bottom:18px;}
-  .cost-empty{font-size:0.85rem; color:var(--ink-soft); font-style:italic;}
+  .cost-summary{margin-bottom:20px;}
+  .cost-empty{font-size:15px; color:var(--ink-soft); background:var(--paper); border-radius:var(--radius-lg); padding:15px;}
   .cost-total-row{
-    display:flex; justify-content:space-between; align-items:center; font-size:0.9rem;
-    padding:9px 0; border-bottom:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:center; font-size:16px;
+    background:var(--paper); padding:12px 15px; border-top:0.5px solid var(--line);
   }
-  .cost-total-row.total{font-weight:700; font-size:1.05rem; border-bottom:2px solid var(--ink);}
-  .cost-total-row span:last-child{font-family:'JetBrains Mono', monospace;}
+  .cost-total-row:first-child{border-top:none; border-radius:var(--radius-lg) var(--radius-lg) 0 0;}
+  .cost-total-row:last-of-type{border-radius:0 0 var(--radius-lg) var(--radius-lg);}
+  .cost-total-row.total{font-weight:700; font-size:17px;}
+  .cost-total-row span:last-child{color:var(--ink-soft);}
+  .cost-total-row.total span:last-child{color:var(--ink);}
   .cost-settle{
-    margin-top:12px; padding:12px 14px; border-radius:10px; background:var(--rose-soft); color:var(--rose-deep);
-    font-size:0.9rem; font-weight:600;
+    margin-top:14px; padding:14px 15px; border-radius:var(--radius-lg); background:var(--rose-soft); color:var(--rose-deep);
+    font-size:16px; font-weight:600;
   }
   .cost-settle.even{background:var(--teal-soft); color:var(--teal-deep);}
   .cost-add-row{display:flex; gap:8px; margin-bottom:10px;}
   .cost-desc-input{
-    flex:1; min-width:0; padding:10px 12px; border:1px solid var(--line); border-radius:10px;
-    font-family:inherit; font-size:0.85rem; color:var(--ink); background:var(--paper);
+    flex:1; min-width:0; min-height:var(--tap); padding:12px; border:none; border-radius:var(--radius);
+    font-size:16px; color:var(--ink); background:var(--paper);
   }
   .cost-amount-input{
-    width:88px; flex:none; padding:10px 12px; border:1px solid var(--line); border-radius:10px;
-    font-family:inherit; font-size:0.85rem; color:var(--ink); background:var(--paper);
+    width:112px; flex:none; min-height:var(--tap); padding:12px; border:none; border-radius:var(--radius);
+    font-size:16px; color:var(--ink); background:var(--paper);
   }
-  .cost-desc-input:focus-visible, .cost-amount-input:focus-visible{outline:2px solid var(--teal); outline-offset:1px;}
+  .cost-desc-input::placeholder, .cost-amount-input::placeholder{color:var(--ink-faint);}
   .cost-add-btn{
-    width:100%; padding:11px; border-radius:10px; border:1px solid var(--teal); margin-bottom:18px;
-    background:var(--teal); color:#fff; font-size:0.85rem; font-weight:600; cursor:pointer;
+    width:100%; min-height:var(--tap); padding:13px; border-radius:var(--radius-lg); border:none; margin-bottom:22px;
+    background:var(--teal); color:#fff; font-size:17px; font-weight:600; cursor:pointer;
   }
-  .cost-list{display:flex; flex-direction:column; gap:8px;}
+  .cost-add-btn:active{opacity:0.75;}
+  .cost-list{display:flex; flex-direction:column; background:var(--paper); border-radius:var(--radius-lg); overflow:hidden;}
   .cost-item{
-    display:flex; align-items:center; gap:10px; background:var(--paper); border:1px solid var(--line);
-    border-radius:10px; padding:11px 12px; box-shadow:var(--shadow);
+    display:flex; align-items:center; gap:10px; padding:12px 15px; border-top:0.5px solid var(--line);
   }
+  .cost-item:first-child{border-top:none;}
   .cost-item-main{flex:1; min-width:0;}
-  .cost-item-desc{display:block; font-size:0.88rem; color:var(--ink); font-weight:600;}
-  .cost-item-who{display:block; font-size:0.74rem; color:var(--ink-soft); margin-top:2px;}
-  .cost-item-amount{flex:none; font-family:'JetBrains Mono', monospace; font-size:0.9rem; color:var(--ink);}
-  .cost-remove{flex:none; border:none; background:none; color:var(--rose-deep); font-size:1.2rem; line-height:1; cursor:pointer; padding:0 2px;}
+  .cost-item-desc{display:block; font-size:16px; color:var(--ink); font-weight:500;}
+  .cost-item-who{display:block; font-size:13px; color:var(--ink-soft); margin-top:1px;}
+  .cost-item-amount{flex:none; font-size:16px; color:var(--ink-soft);}
+  .cost-edit{
+    flex:none; border:none; background:none; font-size:16px; cursor:pointer;
+    width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+  }
+  .cost-remove{
+    flex:none; border:none; background:none; color:var(--rose); font-size:22px; line-height:1; cursor:pointer;
+    width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+  }
 
   /* RESERVAS */
-  .resv-add-row{display:flex; gap:8px; margin-bottom:10px;}
+  .resv-add-row{display:flex; gap:8px; margin-top:10px;}
   .resv-add-input{
-    flex:1; min-width:0; padding:10px 12px; border:1px solid var(--line); border-radius:10px;
-    font-family:inherit; font-size:0.85rem; color:var(--ink); background:var(--paper);
+    flex:1; min-width:0; min-height:var(--tap); padding:12px; border:none; border-radius:var(--radius);
+    font-size:16px; color:var(--ink); background:var(--paper);
   }
-  .resv-add-input:focus-visible{outline:2px solid var(--teal); outline-offset:1px;}
+  .resv-add-input::placeholder{color:var(--ink-faint);}
   .resv-add-btn{
-    flex:none; padding:10px 14px; border-radius:10px; border:1px solid var(--teal);
-    background:var(--teal); color:#fff; font-size:0.82rem; font-weight:600; cursor:pointer;
+    flex:none; min-height:var(--tap); padding:12px 16px; border-radius:var(--radius); border:none;
+    background:var(--teal); color:#fff; font-size:16px; font-weight:600; cursor:pointer;
   }
-  .resv-list{display:flex; flex-direction:column; gap:8px;}
-  .resv-empty{font-size:0.85rem; color:var(--ink-soft); font-style:italic;}
+  .resv-add-btn:active{opacity:0.75;}
+  .resv-list{display:flex; flex-direction:column; background:var(--paper); border-radius:var(--radius-lg); overflow:hidden;}
+  .resv-empty{font-size:15px; color:var(--ink-soft); padding:14px 15px;}
   .resv-item{
-    display:flex; align-items:center; gap:10px; background:var(--paper); border:1px solid var(--line);
-    border-radius:10px; padding:11px 12px; box-shadow:var(--shadow);
+    display:flex; align-items:center; gap:12px; padding:12px 15px; border-top:0.5px solid var(--line);
   }
+  .resv-item:first-child{border-top:none;}
   .resv-check{
-    flex:none; width:22px; height:22px; border-radius:50%; border:2px solid var(--teal);
+    flex:none; width:26px; height:26px; border-radius:50%; border:1.5px solid var(--ink-faint);
     background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;
   }
-  .resv-check svg{width:13px; height:13px; opacity:0; stroke:#fff;}
-  .resv-item.done .resv-check{background:var(--teal);}
+  .resv-check svg{width:14px; height:14px; opacity:0; stroke:#fff;}
+  .resv-item.done .resv-check{background:var(--teal); border-color:var(--teal);}
   .resv-item.done .resv-check svg{opacity:1;}
-  .resv-title{flex:1; font-size:0.9rem; color:var(--ink); word-break:break-word;}
-  .resv-item.done .resv-title{color:var(--ink-soft); text-decoration:line-through;}
+  .resv-title{flex:1; font-size:16px; color:var(--ink); word-break:break-word;}
+  .resv-item.done .resv-title{color:var(--ink-faint);}
   .resv-remove{
-    flex:none; border:none; background:none; color:var(--rose-deep); font-size:1.2rem; line-height:1;
-    cursor:pointer; padding:0 2px;
+    flex:none; border:none; background:none; color:var(--rose); font-size:22px; line-height:1; cursor:pointer;
+    width:32px; height:32px; display:flex; align-items:center; justify-content:center;
   }
 
-  .section-lede{font-size:0.87rem; color:var(--ink-soft); margin-bottom:16px;}
-
+  /* TAB BAR — iOS translucent */
   .tabbar{
-    display:flex; border-top:1px solid var(--line); background:var(--paper);
-    padding:8px 6px calc(8px + var(--safe-b));
+    display:flex;
+    background:rgba(248,248,243,0.86);
+    -webkit-backdrop-filter:saturate(180%) blur(20px);
+    backdrop-filter:saturate(180%) blur(20px);
+    border-top:0.5px solid var(--line);
+    padding:6px 4px calc(6px + var(--safe-b));
   }
   .tab{
-    flex:1; background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:4px;
-    padding:6px 2px; color:var(--ink-soft); cursor:pointer; border-radius:10px;
+    flex:1; background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:3px;
+    padding:5px 2px; color:var(--ink-faint); cursor:pointer; min-height:var(--tap);
   }
-  .tab svg{width:21px; height:21px;}
-  .tab span{font-family:'JetBrains Mono', monospace; font-size:0.62rem; letter-spacing:0.03em;}
-  .tab.active{color:var(--rose-deep);}
-  .tab.active svg{stroke:var(--rose-deep);}
+  .tab svg{width:25px; height:25px; stroke-width:1.7;}
+  .tab span{font-size:10px; font-weight:500; letter-spacing:0.005em;}
+  .tab.active{color:var(--rose);}
+  .tab.active svg{stroke:var(--rose);}
 </style>
 </head>
 <body>
@@ -1041,25 +1102,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
         <article class="day-panel active" data-day="0">
           <div class="day-title-row"><h2>Chegada</h2><span class="day-base-pill">Base 1 · Cortina</span></div>
-          <div class="block pm">
-            <span class="tag">Viagem</span>
-            <h4>Salzburg → Cortina d'Ampezzo</h4>
-            <p>Via Lienz (Áustria), ~3h de condução direta. Check-in e instalação — sem atividades marcadas.</p>
-          </div>
+          <div class="stops-list" data-day="0"></div>
+          <button class="stop-add-btn" data-day="0">+ Adicionar localização</button>
           <div class="day-extra">
             <div class="extra-block notes-block">
               <div class="extra-label">Notas pessoais</div>
               <textarea class="notes-input" data-day="0" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
-            </div>
-            <div class="extra-block locations-block">
-              <div class="extra-label">As tuas localizações</div>
-              <div class="loc-list" data-day="0"></div>
-              <div class="loc-search-row">
-                <input type="text" class="loc-search-input" data-day="0" placeholder="Pesquisar local ou morada…">
-                <button class="loc-search-btn" data-day="0">Procurar</button>
-              </div>
-              <div class="loc-results" data-day="0"></div>
-              <button class="add-loc-btn" data-day="0" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
             </div>
             <div class="extra-block reservations-block">
               <div class="extra-label">Reservas a fazer</div>
@@ -1074,32 +1122,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
         <article class="day-panel" data-day="1">
           <div class="day-title-row"><h2>Cadini + Braies</h2><span class="day-base-pill">Cortina</span></div>
-          <div class="block am">
-            <span class="tag">Manhã cedo</span>
-            <h4>Cadini di Misurina</h4>
-            <p>Caminhada até ao miradouro icónico, ~3h ida e volta.</p>
-            <div class="note">⚠ Parque gratuito e pequeno — chegar por volta das 7h.</div>
-          </div>
-          <div class="block pm">
-            <span class="tag">Tarde</span>
-            <h4>Lago di Braies</h4>
-            <p>Volta ao lago a pé, percurso fácil e plano, ~2h com calma.</p>
-            <div class="note">⚠ Reservar parque ou chegar depois das 16h (jul–set).</div>
-          </div>
+          <div class="stops-list" data-day="1"></div>
+          <button class="stop-add-btn" data-day="1">+ Adicionar localização</button>
           <div class="day-extra">
             <div class="extra-block notes-block">
               <div class="extra-label">Notas pessoais</div>
               <textarea class="notes-input" data-day="1" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
-            </div>
-            <div class="extra-block locations-block">
-              <div class="extra-label">As tuas localizações</div>
-              <div class="loc-list" data-day="1"></div>
-              <div class="loc-search-row">
-                <input type="text" class="loc-search-input" data-day="1" placeholder="Pesquisar local ou morada…">
-                <button class="loc-search-btn" data-day="1">Procurar</button>
-              </div>
-              <div class="loc-results" data-day="1"></div>
-              <button class="add-loc-btn" data-day="1" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
             </div>
             <div class="extra-block reservations-block">
               <div class="extra-label">Reservas a fazer</div>
@@ -1114,31 +1142,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
         <article class="day-panel" data-day="2">
           <div class="day-title-row"><h2>Tre Cime + Giau</h2><span class="day-base-pill">Cortina</span></div>
-          <div class="block am">
-            <span class="tag">Manhã</span>
-            <h4>Tre Cime di Lavaredo</h4>
-            <p>Volta clássica pelo Rifugio Auronzo, ~3–4h, ~10km.</p>
-            <div class="note">⚠ Reserva obrigatória em pass.auronzo.info (~€40/12h).</div>
-          </div>
-          <div class="block pm">
-            <span class="tag">Tarde</span>
-            <h4>Passo Giau</h4>
-            <p>Vista panorâmica de 360°, sem esforço. Excelente para o entardecer.</p>
-          </div>
+          <div class="stops-list" data-day="2"></div>
+          <button class="stop-add-btn" data-day="2">+ Adicionar localização</button>
           <div class="day-extra">
             <div class="extra-block notes-block">
               <div class="extra-label">Notas pessoais</div>
               <textarea class="notes-input" data-day="2" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
-            </div>
-            <div class="extra-block locations-block">
-              <div class="extra-label">As tuas localizações</div>
-              <div class="loc-list" data-day="2"></div>
-              <div class="loc-search-row">
-                <input type="text" class="loc-search-input" data-day="2" placeholder="Pesquisar local ou morada…">
-                <button class="loc-search-btn" data-day="2">Procurar</button>
-              </div>
-              <div class="loc-results" data-day="2"></div>
-              <button class="add-loc-btn" data-day="2" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
             </div>
             <div class="extra-block reservations-block">
               <div class="extra-label">Reservas a fazer</div>
@@ -1153,31 +1162,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
         <article class="day-panel" data-day="3">
           <div class="day-title-row"><h2>Sorapis + mudança</h2><span class="day-base-pill">Cortina → Ortisei</span></div>
-          <div class="block am">
-            <span class="tag">Manhã</span>
-            <h4>Lago di Sorapis</h4>
-            <p>O trilho mais exigente — secções de via ferrata, ~5–6h, ~450m desnível.</p>
-            <div class="note">⚠ Botas de montanha; sair o mais cedo possível.</div>
-          </div>
-          <div class="block pm">
-            <span class="tag">Tarde</span>
-            <h4>Passo Gardena → Ortisei</h4>
-            <p>Condução panorâmica via Corvara. Check-in na Base 2 ao final da tarde.</p>
-          </div>
+          <div class="stops-list" data-day="3"></div>
+          <button class="stop-add-btn" data-day="3">+ Adicionar localização</button>
           <div class="day-extra">
             <div class="extra-block notes-block">
               <div class="extra-label">Notas pessoais</div>
               <textarea class="notes-input" data-day="3" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
-            </div>
-            <div class="extra-block locations-block">
-              <div class="extra-label">As tuas localizações</div>
-              <div class="loc-list" data-day="3"></div>
-              <div class="loc-search-row">
-                <input type="text" class="loc-search-input" data-day="3" placeholder="Pesquisar local ou morada…">
-                <button class="loc-search-btn" data-day="3">Procurar</button>
-              </div>
-              <div class="loc-results" data-day="3"></div>
-              <button class="add-loc-btn" data-day="3" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
             </div>
             <div class="extra-block reservations-block">
               <div class="extra-label">Reservas a fazer</div>
@@ -1192,30 +1182,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
         <article class="day-panel" data-day="4">
           <div class="day-title-row"><h2>Seceda + Funes</h2><span class="day-base-pill">Ortisei</span></div>
-          <div class="block am">
-            <span class="tag">Manhã</span>
-            <h4>Seceda</h4>
-            <p>Teleférico desde Ortisei, caminhada pela cumeada. Ir cedo evita filas.</p>
-          </div>
-          <div class="block pm">
-            <span class="tag">Tarde</span>
-            <h4>St. Magdalena (Val di Funes)</h4>
-            <p>Caminhada fácil (~1–2h) até à vista clássica com as Odle ao fundo.</p>
-          </div>
+          <div class="stops-list" data-day="4"></div>
+          <button class="stop-add-btn" data-day="4">+ Adicionar localização</button>
           <div class="day-extra">
             <div class="extra-block notes-block">
               <div class="extra-label">Notas pessoais</div>
               <textarea class="notes-input" data-day="4" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
-            </div>
-            <div class="extra-block locations-block">
-              <div class="extra-label">As tuas localizações</div>
-              <div class="loc-list" data-day="4"></div>
-              <div class="loc-search-row">
-                <input type="text" class="loc-search-input" data-day="4" placeholder="Pesquisar local ou morada…">
-                <button class="loc-search-btn" data-day="4">Procurar</button>
-              </div>
-              <div class="loc-results" data-day="4"></div>
-              <button class="add-loc-btn" data-day="4" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
             </div>
             <div class="extra-block reservations-block">
               <div class="extra-label">Reservas a fazer</div>
@@ -1230,30 +1202,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
         <article class="day-panel" data-day="5">
           <div class="day-title-row"><h2>Siusi + Carezza</h2><span class="day-base-pill">Ortisei</span></div>
-          <div class="block am">
-            <span class="tag">Manhã</span>
-            <h4>Alpe di Siusi</h4>
-            <p>Maior planalto alpino da Europa — caminhada leve entre prados.</p>
-          </div>
-          <div class="block pm">
-            <span class="tag">Tarde</span>
-            <h4>Lago di Carezza</h4>
-            <p>Volta ao lago em ~20 min. A paragem mais tranquila do roteiro.</p>
-          </div>
+          <div class="stops-list" data-day="5"></div>
+          <button class="stop-add-btn" data-day="5">+ Adicionar localização</button>
           <div class="day-extra">
             <div class="extra-block notes-block">
               <div class="extra-label">Notas pessoais</div>
               <textarea class="notes-input" data-day="5" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
-            </div>
-            <div class="extra-block locations-block">
-              <div class="extra-label">As tuas localizações</div>
-              <div class="loc-list" data-day="5"></div>
-              <div class="loc-search-row">
-                <input type="text" class="loc-search-input" data-day="5" placeholder="Pesquisar local ou morada…">
-                <button class="loc-search-btn" data-day="5">Procurar</button>
-              </div>
-              <div class="loc-results" data-day="5"></div>
-              <button class="add-loc-btn" data-day="5" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
             </div>
             <div class="extra-block reservations-block">
               <div class="extra-label">Reservas a fazer</div>
@@ -1268,25 +1222,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
         <article class="day-panel" data-day="6">
           <div class="day-title-row"><h2>Regresso</h2><span class="day-base-pill">Ortisei → Salzburg</span></div>
-          <div class="block pm">
-            <span class="tag">Viagem</span>
-            <h4>Ortisei → Salzburg</h4>
-            <p>Via Bolzano e Passo do Brennero, ~4h de condução.</p>
-          </div>
+          <div class="stops-list" data-day="6"></div>
+          <button class="stop-add-btn" data-day="6">+ Adicionar localização</button>
           <div class="day-extra">
             <div class="extra-block notes-block">
               <div class="extra-label">Notas pessoais</div>
               <textarea class="notes-input" data-day="6" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
-            </div>
-            <div class="extra-block locations-block">
-              <div class="extra-label">As tuas localizações</div>
-              <div class="loc-list" data-day="6"></div>
-              <div class="loc-search-row">
-                <input type="text" class="loc-search-input" data-day="6" placeholder="Pesquisar local ou morada…">
-                <button class="loc-search-btn" data-day="6">Procurar</button>
-              </div>
-              <div class="loc-results" data-day="6"></div>
-              <button class="add-loc-btn" data-day="6" data-mode="geo" style="margin-top:6px;">🧭 Usar a minha localização atual</button>
             </div>
             <div class="extra-block reservations-block">
               <div class="extra-label">Reservas a fazer</div>
@@ -1370,12 +1311,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <!-- MAPA -->
     <section class="screen" id="screen-mapa">
       <p class="section-lede">Todas as paragens agrupadas por dia — sem voltas para trás.</p>
-      <div id="map" role="img" aria-label="Mapa do roteiro"><div id="mapFallback" style="padding:16px; font-family:JetBrains Mono, monospace; font-size:0.78rem; color:#5C685D;">A carregar mapa…</div></div>
+      <div id="map" role="img" aria-label="Mapa do roteiro"><div id="mapFallback" style="padding:16px; font-size:15px; color:#6B776C;">A carregar mapa…</div></div>
       <div class="legend">
         <span><span class="dot ink"></span>Viagem Salzburg / bases</span>
-        <span><span class="dot rose"></span>Zona este — Cortina (7–8 set)</span>
-        <span><span class="dot teal"></span>Zona oeste — Ortisei (9–11 set)</span>
-        <span><span class="dot amber"></span>As tuas localizações</span>
+        <span><span class="dot rose"></span>Zona este — Cortina (7–9 set)</span>
+        <span><span class="dot teal"></span>Zona oeste — Ortisei (10–11 set)</span>
+        <span><span class="dot amber"></span>Localizações adicionadas</span>
       </div>
     </section>
 
@@ -1430,7 +1371,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       <div class="cost-add-row">
         <input type="text" class="cost-desc-input" id="costDescInput" placeholder="Descrição (ex: jantar, gasolina)">
-        <input type="number" class="cost-amount-input" id="costAmountInput" placeholder="€" step="0.01" min="0" inputmode="decimal">
+        <input type="text" class="cost-amount-input" id="costAmountInput" placeholder="€ (ex: 12,50)" inputmode="decimal">
       </div>
       <button class="cost-add-btn" id="costAddBtn">Adicionar custo</button>
 
@@ -1442,23 +1383,23 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <nav class="tabbar">
     <button class="tab active" data-target="screen-roteiro">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20 L9 8 L13 15 L16 10 L21 20 Z"/></svg>
-      <span>ROTEIRO</span>
+      <span>Roteiro</span>
     </button>
     <button class="tab" data-target="screen-alojamento">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"/><path d="M3 18h18"/><path d="M6 10V7a2 2 0 0 1 2-2h3v5"/></svg>
-      <span>ALOJAMENTO</span>
+      <span>Alojamento</span>
     </button>
     <button class="tab" data-target="screen-mapa">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
-      <span>MAPA</span>
+      <span>Mapa</span>
     </button>
     <button class="tab" data-target="screen-custos">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5c0-1 1-1.8 2.5-1.8s2.5.7 2.5 1.7c0 2.3-5 1.1-5 3.4 0 1 1 1.7 2.5 1.7s2.5-.8 2.5-1.8"/></svg>
-      <span>CUSTOS</span>
+      <span>Custos</span>
     </button>
     <button class="tab" data-target="screen-notas">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14v16l-3-2-2 2-2-2-2 2-2-2-3 2Z"/><path d="M8 9h8M8 13h5"/></svg>
-      <span>NOTAS</span>
+      <span>Notas</span>
     </button>
   </nav>
 
@@ -1478,6 +1419,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     'screen-roteiro': 'Roteiro · 7 dias',
     'screen-alojamento': 'Alojamento · 2 bases',
     'screen-mapa': 'Mapa · trajeto completo',
+    'screen-custos': 'Custos · partilhados',
     'screen-notas': 'Notas práticas'
   };
 
@@ -1496,7 +1438,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         catch (err) {
           console.error('Falha ao iniciar o mapa:', err);
           var mf = document.getElementById('map');
-          if (mf) mf.innerHTML = '<div style="padding:16px; font-family:JetBrains Mono, monospace; font-size:0.78rem; color:#8F3C2C;">Não foi possível carregar o mapa. Verifica a ligação à internet e tenta reabrir a página.</div>';
+          if (mf) mf.innerHTML = '<div style="padding:16px; font-size:15px; color:#8F3C2C;">Não foi possível carregar o mapa. Verifica a ligação à internet e tenta reabrir a página.</div>';
         }
       }
       setTimeout(function(){ if (window.__map) window.__map.invalidateSize(); }, 60);
@@ -1537,7 +1479,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbXpodnJqYXl6bGZja3ZqdXVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3NTExODksImV4cCI6MjEwMjMyNzE4OX0.1NJ_XMoiGW7pdE0dvKLMyciVVoL9zItTpP-vYFJKEBU';
 
   var DAY_LABELS = ['Dom 6 set', 'Seg 7 set', 'Ter 8 set', 'Qua 9 set', 'Qui 10 set', 'Sex 11 set', 'Sáb 12 set'];
-  var SHARED = { notes: {}, locations: [], reservations: [], bookingLinks: {}, costs: [] };
+  var SHARED = { notes: {}, stops: [], reservations: [], bookingLinks: {}, costs: [] };
   var sharedReady = false;
 
   function escapeHtml(s){
@@ -1555,7 +1497,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   function normalizeShared(data){
     var d = (data && typeof data === 'object') ? data : {};
     if (!d.notes || typeof d.notes !== 'object') d.notes = {};
-    if (!Array.isArray(d.locations)) d.locations = [];
+    if (!Array.isArray(d.stops)) d.stops = [];
     if (!Array.isArray(d.reservations)) d.reservations = [];
     if (!d.bookingLinks || typeof d.bookingLinks !== 'object') d.bookingLinks = {};
     if (!Array.isArray(d.costs)) d.costs = [];
@@ -1574,8 +1516,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
     return Promise.all([
       fetch(SUPABASE_URL + '/rest/v1/dolomiti_notes?select=day,text', { headers: sbHeaders() })
         .then(function(r){ if (!r.ok) throw new Error('notes fetch failed'); return r.json(); }),
-      fetch(SUPABASE_URL + '/rest/v1/dolomiti_locations?select=id,day,name,lat,lng&order=created_at.asc', { headers: sbHeaders() })
-        .then(function(r){ if (!r.ok) throw new Error('locations fetch failed'); return r.json(); }),
+      fetch(SUPABASE_URL + '/rest/v1/dolomiti_stops?select=id,day,name,period,description,warning,is_custom,lat,lng&order=created_at.asc', { headers: sbHeaders() })
+        .then(function(r){ if (!r.ok) throw new Error('stops fetch failed'); return r.json(); }),
       fetch(SUPABASE_URL + '/rest/v1/dolomiti_reservations?select=id,day,title,done&order=created_at.asc', { headers: sbHeaders() })
         .then(function(r){ if (!r.ok) throw new Error('reservations fetch failed'); return r.json(); }),
       fetch(SUPABASE_URL + '/rest/v1/dolomiti_booking_links?select=base_id,url', { headers: sbHeaders() })
@@ -1585,8 +1527,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
     ]).then(function(results){
       var notes = {};
       results[0].forEach(function(row){ notes[row.day] = row.text; });
-      var locations = results[1].map(function(l){
-        return { id: l.id, day: String(l.day), name: l.name, lat: l.lat, lng: l.lng };
+      var stops = results[1].map(function(s){
+        return { id: s.id, day: String(s.day), name: s.name, period: s.period, description: s.description || '', warning: s.warning || '', is_custom: !!s.is_custom, lat: s.lat, lng: s.lng };
       });
       var reservations = results[2].map(function(r){
         return { id: r.id, day: String(r.day), title: r.title, done: !!r.done };
@@ -1596,12 +1538,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
       var costs = results[4].map(function(c){
         return { id: c.id, description: c.description, amount: Number(c.amount), paid_by: c.paid_by };
       });
-      return { notes: notes, locations: locations, reservations: reservations, bookingLinks: bookingLinks, costs: costs };
+      return { notes: notes, stops: stops, reservations: reservations, bookingLinks: bookingLinks, costs: costs };
     });
   }
   function renderAllFromShared(){
     for (var d = 0; d <= 6; d++){
-      renderDayLocations(d);
+      renderDayStops(d);
       renderDayReservations(d);
       var ta = document.querySelector('.notes-input[data-day="'+d+'"]');
       if (ta) ta.value = SHARED.notes[d] || '';
@@ -1611,13 +1553,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     renderBookingLink('car');
     renderCostList();
     renderCostSummary();
-    if (window.__map){
-      if (window.__customMarkers){
-        Object.keys(window.__customMarkers).forEach(function(id){ window.__map.removeLayer(window.__customMarkers[id]); });
-      }
-      window.__customMarkers = {};
-      SHARED.locations.forEach(function(loc){ addCustomMarkerToMap(loc); });
-    }
+    if (window.__map) refreshMapStops();
   }
   function setShareBarBase(msg){
     console.log('[Dolomiti]', msg);
@@ -1661,53 +1597,174 @@ svg.leaflet-image-layer.leaflet-interactive path {
     }
   }, true);
 
-  function renderDayLocations(day){
-    var container = document.querySelector('.loc-list[data-day="'+day+'"]');
-    if (!container) return;
-    var items = SHARED.locations.filter(function(l){ return String(l.day) === String(day); });
-    if (!items.length){
-      container.innerHTML = '<div class="loc-empty">Ainda sem localizações adicionadas.</div>';
-      return;
-    }
-    container.innerHTML = items.map(function(l){
-      var googleUrl = 'https://www.google.com/search?q=' + encodeURIComponent(l.name);
-      return '<div class="block custom">'
-        + '<div class="block-top">'
-        +   '<span class="tag">A tua localização</span>'
-        +   '<button class="loc-remove" data-id="'+l.id+'" aria-label="Remover">×</button>'
-        + '</div>'
-        + '<h4>'+escapeHtml(l.name)+'</h4>'
-        + '<p>Adicionada por ti · aparece também no mapa</p>'
-        + '<a class="loc-google-link" href="'+googleUrl+'" target="_blank" rel="noopener">🔍 Pesquisar no Google ↗</a>'
-        + '</div>';
+  var PERIOD_LABELS = { am: 'Manhã', pm: 'Tarde', travel: 'Viagem' };
+  function buildStopCardHtml(s){
+    var googleUrl = 'https://www.google.com/search?q=' + encodeURIComponent(s.name);
+    var dayOptions = DAY_LABELS.map(function(lbl, idx){
+      return '<option value="'+idx+'"'+(String(idx)===String(s.day)?' selected':'')+'>'+lbl+'</option>';
     }).join('');
+    var periodOptions = ['am','pm','travel'].map(function(p){
+      return '<option value="'+p+'"'+(p===s.period?' selected':'')+'>'+PERIOD_LABELS[p]+'</option>';
+    }).join('');
+    return '<div class="block stop-card '+s.period+(s.is_custom?' custom':'')+'" data-id="'+s.id+'">'
+      + '<div class="stop-top">'
+      +   '<select class="stop-select stop-period-select '+s.period+'" data-id="'+s.id+'">'+periodOptions+'</select>'
+      +   (s.is_custom ? '<span class="stop-custom-badge">Teu</span>' : '')
+      +   '<span class="stop-top-spacer"></span>'
+      +   '<select class="stop-select stop-day-select" data-id="'+s.id+'">'+dayOptions+'</select>'
+      +   '<button class="stop-remove" data-id="'+s.id+'" aria-label="Remover">×</button>'
+      + '</div>'
+      + '<div class="stop-name">'+escapeHtml(s.name)+'</div>'
+      + '<textarea class="stop-desc-input" data-id="'+s.id+'" placeholder="Descrição...">'+escapeHtml(s.description)+'</textarea>'
+      + '<input type="text" class="stop-warning-input" data-id="'+s.id+'" placeholder="Aviso (opcional)" value="'+escapeHtml(s.warning)+'">'
+      + '<a class="loc-google-link" href="'+googleUrl+'" target="_blank" rel="noopener">🔍 Pesquisar no Google</a>'
+      + (s.is_custom ? '<button class="stop-promote" data-id="'+s.id+'">↑ Tornar localização principal</button>' : '')
+      + '</div>';
   }
-  function addLocation(day, name, lat, lng){
-    var loc = { id: Date.now()+'-'+Math.floor(Math.random()*1000), day: String(day), name: name, lat: lat, lng: lng };
-    SHARED.locations.push(loc);
+  function renderDayStops(day){
+    var container = document.querySelector('.stops-list[data-day="'+day+'"]');
+    if (!container) return;
+    var order = { travel: 1, am: 2, pm: 3 };
+    function byPeriod(a, b){ return (order[a.period]||9) - (order[b.period]||9); }
+    var items = SHARED.stops.filter(function(s){ return String(s.day) === String(day); });
+    var planned = items.filter(function(s){ return !s.is_custom; }).slice().sort(byPeriod);
+    var added   = items.filter(function(s){ return s.is_custom; }).slice().sort(byPeriod);
+
+    var html = '<div class="stops-group-label">Plano do dia</div>';
+    html += planned.length
+      ? planned.map(buildStopCardHtml).join('')
+      : '<div class="stops-group-empty">Sem paragens planeadas para este dia.</div>';
+
+    html += '<div class="stops-group-label second">Adicionadas por vocês</div>';
+    html += added.length
+      ? added.map(buildStopCardHtml).join('')
+      : '<div class="stops-group-empty">Nada adicionado ainda. Usa o botão abaixo.</div>';
+
+    container.innerHTML = html;
+  }
+  function geocodeName(query){
+    var viewbox = '9.5,48.2,14.5,45.5'; // loose box covering Salzburg + the Dolomites, biases results
+    var url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1'
+      + '&viewbox=' + viewbox + '&bounded=0&q=' + encodeURIComponent(query);
+    return fetch(url, { headers: { 'Accept-Language': 'pt' } }).then(function(r){
+      if (!r.ok) throw new Error('geocode failed');
+      return r.json();
+    }).then(function(data){
+      if (!data || !data.length) return null;
+      return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+    }).catch(function(){ return null; });
+  }
+  function addStop(day){
+    var name = window.prompt('Nome do local:');
+    if (!name || !name.trim()) return;
+    name = name.trim();
+    var stop = { id: Date.now()+'-'+Math.floor(Math.random()*1000), day: String(day), name: name, period: 'pm', description: '', warning: '', is_custom: true, lat: null, lng: null };
+    SHARED.stops.push(stop);
     saveLocalCache();
-    renderDayLocations(day);
-    if (window.__map) addCustomMarkerToMap(loc);
-    fetch(SUPABASE_URL + '/rest/v1/dolomiti_locations', {
-      method: 'POST',
+    renderDayStops(day);
+    geocodeName(name).then(function(coords){
+      if (coords){ stop.lat = coords.lat; stop.lng = coords.lng; saveLocalCache(); refreshMapStops(); }
+      fetch(SUPABASE_URL + '/rest/v1/dolomiti_stops', {
+        method: 'POST',
+        headers: sbHeaders({ 'Prefer': 'return=minimal' }),
+        body: JSON.stringify([{ id: stop.id, day: Number(day), name: name, period: 'pm', description: '', warning: '', is_custom: true, lat: coords ? coords.lat : null, lng: coords ? coords.lng : null }])
+      }).catch(function(){});
+    });
+  }
+  function findStop(id){
+    return SHARED.stops.filter(function(s){ return s.id === id; })[0];
+  }
+  function patchStop(id, fields){
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_stops?id=eq.' + encodeURIComponent(id), {
+      method: 'PATCH',
       headers: sbHeaders({ 'Prefer': 'return=minimal' }),
-      body: JSON.stringify([{ id: loc.id, day: Number(day), name: name, lat: lat, lng: lng }])
-    }).catch(function(){ /* offline — local cache already saved */ });
-    return loc;
+      body: JSON.stringify(fields)
+    }).catch(function(){});
   }
-  function removeLocation(id){
-    SHARED.locations = SHARED.locations.filter(function(l){ return l.id !== id; });
+  function updateStopText(id, field, value){
+    var s = findStop(id);
+    if (!s) return;
+    s[field] = value;
     saveLocalCache();
-    if (window.__customMarkers && window.__customMarkers[id]){
-      window.__map.removeLayer(window.__customMarkers[id]);
-      delete window.__customMarkers[id];
-    }
-    for (var d = 0; d <= 6; d++){ renderDayLocations(d); }
-    fetch(SUPABASE_URL + '/rest/v1/dolomiti_locations?id=eq.' + encodeURIComponent(id), {
+    var payload = {};
+    payload[field] = value;
+    patchStop(id, payload);
+  }
+  function updateStopPeriod(id, period){
+    var s = findStop(id);
+    if (!s) return;
+    s.period = period;
+    saveLocalCache();
+    renderDayStops(s.day);
+    refreshMapStops();
+    patchStop(id, { period: period });
+  }
+  function moveStopToDay(id, newDay){
+    var s = findStop(id);
+    if (!s) return;
+    var oldDay = s.day;
+    s.day = String(newDay);
+    saveLocalCache();
+    renderDayStops(oldDay);
+    renderDayStops(newDay);
+    refreshMapStops();
+    patchStop(id, { day: Number(newDay) });
+  }
+  function promoteStop(id){
+    var s = findStop(id);
+    if (!s) return;
+    s.is_custom = false;
+    saveLocalCache();
+    renderDayStops(s.day);
+    refreshMapStops();
+    patchStop(id, { is_custom: false });
+  }
+  function removeStop(id){
+    if (!window.confirm('Remover esta localização do roteiro? Esta ação não pode ser desfeita.')) return;
+    var s = findStop(id);
+    var day = s ? s.day : null;
+    SHARED.stops = SHARED.stops.filter(function(x){ return x.id !== id; });
+    saveLocalCache();
+    if (day !== null) renderDayStops(day);
+    refreshMapStops();
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_stops?id=eq.' + encodeURIComponent(id), {
       method: 'DELETE',
       headers: sbHeaders({ 'Prefer': 'return=minimal' })
     }).catch(function(){});
   }
+  document.addEventListener('click', function(e){
+    var addBtn = e.target.closest ? e.target.closest('.stop-add-btn') : null;
+    if (addBtn){ addStop(addBtn.dataset.day); return; }
+    var promoteBtn = e.target.closest ? e.target.closest('.stop-promote') : null;
+    if (promoteBtn){ promoteStop(promoteBtn.dataset.id); return; }
+    var rmBtn = e.target.closest ? e.target.closest('.stop-remove') : null;
+    if (rmBtn){ removeStop(rmBtn.dataset.id); return; }
+  });
+  document.addEventListener('change', function(e){
+    if (e.target.classList.contains('stop-period-select')){
+      updateStopPeriod(e.target.dataset.id, e.target.value);
+    }
+    if (e.target.classList.contains('stop-day-select')){
+      moveStopToDay(e.target.dataset.id, e.target.value);
+    }
+  });
+  var stopTextTimers = {};
+  document.addEventListener('input', function(e){
+    if (e.target.classList.contains('stop-desc-input') || e.target.classList.contains('stop-warning-input')){
+      var id = e.target.dataset.id;
+      var field = e.target.classList.contains('stop-desc-input') ? 'description' : 'warning';
+      var key = id + ':' + field;
+      clearTimeout(stopTextTimers[key]);
+      var val = e.target.value;
+      stopTextTimers[key] = setTimeout(function(){ updateStopText(id, field, val); }, 500);
+    }
+  });
+  document.addEventListener('blur', function(e){
+    if (e.target.classList && (e.target.classList.contains('stop-desc-input') || e.target.classList.contains('stop-warning-input'))){
+      var field = e.target.classList.contains('stop-desc-input') ? 'description' : 'warning';
+      updateStopText(e.target.dataset.id, field, e.target.value);
+    }
+  }, true);
 
   function renderDayReservations(day){
     var container = document.querySelector('.resv-list[data-day="'+day+'"]');
@@ -1816,6 +1873,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
   });
 
   /* ---------- Costs (Custos) — split & settle-up between whoever adds expenses ---------- */
+  function parseAmount(raw){
+    if (typeof raw !== 'string') return NaN;
+    var cleaned = raw.trim().replace(/\s/g, '').replace(',', '.');
+    return parseFloat(cleaned);
+  }
   function getMyName(){
     try { return localStorage.getItem('dolomiti_my_name') || ''; } catch (e) { return ''; }
   }
@@ -1858,6 +1920,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         +   '<span class="cost-item-who">'+escapeHtml(c.paid_by)+'</span>'
         + '</div>'
         + '<span class="cost-item-amount">€'+c.amount.toFixed(2)+'</span>'
+        + '<button class="cost-edit" data-id="'+c.id+'" aria-label="Editar">✏️</button>'
         + '<button class="cost-remove" data-id="'+c.id+'" aria-label="Remover">×</button>'
         + '</div>';
     }).join('');
@@ -1914,7 +1977,30 @@ svg.leaflet-image-layer.leaflet-interactive path {
       body: JSON.stringify([{ id: cost.id, description: description, amount: amount, paid_by: paidBy }])
     }).catch(function(){});
   }
+  function editCost(id){
+    var cost = SHARED.costs.filter(function(c){ return c.id === id; })[0];
+    if (!cost) return;
+    var newDesc = window.prompt('Descrição:', cost.description);
+    if (newDesc === null) return;
+    newDesc = newDesc.trim();
+    if (!newDesc) return;
+    var newAmountRaw = window.prompt('Valor (€):', String(cost.amount.toFixed(2)).replace('.', ','));
+    if (newAmountRaw === null) return;
+    var newAmount = parseAmount(newAmountRaw);
+    if (isNaN(newAmount) || newAmount <= 0) return;
+    cost.description = newDesc;
+    cost.amount = newAmount;
+    saveLocalCache();
+    renderCostList();
+    renderCostSummary();
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_costs?id=eq.' + encodeURIComponent(id), {
+      method: 'PATCH',
+      headers: sbHeaders({ 'Prefer': 'return=minimal' }),
+      body: JSON.stringify({ description: newDesc, amount: newAmount })
+    }).catch(function(){});
+  }
   function removeCost(id){
+    if (!window.confirm('Remover este custo? Esta ação não pode ser desfeita.')) return;
     SHARED.costs = SHARED.costs.filter(function(c){ return c.id !== id; });
     saveLocalCache();
     renderCostList();
@@ -1930,7 +2016,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       var descInput = document.getElementById('costDescInput');
       var amountInput = document.getElementById('costAmountInput');
       var desc = descInput.value.trim();
-      var amount = parseFloat(amountInput.value);
+      var amount = parseAmount(amountInput.value);
       if (!desc || isNaN(amount) || amount <= 0) return;
       var name = ensureMyName();
       if (!name) return;
@@ -1940,140 +2026,80 @@ svg.leaflet-image-layer.leaflet-interactive path {
     });
   }
   document.addEventListener('click', function(e){
+    var editBtn = e.target.closest ? e.target.closest('.cost-edit') : null;
+    if (editBtn){ editCost(editBtn.dataset.id); return; }
     var rm = e.target.closest ? e.target.closest('.cost-remove') : null;
     if (rm) removeCost(rm.dataset.id);
   });
 
   initSharedStorage();
 
-  document.addEventListener('click', function(e){
-    if (e.target.classList.contains('loc-remove')){
-      removeLocation(e.target.dataset.id);
-    }
-  });
-
-  /* ---------- Add-location entry points ---------- */
-  document.addEventListener('click', function(e){
-    var btn = e.target.closest ? e.target.closest('.add-loc-btn') : null;
-    if (!btn) return;
-    var day = btn.dataset.day;
-    var mode = btn.dataset.mode;
-
-    if (mode === 'geo'){
-      if (!navigator.geolocation){
-        alert('Este browser não suporta geolocalização. Tenta pesquisar o local pelo nome.');
-        return;
-      }
-      var original = btn.textContent;
-      btn.disabled = true;
-      btn.textContent = 'A localizar...';
-      navigator.geolocation.getCurrentPosition(function(pos){
-        btn.disabled = false;
-        btn.textContent = original;
-        var name = window.prompt('Nome para este local:', 'A minha localização');
-        if (name){ addLocation(day, name, pos.coords.latitude, pos.coords.longitude); }
-      }, function(){
-        btn.disabled = false;
-        btn.textContent = original;
-        alert('Não foi possível obter a localização. Tenta pesquisar o local pelo nome.');
-      }, { timeout: 8000 });
-    }
-  });
-
-  /* ---------- Search-based add (geocoding) ---------- */
-  // Uses OpenStreetMap's free Nominatim search — no API key needed.
-  // Works best when this page is hosted online (https). Opened as a local
-  // file, some browsers (notably Safari) block this network request; use
-  // "A minha localização atual" as a fallback in that case.
-  function geocodeSearch(query){
-    var viewbox = '9.5,48.2,14.5,45.5'; // loose box covering Salzburg + the Dolomites, used only to bias results
-    var url = 'https://nominatim.openstreetmap.org/search?format=json&limit=5&addressdetails=1'
-      + '&viewbox=' + viewbox + '&bounded=0&q=' + encodeURIComponent(query);
-    return fetch(url, { headers: { 'Accept-Language': 'pt' } }).then(function(r){
-      if (!r.ok) throw new Error('network');
-      return r.json();
-    });
-  }
-  function runLocationSearch(day, input, resultsBox){
-    var query = input.value.trim();
-    if (!query) return;
-    var searchBtn = document.querySelector('.loc-search-btn[data-day="'+day+'"]');
-    if (searchBtn){ searchBtn.disabled = true; }
-    resultsBox.innerHTML = '<div class="loc-status">A procurar…</div>';
-    geocodeSearch(query).then(function(data){
-      if (searchBtn){ searchBtn.disabled = false; }
-      if (!data || !data.length){
-        resultsBox.innerHTML = '<div class="loc-status error">Nada encontrado. Tenta um nome mais específico.</div>';
-        return;
-      }
-      resultsBox.innerHTML = '';
-      data.slice(0, 5).forEach(function(place){
-        var short = place.display_name.split(',').slice(0, 3).join(', ');
-        var btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'loc-result-item';
-        btn.innerHTML = '<span class="r-name">' + escapeHtml(place.name || short) + '</span>'
-          + '<span class="r-addr">' + escapeHtml(short) + '</span>';
-        btn.addEventListener('click', function(){
-          addLocation(day, place.name || short, parseFloat(place.lat), parseFloat(place.lon));
-          resultsBox.innerHTML = '<div class="loc-status">✓ Adicionado.</div>';
-          input.value = '';
-          setTimeout(function(){ resultsBox.innerHTML = ''; }, 1400);
-        });
-        resultsBox.appendChild(btn);
-      });
-    }).catch(function(){
-      if (searchBtn){ searchBtn.disabled = false; }
-      resultsBox.innerHTML = '<div class="loc-status error">Não foi possível pesquisar agora. Verifica a ligação à internet (esta pesquisa também pode falhar se a página estiver aberta como ficheiro local em vez de publicada online) — em alternativa usa "A minha localização atual".</div>';
-    });
-  }
-  document.addEventListener('click', function(e){
-    var sbtn = e.target.closest ? e.target.closest('.loc-search-btn') : null;
-    if (!sbtn) return;
-    var day = sbtn.dataset.day;
-    var input = document.querySelector('.loc-search-input[data-day="'+day+'"]');
-    var resultsBox = document.querySelector('.loc-results[data-day="'+day+'"]');
-    if (input && resultsBox) runLocationSearch(day, input, resultsBox);
-  });
-  document.addEventListener('keydown', function(e){
-    if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('loc-search-input')){
-      e.preventDefault();
-      var day = e.target.dataset.day;
-      var resultsBox = document.querySelector('.loc-results[data-day="'+day+'"]');
-      if (resultsBox) runLocationSearch(day, e.target, resultsBox);
-    }
-  });
-
   /* ---------- Reset ---------- */
   document.getElementById('resetBtn').addEventListener('click', function(){
-    if (!confirm('Isto apaga todas as notas, localizações e reservas partilhadas — para ti E para quem tiver este link. Continuar?')) return;
-    SHARED = { notes: {}, locations: [], reservations: [] };
+    if (!confirm('Isto apaga todas as notas e reservas partilhadas — para ti E para quem tiver este link. (As localizações do roteiro não são afetadas.) Continuar?')) return;
+    SHARED.notes = {};
+    SHARED.reservations = [];
     saveLocalCache();
     fetch(SUPABASE_URL + '/rest/v1/dolomiti_notes?day=gte.0', { method: 'DELETE', headers: sbHeaders({ 'Prefer': 'return=minimal' }) }).catch(function(){});
-    fetch(SUPABASE_URL + '/rest/v1/dolomiti_locations?day=gte.0', { method: 'DELETE', headers: sbHeaders({ 'Prefer': 'return=minimal' }) }).catch(function(){});
     fetch(SUPABASE_URL + '/rest/v1/dolomiti_reservations?day=gte.0', { method: 'DELETE', headers: sbHeaders({ 'Prefer': 'return=minimal' }) }).catch(function(){});
     document.querySelectorAll('.notes-input').forEach(function(ta){ ta.value = ''; });
-    for (var d = 0; d <= 6; d++){ renderDayLocations(d); renderDayReservations(d); }
-    if (window.__map && window.__customMarkers){
-      Object.keys(window.__customMarkers).forEach(function(id){ window.__map.removeLayer(window.__customMarkers[id]); });
-      window.__customMarkers = {};
-    }
+    for (var d = 0; d <= 6; d++){ renderDayReservations(d); }
   });
 
   /* ---------- Map ---------- */
-  function customIcon(){
-    return L.divIcon({
-      className: '',
-      html: '<div style="width:14px;height:14px;border-radius:50%;background:#C99A2E;border:2px solid #F8F8F3;box-shadow:0 1px 3px rgba(0,0,0,.35);"></div>',
-      iconSize: [14,14], iconAnchor: [7,7]
-    });
+  var MAP_ROSE='#B8523E', MAP_TEAL='#2E6E6A', MAP_INK='#232C24', MAP_AMBER='#C99A2E';
+  var MAP_SALZBURG=[47.8014154,13.0448441], MAP_CORTINA=[46.5378431,12.1358821], MAP_ORTISEI=[46.5747589,11.6711082];
+  var EAST_DAYS = ['1','2','3'], WEST_DAYS = ['4','5'];
+  var STOP_ORDER = { travel: 1, am: 2, pm: 3 };
+
+  function mapDotIcon(color){
+    return L.divIcon({ className:'', html:'<div style="width:14px;height:14px;border-radius:50%;background:'+color+';border:2px solid #F8F8F3;box-shadow:0 1px 3px rgba(0,0,0,.35);"></div>', iconSize:[14,14], iconAnchor:[7,7] });
   }
-  function addCustomMarkerToMap(loc){
+
+  function refreshMapStops(){
     if (!window.__map) return;
-    var dayLabel = DAY_LABELS[Number(loc.day)] || ('Dia ' + loc.day);
-    var m = L.marker([loc.lat, loc.lng], { icon: customIcon() }).addTo(window.__map)
-      .bindPopup('<strong>'+escapeHtml(loc.name)+'</strong><br>'+dayLabel+' · adicionado por ti');
-    window.__customMarkers[loc.id] = m;
+    if (window.__stopLayers){
+      window.__stopLayers.forEach(function(l){ window.__map.removeLayer(l); });
+    }
+    window.__stopLayers = [];
+
+    var withCoords = SHARED.stops.filter(function(s){ return s.lat != null && s.lng != null; });
+    var mainStops = withCoords.filter(function(s){ return !s.is_custom; });
+    var customStops = withCoords.filter(function(s){ return s.is_custom; });
+
+    function addMarker(s, color){
+      var dayLabel = DAY_LABELS[Number(s.day)] || ('Dia ' + s.day);
+      var m = L.marker([s.lat, s.lng], { icon: mapDotIcon(color) }).addTo(window.__map)
+        .bindPopup('<strong>'+escapeHtml(s.name)+'</strong><br>'+dayLabel+' · '+(PERIOD_LABELS[s.period]||s.period));
+      window.__stopLayers.push(m);
+    }
+    mainStops.forEach(function(s){
+      var color = EAST_DAYS.indexOf(s.day) !== -1 ? MAP_ROSE : (WEST_DAYS.indexOf(s.day) !== -1 ? MAP_TEAL : MAP_INK);
+      addMarker(s, color);
+    });
+    customStops.forEach(function(s){ addMarker(s, MAP_AMBER); });
+
+    function buildZoneRoute(days, base){
+      var pts = [];
+      days.forEach(function(day){
+        var dayStops = mainStops.filter(function(s){ return s.day === day; })
+          .sort(function(a,b){ return (STOP_ORDER[a.period]||9) - (STOP_ORDER[b.period]||9); });
+        if (!dayStops.length) return;
+        pts.push(base);
+        dayStops.forEach(function(s){ pts.push([s.lat, s.lng]); });
+      });
+      return pts;
+    }
+    var eastRoute = buildZoneRoute(EAST_DAYS, MAP_CORTINA);
+    if (eastRoute.length){
+      eastRoute.push(MAP_ORTISEI);
+      window.__stopLayers.push(L.polyline(eastRoute, { color: MAP_ROSE, weight:2.5, opacity:.55, dashArray:'1 7' }).addTo(window.__map));
+    }
+    var westRoute = buildZoneRoute(WEST_DAYS, MAP_ORTISEI);
+    if (westRoute.length){
+      westRoute.push(MAP_ORTISEI);
+      window.__stopLayers.push(L.polyline(westRoute, { color: MAP_TEAL, weight:2.5, opacity:.55, dashArray:'1 7' }).addTo(window.__map));
+    }
   }
 
   function initMap(){
@@ -2081,60 +2107,29 @@ svg.leaflet-image-layer.leaflet-interactive path {
     if (fb && fb.parentNode) fb.parentNode.removeChild(fb);
     var map = L.map('map', { scrollWheelZoom:false }).setView([46.55,12.0], 9);
     window.__map = map;
-    window.__customMarkers = {};
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
       attribution:'&copy; OpenStreetMap &copy; CARTO', maxZoom:17
     }).addTo(map);
 
-    var ROSE='#B8523E', TEAL='#2E6E6A', INK='#232C24';
-    function icon(color){
-      return L.divIcon({ className:'', html:'<div style="width:14px;height:14px;border-radius:50%;background:'+color+';border:2px solid #F8F8F3;box-shadow:0 1px 3px rgba(0,0,0,.35);"></div>', iconSize:[14,14], iconAnchor:[7,7] });
-    }
-    var salzburg=[47.8014154,13.0448441], cortina=[46.5378431,12.1358821], cadini=[46.6009,12.295422],
-        braies=[46.694333,12.0854273], treCime=[46.6122429,12.2961887], giau=[46.4830556,12.0541667],
-        sorapis=[46.5205589,12.2235133], gardena=[46.55,11.8094444], ortisei=[46.5747589,11.6711082],
-        seceda=[46.5764597,11.6748572], funes=[46.6447026,11.7194329], siusi=[46.5411563,11.6170485],
-        carezza=[46.4092273,11.5750645];
-
-    var stops=[
-      {p:salzburg,n:'Salzburg',note:'Partida / regresso',c:INK},
-      {p:cortina,n:"Cortina d'Ampezzo",note:'Base 1 — 6 a 8 set',c:INK},
-      {p:cadini,n:'Cadini di Misurina',note:'Seg 7 set · manhã',c:ROSE},
-      {p:braies,n:'Lago di Braies',note:'Seg 7 set · tarde',c:ROSE},
-      {p:treCime,n:'Tre Cime di Lavaredo',note:'Ter 8 set · manhã',c:ROSE},
-      {p:giau,n:'Passo Giau',note:'Ter 8 set · tarde',c:ROSE},
-      {p:sorapis,n:'Lago di Sorapis',note:'Qua 9 set · manhã',c:ROSE},
-      {p:gardena,n:'Passo Gardena',note:'Qua 9 set · tarde',c:TEAL},
-      {p:ortisei,n:'Ortisei',note:'Base 2 — 9 a 11 set',c:INK},
-      {p:seceda,n:'Seceda',note:'Qui 10 set · manhã',c:TEAL},
-      {p:funes,n:'St. Magdalena',note:'Qui 10 set · tarde',c:TEAL},
-      {p:siusi,n:'Alpe di Siusi',note:'Sex 11 set · manhã',c:TEAL},
-      {p:carezza,n:'Lago di Carezza',note:'Sex 11 set · tarde',c:TEAL}
+    var baseStops = [
+      { p: MAP_SALZBURG, n: 'Salzburg', note: 'Partida / regresso' },
+      { p: MAP_CORTINA, n: "Cortina d'Ampezzo", note: 'Base 1 — 6 a 8 set' },
+      { p: MAP_ORTISEI, n: 'Ortisei', note: 'Base 2 — 9 a 11 set' }
     ];
-    stops.forEach(function(s){
-      L.marker(s.p,{icon:icon(s.c)}).addTo(map).bindPopup('<strong>'+s.n+'</strong><br>'+s.note);
+    baseStops.forEach(function(s){
+      L.marker(s.p, { icon: mapDotIcon(MAP_INK) }).addTo(map).bindPopup('<strong>'+s.n+'</strong><br>'+s.note);
     });
-    var routes=[
-      {pts:[salzburg,cortina],c:INK},
-      {pts:[cortina,cadini,braies,cortina],c:ROSE},
-      {pts:[cortina,treCime,giau,cortina],c:ROSE},
-      {pts:[cortina,sorapis,cortina,gardena,ortisei],c:TEAL},
-      {pts:[ortisei,seceda,funes,ortisei],c:TEAL},
-      {pts:[ortisei,siusi,carezza,ortisei],c:TEAL},
-      {pts:[ortisei,salzburg],c:INK}
-    ];
-    routes.forEach(function(r){ L.polyline(r.pts,{color:r.c,weight:2.5,opacity:.55,dashArray:'1 7'}).addTo(map); });
+    L.polyline([MAP_SALZBURG, MAP_CORTINA], { color: MAP_INK, weight:2.5, opacity:.55, dashArray:'1 7' }).addTo(map);
+    L.polyline([MAP_ORTISEI, MAP_SALZBURG], { color: MAP_INK, weight:2.5, opacity:.55, dashArray:'1 7' }).addTo(map);
 
-    var group = new L.featureGroup(stops.map(function(s){ return L.marker(s.p); }));
+    if (sharedReady) refreshMapStops();
+
+    var boundsPts = [MAP_SALZBURG, MAP_CORTINA, MAP_ORTISEI].concat(
+      SHARED.stops.filter(function(s){ return s.lat != null && s.lng != null; }).map(function(s){ return [s.lat, s.lng]; })
+    );
+    var group = new L.featureGroup(boundsPts.map(function(p){ return L.marker(p); }));
     map.fitBounds(group.getBounds().pad(0.12));
-
-    // Custom locations already loaded from shared storage (or will render via
-    // renderAllFromShared once the initial fetch completes, if it hasn't yet)
-    if (sharedReady){
-      window.__customMarkers = window.__customMarkers || {};
-      SHARED.locations.forEach(function(loc){ addCustomMarkerToMap(loc); });
-    }
   }
 </script>
 
