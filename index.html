@@ -798,6 +798,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .block-top{display:flex; align-items:flex-start; justify-content:space-between; gap:8px;}
   .block h4{font-size:1.02rem; font-weight:600; margin-bottom:5px;}
   .block p{margin:0; font-size:0.87rem; color:var(--ink-soft); line-height:1.5;}
+  .loc-google-link{
+    display:inline-block; margin-top:10px; font-size:0.8rem; font-weight:600;
+    color:var(--amber-deep); text-decoration:none;
+  }
   .block .note{
     margin-top:9px; font-size:0.75rem; font-family:'JetBrains Mono', monospace;
     color:var(--rose-deep); line-height:1.4;
@@ -1666,6 +1670,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       return;
     }
     container.innerHTML = items.map(function(l){
+      var googleUrl = 'https://www.google.com/search?q=' + encodeURIComponent(l.name);
       return '<div class="block custom">'
         + '<div class="block-top">'
         +   '<span class="tag">A tua localização</span>'
@@ -1673,6 +1678,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         + '</div>'
         + '<h4>'+escapeHtml(l.name)+'</h4>'
         + '<p>Adicionada por ti · aparece também no mapa</p>'
+        + '<a class="loc-google-link" href="'+googleUrl+'" target="_blank" rel="noopener">🔍 Pesquisar no Google ↗</a>'
         + '</div>';
     }).join('');
   }
