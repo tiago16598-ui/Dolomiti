@@ -1818,7 +1818,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   function updateWhoamiDisplay(){
     var el = document.getElementById('whoamiName');
-    if (el) el.textContent = getMyName() || '—';
+    var name = getMyName();
+    if (el) el.textContent = name || '—';
+    var btn = document.getElementById('whoamiChange');
+    if (btn) btn.textContent = name ? 'mudar' : 'Adicionar';
   }
   function ensureMyName(){
     var name = getMyName();
