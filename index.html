@@ -889,7 +889,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     color:var(--ink-soft); margin:0 4px 8px;
   }
   .notes-input{
-    width:100%; min-height:88px; resize:vertical; border:none; border-radius:var(--radius-lg);
+    width:100%; min-height:52px; resize:none; overflow:hidden; border:none; border-radius:var(--radius-lg);
     padding:13px 15px; font-size:16px; color:var(--ink); background:var(--paper); line-height:1.42;
   }
   .notes-input::placeholder{color:var(--ink-faint);}
@@ -1105,10 +1105,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
           <div class="stops-list" data-day="0"></div>
           <button class="stop-add-btn" data-day="0">+ Adicionar localização</button>
           <div class="day-extra">
-            <div class="extra-block notes-block">
-              <div class="extra-label">Notas pessoais</div>
-              <textarea class="notes-input" data-day="0" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
-            </div>
             <div class="extra-block reservations-block">
               <div class="extra-label">Reservas a fazer</div>
               <div class="resv-list" data-day="0"></div>
@@ -1116,6 +1112,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 <input type="text" class="resv-add-input" data-day="0" placeholder="Nova reserva…">
                 <button class="resv-add-btn" data-day="0">Adicionar</button>
               </div>
+            </div>
+            <div class="extra-block notes-block">
+              <div class="extra-label">Notas pessoais</div>
+              <textarea class="notes-input" data-day="0" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
             </div>
           </div>
         </article>
@@ -1125,10 +1125,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
           <div class="stops-list" data-day="1"></div>
           <button class="stop-add-btn" data-day="1">+ Adicionar localização</button>
           <div class="day-extra">
-            <div class="extra-block notes-block">
-              <div class="extra-label">Notas pessoais</div>
-              <textarea class="notes-input" data-day="1" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
-            </div>
             <div class="extra-block reservations-block">
               <div class="extra-label">Reservas a fazer</div>
               <div class="resv-list" data-day="1"></div>
@@ -1136,6 +1132,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 <input type="text" class="resv-add-input" data-day="1" placeholder="Nova reserva…">
                 <button class="resv-add-btn" data-day="1">Adicionar</button>
               </div>
+            </div>
+            <div class="extra-block notes-block">
+              <div class="extra-label">Notas pessoais</div>
+              <textarea class="notes-input" data-day="1" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
             </div>
           </div>
         </article>
@@ -1145,10 +1145,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
           <div class="stops-list" data-day="2"></div>
           <button class="stop-add-btn" data-day="2">+ Adicionar localização</button>
           <div class="day-extra">
-            <div class="extra-block notes-block">
-              <div class="extra-label">Notas pessoais</div>
-              <textarea class="notes-input" data-day="2" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
-            </div>
             <div class="extra-block reservations-block">
               <div class="extra-label">Reservas a fazer</div>
               <div class="resv-list" data-day="2"></div>
@@ -1156,6 +1152,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 <input type="text" class="resv-add-input" data-day="2" placeholder="Nova reserva…">
                 <button class="resv-add-btn" data-day="2">Adicionar</button>
               </div>
+            </div>
+            <div class="extra-block notes-block">
+              <div class="extra-label">Notas pessoais</div>
+              <textarea class="notes-input" data-day="2" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
             </div>
           </div>
         </article>
@@ -1165,10 +1165,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
           <div class="stops-list" data-day="3"></div>
           <button class="stop-add-btn" data-day="3">+ Adicionar localização</button>
           <div class="day-extra">
-            <div class="extra-block notes-block">
-              <div class="extra-label">Notas pessoais</div>
-              <textarea class="notes-input" data-day="3" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
-            </div>
             <div class="extra-block reservations-block">
               <div class="extra-label">Reservas a fazer</div>
               <div class="resv-list" data-day="3"></div>
@@ -1176,6 +1172,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 <input type="text" class="resv-add-input" data-day="3" placeholder="Nova reserva…">
                 <button class="resv-add-btn" data-day="3">Adicionar</button>
               </div>
+            </div>
+            <div class="extra-block notes-block">
+              <div class="extra-label">Notas pessoais</div>
+              <textarea class="notes-input" data-day="3" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
             </div>
           </div>
         </article>
@@ -1185,10 +1185,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
           <div class="stops-list" data-day="4"></div>
           <button class="stop-add-btn" data-day="4">+ Adicionar localização</button>
           <div class="day-extra">
-            <div class="extra-block notes-block">
-              <div class="extra-label">Notas pessoais</div>
-              <textarea class="notes-input" data-day="4" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
-            </div>
             <div class="extra-block reservations-block">
               <div class="extra-label">Reservas a fazer</div>
               <div class="resv-list" data-day="4"></div>
@@ -1196,6 +1192,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 <input type="text" class="resv-add-input" data-day="4" placeholder="Nova reserva…">
                 <button class="resv-add-btn" data-day="4">Adicionar</button>
               </div>
+            </div>
+            <div class="extra-block notes-block">
+              <div class="extra-label">Notas pessoais</div>
+              <textarea class="notes-input" data-day="4" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
             </div>
           </div>
         </article>
@@ -1205,10 +1205,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
           <div class="stops-list" data-day="5"></div>
           <button class="stop-add-btn" data-day="5">+ Adicionar localização</button>
           <div class="day-extra">
-            <div class="extra-block notes-block">
-              <div class="extra-label">Notas pessoais</div>
-              <textarea class="notes-input" data-day="5" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
-            </div>
             <div class="extra-block reservations-block">
               <div class="extra-label">Reservas a fazer</div>
               <div class="resv-list" data-day="5"></div>
@@ -1216,6 +1212,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 <input type="text" class="resv-add-input" data-day="5" placeholder="Nova reserva…">
                 <button class="resv-add-btn" data-day="5">Adicionar</button>
               </div>
+            </div>
+            <div class="extra-block notes-block">
+              <div class="extra-label">Notas pessoais</div>
+              <textarea class="notes-input" data-day="5" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
             </div>
           </div>
         </article>
@@ -1225,10 +1225,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
           <div class="stops-list" data-day="6"></div>
           <button class="stop-add-btn" data-day="6">+ Adicionar localização</button>
           <div class="day-extra">
-            <div class="extra-block notes-block">
-              <div class="extra-label">Notas pessoais</div>
-              <textarea class="notes-input" data-day="6" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
-            </div>
             <div class="extra-block reservations-block">
               <div class="extra-label">Reservas a fazer</div>
               <div class="resv-list" data-day="6"></div>
@@ -1236,6 +1232,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
                 <input type="text" class="resv-add-input" data-day="6" placeholder="Nova reserva…">
                 <button class="resv-add-btn" data-day="6">Adicionar</button>
               </div>
+            </div>
+            <div class="extra-block notes-block">
+              <div class="extra-label">Notas pessoais</div>
+              <textarea class="notes-input" data-day="6" placeholder="Reservas, lembretes, ideias para este dia..."></textarea>
             </div>
           </div>
         </article>
@@ -1464,6 +1464,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
     if (activeChip) activeChip.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
     prevBtn.disabled = n === 0;
     nextBtn.disabled = n === maxDay;
+    var activeNotes = document.querySelector('.day-panel[data-day="'+n+'"] .notes-input');
+    if (activeNotes) autoGrowTextarea(activeNotes);
   }
   dayChips.forEach(function(c){
     c.addEventListener('click', function(){ showDay(Number(c.dataset.day)); });
@@ -1546,7 +1548,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       renderDayStops(d);
       renderDayReservations(d);
       var ta = document.querySelector('.notes-input[data-day="'+d+'"]');
-      if (ta) ta.value = SHARED.notes[d] || '';
+      if (ta){ ta.value = SHARED.notes[d] || ''; autoGrowTextarea(ta); }
     }
     renderBookingLink('base1');
     renderBookingLink('base2');
@@ -1583,9 +1585,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
       body: JSON.stringify([{ day: Number(day), text: text, updated_at: new Date().toISOString() }])
     }).catch(function(){ /* offline — local cache already saved */ });
   }
+  function autoGrowTextarea(el){
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }
   var noteTimers = {};
   document.addEventListener('input', function(e){
     if (e.target.classList.contains('notes-input')){
+      autoGrowTextarea(e.target);
       var day = e.target.dataset.day;
       clearTimeout(noteTimers[day]);
       noteTimers[day] = setTimeout(function(){ saveNoteForDay(day, e.target.value); }, 500);
@@ -2042,7 +2049,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     saveLocalCache();
     fetch(SUPABASE_URL + '/rest/v1/dolomiti_notes?day=gte.0', { method: 'DELETE', headers: sbHeaders({ 'Prefer': 'return=minimal' }) }).catch(function(){});
     fetch(SUPABASE_URL + '/rest/v1/dolomiti_reservations?day=gte.0', { method: 'DELETE', headers: sbHeaders({ 'Prefer': 'return=minimal' }) }).catch(function(){});
-    document.querySelectorAll('.notes-input').forEach(function(ta){ ta.value = ''; });
+    document.querySelectorAll('.notes-input').forEach(function(ta){ ta.value = ''; autoGrowTextarea(ta); });
     for (var d = 0; d <= 6; d++){ renderDayReservations(d); }
   });
 
