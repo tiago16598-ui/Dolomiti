@@ -872,6 +872,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
     background:var(--paper); color:var(--teal); font-size:16px; font-weight:600; cursor:pointer; margin-top:12px;
   }
   .stop-add-btn:active{background:var(--bg-deep);}
+  .extra-booking-add-btn{
+    width:100%; min-height:var(--tap); padding:12px; border:none; border-radius:var(--radius-lg);
+    background:var(--paper); color:var(--teal); font-size:16px; font-weight:600; cursor:pointer; margin-top:12px;
+  }
+  .extra-booking-add-btn:active{background:var(--bg-deep);}
 
   .day-arrows{display:flex; gap:10px; margin-top:22px;}
   .arrow-btn{
@@ -913,12 +918,24 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .reach li:first-child{border-top:none;}
   .reach li span:last-child{color:var(--ink-soft);}
   .booking-link{margin-top:12px; padding-top:12px; border-top:0.5px solid var(--line);}
-  .booking-link-view{
-    display:flex; align-items:center; min-height:var(--tap);
+  .attachment-list{display:flex; flex-direction:column; margin-bottom:4px;}
+  .attachment-item{
+    display:flex; align-items:center; gap:8px; min-height:var(--tap);
+    border-top:0.5px solid var(--line);
+  }
+  .attachment-item:first-child{border-top:none;}
+  .attachment-link{
+    flex:1; min-width:0; display:flex; align-items:center; gap:8px;
     font-size:16px; font-weight:500; color:var(--teal); text-decoration:none;
   }
-  .booking-link-view::after{content:'›'; margin-left:auto; font-size:20px; color:var(--ink-faint);}
-  .booking-link-view[hidden]{display:none;}
+  .attachment-link .attachment-icon{flex:none; font-size:15px;}
+  .attachment-link .attachment-label{
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .attachment-remove{
+    flex:none; border:none; background:none; color:var(--rose); font-size:20px; line-height:1; cursor:pointer;
+    width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+  }
   .booking-link-edit-row{display:flex; gap:8px; align-items:center;}
   .booking-link-input{
     flex:1; min-width:0; min-height:var(--tap); padding:11px 12px; border:none; border-radius:var(--radius);
@@ -930,6 +947,23 @@ svg.leaflet-image-layer.leaflet-interactive path {
     background:var(--teal); color:#fff; font-size:16px; font-weight:600; cursor:pointer;
   }
   .booking-link-save:active{opacity:0.75;}
+  .booking-file-btn{
+    display:flex; align-items:center; justify-content:center; min-height:var(--tap); margin-top:8px;
+    border-radius:var(--radius); background:var(--fill); color:var(--teal-deep);
+    font-size:15px; font-weight:500; cursor:pointer; text-align:center;
+  }
+  .booking-file-btn:active{background:var(--bg-deep);}
+  .extra-bookings-list{display:flex; flex-direction:column;}
+  .extra-booking-card{
+    background:var(--paper); border-radius:var(--radius-lg);
+    padding:14px 16px; margin-top:12px;
+  }
+  .extra-booking-top{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px;}
+  .extra-booking-top h3{font-size:17px; letter-spacing:-0.02em;}
+  .extra-booking-remove{
+    flex:none; border:none; background:none; color:var(--rose); font-size:22px; line-height:1; cursor:pointer;
+    width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+  }
 
   /* MAPA */
   #map{width:100%; height:52vh; min-height:320px; border-radius:var(--radius-lg); background:#E4E7DC;}
@@ -1265,11 +1299,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
           <li><span>Lago di Braies</span><span>~55 min</span></li>
         </ul>
         <div class="booking-link">
-          <a class="booking-link-view" data-base="base1" href="#" target="_blank" rel="noopener" hidden>🔗 Ver detalhes da reserva ↗</a>
+          <div class="attachment-list" data-base="base1"></div>
           <div class="booking-link-edit-row">
             <input type="url" class="booking-link-input" data-base="base1" placeholder="Link da reserva (Booking, email, etc.)">
-            <button class="booking-link-save" data-base="base1">Guardar</button>
+            <button class="booking-link-save" data-base="base1">Adicionar</button>
           </div>
+          <label class="booking-file-btn" for="file-base1">
+            <span class="booking-file-text">📎 Carregar imagem ou PDF</span>
+            <input type="file" id="file-base1" class="booking-file-input" data-base="base1" accept="image/*,application/pdf" hidden>
+          </label>
         </div>
       </div>
 
@@ -1286,11 +1324,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
           <li><span>Passo Gardena</span><span>~25 min</span></li>
         </ul>
         <div class="booking-link">
-          <a class="booking-link-view" data-base="base2" href="#" target="_blank" rel="noopener" hidden>🔗 Ver detalhes da reserva ↗</a>
+          <div class="attachment-list" data-base="base2"></div>
           <div class="booking-link-edit-row">
             <input type="url" class="booking-link-input" data-base="base2" placeholder="Link da reserva (Booking, email, etc.)">
-            <button class="booking-link-save" data-base="base2">Guardar</button>
+            <button class="booking-link-save" data-base="base2">Adicionar</button>
           </div>
+          <label class="booking-file-btn" for="file-base2">
+            <span class="booking-file-text">📎 Carregar imagem ou PDF</span>
+            <input type="file" id="file-base2" class="booking-file-input" data-base="base2" accept="image/*,application/pdf" hidden>
+          </label>
         </div>
       </div>
 
@@ -1299,13 +1341,21 @@ svg.leaflet-image-layer.leaflet-interactive path {
         <h3>Aluguer de carro</h3>
         <p>Guarda aqui o link da confirmação do aluguer, para o teres à mão.</p>
         <div class="booking-link">
-          <a class="booking-link-view" data-base="car" href="#" target="_blank" rel="noopener" hidden>🔗 Ver detalhes da reserva ↗</a>
+          <div class="attachment-list" data-base="car"></div>
           <div class="booking-link-edit-row">
             <input type="url" class="booking-link-input" data-base="car" placeholder="Link da reserva do carro">
-            <button class="booking-link-save" data-base="car">Guardar</button>
+            <button class="booking-link-save" data-base="car">Adicionar</button>
           </div>
+          <label class="booking-file-btn" for="file-car">
+            <span class="booking-file-text">📎 Carregar imagem ou PDF</span>
+            <input type="file" id="file-car" class="booking-file-input" data-base="car" accept="image/*,application/pdf" hidden>
+          </label>
         </div>
       </div>
+
+      <div class="extra-label" style="margin-top:22px;">Outras reservas</div>
+      <div class="extra-bookings-list" id="extraBookingsList"></div>
+      <button class="extra-booking-add-btn" id="extraBookingAddBtn">+ Adicionar reserva</button>
     </section>
 
     <!-- MAPA -->
@@ -1387,7 +1437,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </button>
     <button class="tab" data-target="screen-alojamento">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"/><path d="M3 18h18"/><path d="M6 10V7a2 2 0 0 1 2-2h3v5"/></svg>
-      <span>Alojamento</span>
+      <span>Reservas</span>
     </button>
     <button class="tab" data-target="screen-mapa">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
@@ -1417,7 +1467,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <script>
   var subtitles = {
     'screen-roteiro': 'Roteiro · 7 dias',
-    'screen-alojamento': 'Alojamento · 2 bases',
+    'screen-alojamento': 'Reservas · 2 bases',
     'screen-mapa': 'Mapa · trajeto completo',
     'screen-custos': 'Custos · partilhados',
     'screen-notas': 'Notas práticas'
@@ -1481,7 +1531,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbXpodnJqYXl6bGZja3ZqdXVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3NTExODksImV4cCI6MjEwMjMyNzE4OX0.1NJ_XMoiGW7pdE0dvKLMyciVVoL9zItTpP-vYFJKEBU';
 
   var DAY_LABELS = ['Dom 6 set', 'Seg 7 set', 'Ter 8 set', 'Qua 9 set', 'Qui 10 set', 'Sex 11 set', 'Sáb 12 set'];
-  var SHARED = { notes: {}, stops: [], reservations: [], bookingLinks: {}, costs: [] };
+  var SHARED = { notes: {}, stops: [], reservations: [], attachments: [], costs: [], extraBookings: [] };
   var sharedReady = false;
 
   function escapeHtml(s){
@@ -1501,8 +1551,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
     if (!d.notes || typeof d.notes !== 'object') d.notes = {};
     if (!Array.isArray(d.stops)) d.stops = [];
     if (!Array.isArray(d.reservations)) d.reservations = [];
-    if (!d.bookingLinks || typeof d.bookingLinks !== 'object') d.bookingLinks = {};
+    if (!Array.isArray(d.attachments)) d.attachments = [];
     if (!Array.isArray(d.costs)) d.costs = [];
+    if (!Array.isArray(d.extraBookings)) d.extraBookings = [];
     return d;
   }
   function sbHeaders(extra){
@@ -1522,10 +1573,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
         .then(function(r){ if (!r.ok) throw new Error('stops fetch failed'); return r.json(); }),
       fetch(SUPABASE_URL + '/rest/v1/dolomiti_reservations?select=id,day,title,done&order=created_at.asc', { headers: sbHeaders() })
         .then(function(r){ if (!r.ok) throw new Error('reservations fetch failed'); return r.json(); }),
-      fetch(SUPABASE_URL + '/rest/v1/dolomiti_booking_links?select=base_id,url', { headers: sbHeaders() })
-        .then(function(r){ if (!r.ok) throw new Error('booking links fetch failed'); return r.json(); }),
+      fetch(SUPABASE_URL + '/rest/v1/dolomiti_booking_attachments?select=id,base_id,url,label&order=created_at.asc', { headers: sbHeaders() })
+        .then(function(r){ if (!r.ok) throw new Error('attachments fetch failed'); return r.json(); }),
       fetch(SUPABASE_URL + '/rest/v1/dolomiti_costs?select=id,description,amount,paid_by&order=created_at.asc', { headers: sbHeaders() })
-        .then(function(r){ if (!r.ok) throw new Error('costs fetch failed'); return r.json(); })
+        .then(function(r){ if (!r.ok) throw new Error('costs fetch failed'); return r.json(); }),
+      fetch(SUPABASE_URL + '/rest/v1/dolomiti_extra_bookings?select=id,title&order=created_at.asc', { headers: sbHeaders() })
+        .then(function(r){ if (!r.ok) throw new Error('extra bookings fetch failed'); return r.json(); })
     ]).then(function(results){
       var notes = {};
       results[0].forEach(function(row){ notes[row.day] = row.text; });
@@ -1535,12 +1588,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
       var reservations = results[2].map(function(r){
         return { id: r.id, day: String(r.day), title: r.title, done: !!r.done };
       });
-      var bookingLinks = {};
-      results[3].forEach(function(row){ bookingLinks[row.base_id] = row.url || ''; });
+      var attachments = results[3].map(function(a){
+        return { id: a.id, base_id: a.base_id, url: a.url, label: a.label || '' };
+      });
       var costs = results[4].map(function(c){
         return { id: c.id, description: c.description, amount: Number(c.amount), paid_by: c.paid_by };
       });
-      return { notes: notes, stops: stops, reservations: reservations, bookingLinks: bookingLinks, costs: costs };
+      var extraBookings = results[5].map(function(b){ return { id: b.id, title: b.title }; });
+      return { notes: notes, stops: stops, reservations: reservations, attachments: attachments, costs: costs, extraBookings: extraBookings };
     });
   }
   function renderAllFromShared(){
@@ -1550,9 +1605,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
       var ta = document.querySelector('.notes-input[data-day="'+d+'"]');
       if (ta){ ta.value = SHARED.notes[d] || ''; autoGrowTextarea(ta); }
     }
-    renderBookingLink('base1');
-    renderBookingLink('base2');
-    renderBookingLink('car');
+    renderAttachments('base1');
+    renderAttachments('base2');
+    renderAttachments('car');
+    renderExtraBookings();
     renderCostList();
     renderCostSummary();
     if (window.__map) refreshMapStops();
@@ -1851,32 +1907,164 @@ svg.leaflet-image-layer.leaflet-interactive path {
     }
   });
 
-  /* ---------- Booking links (Alojamento) ---------- */
-  function renderBookingLink(baseId){
-    var link = SHARED.bookingLinks[baseId] || '';
-    var viewEl = document.querySelector('.booking-link-view[data-base="'+baseId+'"]');
-    var inputEl = document.querySelector('.booking-link-input[data-base="'+baseId+'"]');
-    if (viewEl){
-      if (link){ viewEl.href = link; viewEl.hidden = false; } else { viewEl.hidden = true; }
-    }
-    if (inputEl && document.activeElement !== inputEl){ inputEl.value = link; }
+  /* ---------- Booking attachments (Reservas) — many links/files per reservation ---------- */
+  function attachmentIcon(url){
+    return /\.pdf(\?|$)/i.test(url) ? '📄' : (/^https?:\/\//i.test(url) && /\.(jpe?g|png|webp|gif|heic)(\?|$)/i.test(url) ? '🖼️' : '🔗');
   }
-  function saveBookingLink(baseId, url){
-    SHARED.bookingLinks[baseId] = url;
+  function renderAttachments(baseId){
+    var container = document.querySelector('.attachment-list[data-base="'+baseId+'"]');
+    if (!container) return;
+    var items = SHARED.attachments.filter(function(a){ return a.base_id === baseId; });
+    container.innerHTML = items.map(function(a){
+      var text = a.label || a.url;
+      return '<div class="attachment-item">'
+        + '<a class="attachment-link" href="'+a.url+'" target="_blank" rel="noopener">'
+        +   '<span class="attachment-icon">'+attachmentIcon(a.url)+'</span>'
+        +   '<span class="attachment-label">'+escapeHtml(text)+'</span>'
+        + '</a>'
+        + '<button class="attachment-remove" data-id="'+a.id+'" aria-label="Remover">×</button>'
+        + '</div>';
+    }).join('');
+  }
+  function addAttachment(baseId, url, label){
+    var a = { id: Date.now()+'-'+Math.floor(Math.random()*1000), base_id: baseId, url: url, label: label || '' };
+    SHARED.attachments.push(a);
     saveLocalCache();
-    renderBookingLink(baseId);
-    fetch(SUPABASE_URL + '/rest/v1/dolomiti_booking_links?on_conflict=base_id', {
+    renderAttachments(baseId);
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_booking_attachments', {
       method: 'POST',
-      headers: sbHeaders({ 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
-      body: JSON.stringify([{ base_id: baseId, url: url, updated_at: new Date().toISOString() }])
+      headers: sbHeaders({ 'Prefer': 'return=minimal' }),
+      body: JSON.stringify([{ id: a.id, base_id: baseId, url: url, label: label || '' }])
     }).catch(function(){});
   }
+  function removeAttachment(id){
+    var a = SHARED.attachments.filter(function(x){ return x.id === id; })[0];
+    SHARED.attachments = SHARED.attachments.filter(function(x){ return x.id !== id; });
+    saveLocalCache();
+    if (a) renderAttachments(a.base_id);
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_booking_attachments?id=eq.' + encodeURIComponent(id), {
+      method: 'DELETE', headers: sbHeaders({ 'Prefer': 'return=minimal' })
+    }).catch(function(){});
+  }
+  document.addEventListener('click', function(e){
+    var rm = e.target.closest ? e.target.closest('.attachment-remove') : null;
+    if (rm) removeAttachment(rm.dataset.id);
+  });
+
+  function buildExtraBookingHtml(b){
+    return '<div class="extra-booking-card" data-id="'+b.id+'">'
+      + '<div class="extra-booking-top">'
+      +   '<h3>'+escapeHtml(b.title)+'</h3>'
+      +   '<button class="extra-booking-remove" data-id="'+b.id+'" aria-label="Remover">×</button>'
+      + '</div>'
+      + '<div class="booking-link">'
+      +   '<div class="attachment-list" data-base="'+b.id+'"></div>'
+      +   '<div class="booking-link-edit-row">'
+      +     '<input type="url" class="booking-link-input" data-base="'+b.id+'" placeholder="Link da reserva">'
+      +     '<button class="booking-link-save" data-base="'+b.id+'">Adicionar</button>'
+      +   '</div>'
+      +   '<label class="booking-file-btn" for="file-'+b.id+'">'
+      +     '<span class="booking-file-text">📎 Carregar imagem ou PDF</span>'
+      +     '<input type="file" id="file-'+b.id+'" class="booking-file-input" data-base="'+b.id+'" accept="image/*,application/pdf" hidden>'
+      +   '</label>'
+      + '</div>'
+      + '</div>';
+  }
+  function renderExtraBookings(){
+    var container = document.getElementById('extraBookingsList');
+    if (!container) return;
+    container.innerHTML = SHARED.extraBookings.map(buildExtraBookingHtml).join('');
+    SHARED.extraBookings.forEach(function(b){ renderAttachments(b.id); });
+  }
+  function addExtraBooking(){
+    var title = window.prompt('Nome da reserva (ex: Jantar em Cortina, Bilhetes Seceda):');
+    if (!title || !title.trim()) return;
+    title = title.trim();
+    var b = { id: Date.now()+'-'+Math.floor(Math.random()*1000), title: title };
+    SHARED.extraBookings.push(b);
+    saveLocalCache();
+    renderExtraBookings();
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_extra_bookings', {
+      method: 'POST',
+      headers: sbHeaders({ 'Prefer': 'return=minimal' }),
+      body: JSON.stringify([{ id: b.id, title: title }])
+    }).catch(function(){});
+  }
+  function removeExtraBooking(id){
+    if (!window.confirm('Remover esta reserva e todos os seus ficheiros/links? Esta ação não pode ser desfeita.')) return;
+    SHARED.extraBookings = SHARED.extraBookings.filter(function(b){ return b.id !== id; });
+    SHARED.attachments = SHARED.attachments.filter(function(a){ return a.base_id !== id; });
+    saveLocalCache();
+    renderExtraBookings();
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_extra_bookings?id=eq.' + encodeURIComponent(id), {
+      method: 'DELETE', headers: sbHeaders({ 'Prefer': 'return=minimal' })
+    }).catch(function(){});
+    fetch(SUPABASE_URL + '/rest/v1/dolomiti_booking_attachments?base_id=eq.' + encodeURIComponent(id), {
+      method: 'DELETE', headers: sbHeaders({ 'Prefer': 'return=minimal' })
+    }).catch(function(){});
+  }
+  var extraBookingAddBtn = document.getElementById('extraBookingAddBtn');
+  if (extraBookingAddBtn) extraBookingAddBtn.addEventListener('click', addExtraBooking);
+  document.addEventListener('click', function(e){
+    var rm = e.target.closest ? e.target.closest('.extra-booking-remove') : null;
+    if (rm) removeExtraBooking(rm.dataset.id);
+  });
+
   document.addEventListener('click', function(e){
     var saveBtn = e.target.closest ? e.target.closest('.booking-link-save') : null;
     if (!saveBtn) return;
     var baseId = saveBtn.dataset.base;
     var input = document.querySelector('.booking-link-input[data-base="'+baseId+'"]');
-    if (input) saveBookingLink(baseId, input.value.trim());
+    if (!input || !input.value.trim()) return;
+    addAttachment(baseId, input.value.trim());
+    input.value = '';
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('booking-link-input')){
+      e.preventDefault();
+      var baseId = e.target.dataset.base;
+      if (e.target.value.trim()){ addAttachment(baseId, e.target.value.trim()); e.target.value = ''; }
+    }
+  });
+
+  var MAX_BOOKING_FILE_BYTES = 15 * 1024 * 1024;
+  function uploadBookingFile(baseId, file){
+    if (!/^image\/|^application\/pdf$/.test(file.type)){
+      alert('Só são aceites imagens ou ficheiros PDF.');
+      return;
+    }
+    if (file.size > MAX_BOOKING_FILE_BYTES){
+      alert('Ficheiro demasiado grande (máx. 15MB).');
+      return;
+    }
+    var label = document.querySelector('label[for="file-'+baseId+'"] .booking-file-text');
+    var original = label ? label.textContent : null;
+    if (label) label.textContent = 'A carregar…';
+
+    var ext = (file.name.split('.').pop() || 'dat').toLowerCase().replace(/[^a-z0-9]/g, '');
+    var path = baseId + '-' + Date.now() + (ext ? '.' + ext : '');
+
+    fetch(SUPABASE_URL + '/storage/v1/object/dolomiti-files/' + path, {
+      method: 'POST',
+      headers: sbHeaders({ 'Content-Type': file.type || 'application/octet-stream' }),
+      body: file
+    }).then(function(r){
+      if (!r.ok) throw new Error('upload failed');
+      var publicUrl = SUPABASE_URL + '/storage/v1/object/public/dolomiti-files/' + path;
+      addAttachment(baseId, publicUrl, file.name);
+      if (label) label.textContent = '✓ Ficheiro carregado';
+      setTimeout(function(){ if (label) label.textContent = original; }, 1800);
+    }).catch(function(){
+      if (label) label.textContent = original;
+      alert('Não foi possível carregar o ficheiro. Verifica a ligação à internet e tenta novamente.');
+    });
+  }
+  document.addEventListener('change', function(e){
+    if (!e.target.classList || !e.target.classList.contains('booking-file-input')) return;
+    var file = e.target.files && e.target.files[0];
+    if (!file) return;
+    uploadBookingFile(e.target.dataset.base, file);
+    e.target.value = '';
   });
 
   /* ---------- Costs (Custos) — split & settle-up between whoever adds expenses ---------- */
