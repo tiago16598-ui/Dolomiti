@@ -1662,9 +1662,195 @@ svg.leaflet-image-layer.leaflet-interactive path {
   @keyframes edgePrev{50%{transform:translateX(14px);} 100%{transform:none;}}
   .day-panel.swap-next{animation:dayNext .22s cubic-bezier(.2,.7,.2,1);}
   .day-panel.swap-prev{animation:dayPrev .22s cubic-bezier(.2,.7,.2,1);}
-  .day-panel.edge-next{animation:edgeNext .26s ease;}
-  .day-panel.edge-prev{animation:edgePrev .26s ease;}
   #screen-roteiro{overflow-x:hidden;}
+
+  /* swipe between days: horizontal gestures belong to the app, vertical ones to the browser's scroll */
+  #dayPanel, #dayPanel *{touch-action:pan-y;}
+  #dayPanel .stop-drag{touch-action:none;}
+  #screen-roteiro{overscroll-behavior-x:contain;}
+  .day-panel.swiping{animation:none; transition:none; will-change:transform; user-select:none; -webkit-user-select:none;}
+  .day-panel.settling{transition:transform .2s cubic-bezier(.2,.7,.2,1), opacity .2s ease;}
+  #dayPanel .stop-card, #dayPanel .sec-head, #dayPanel .tl-period, #dayPanel .leg{user-select:none; -webkit-user-select:none; -webkit-user-drag:none;}
+
+  /* ============================================================
+     ONE KIT FOR THE WHOLE APP
+     surface -> white card (title inside) -> rows split by a hairline.
+     Every row: round lead, title + sub, trailing value or action.
+     Colour: neutral surfaces; teal = actions; rose = warnings, debts.
+     ============================================================ */
+  :root{
+    --bg:#F4F5F2; --bg-deep:#E9EBE6; --paper:#FFFFFF; --fill:#EFF1ED; --strip:#F7F8F5;
+    --ink:#1E2420; --ink-soft:#5F6A63; --ink-faint:#9AA39D; --line:rgba(30,36,32,0.09);
+    --rose-soft:#F6E4DD; --teal-soft:#E0ECE9;
+  }
+  body{background:#E2E5DF;}
+  .screen{padding:16px 16px calc(96px + var(--safe-b));}
+  .tabbar{background:rgba(255,255,255,0.92);}
+
+  .card{background:var(--paper); border-radius:20px; overflow:hidden; margin:0 0 14px;}
+  .card-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:14px 16px 8px;}
+  .card-head h3{font-size:16px; font-weight:700; letter-spacing:-0.015em; color:var(--ink); min-width:0;}
+  .card-head.main h3, .day-sec.main .card-head h3{font-size:20px; font-weight:800; letter-spacing:-0.03em;}
+  .card-head .sec-count{font-size:14px; color:var(--ink-soft); flex:none; font-variant-numeric:tabular-nums; text-transform:none; letter-spacing:0; margin:0;}
+  .total-value{font-size:20px; font-weight:800; letter-spacing:-0.03em; font-variant-numeric:tabular-nums;}
+  .row{
+    display:flex; align-items:center; gap:12px; padding:12px 14px 12px 16px; min-height:64px;
+    border-top:1px solid var(--line); background:none; border-radius:0; margin:0; width:100%; text-align:left; color:var(--ink);
+    border-left:none; border-right:none; border-bottom:none; box-shadow:none;
+  }
+  .card-head + .row, .card-head + * > .row:first-child, .card > .row:first-child{border-top:none;}
+  .row-lead{
+    flex:none; width:44px; height:44px; border-radius:50%; background:var(--fill); color:var(--ink);
+    display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; letter-spacing:-0.01em;
+    font-variant-numeric:tabular-nums;
+  }
+  .row-lead.strong{background:var(--ink); color:#fff;}
+  .row-lead.debt{background:var(--rose-soft); color:var(--rose-deep);}
+  .row-lead .ic{width:20px; height:20px;}
+  .row-text{flex:1; min-width:0; display:flex; flex-direction:column; gap:1px;}
+  .row-title{font-size:17px; font-weight:600; letter-spacing:-0.02em; color:var(--ink); overflow:hidden; text-overflow:ellipsis;}
+  .row-sub{font-size:14px; font-weight:400; color:var(--ink-soft); overflow:hidden; text-overflow:ellipsis;}
+  .row-body{font-size:14px; color:var(--ink-soft); line-height:1.4; margin-top:2px;}
+  .row-value{flex:none; font-size:15px; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
+  .row-empty{padding:6px 16px 16px; font-size:15px; color:var(--ink-soft); line-height:1.4;}
+  .card > .row-empty:first-child{padding-top:16px;}
+  .row-chevron{flex:none; color:var(--ink-faint); font-size:22px; line-height:1;}
+  .text-btn{flex:none; border:none; background:none; color:var(--teal); font-size:16px; font-weight:600; cursor:pointer; min-height:var(--tap); padding:0 2px;}
+  .text-btn:active{opacity:0.6;}
+
+  /* ---------- home ---------- */
+  .home-label{font-size:16px; font-weight:700; margin:0 4px -4px;}
+  .trip-past-list{margin-top:6px;}
+  .trip-card.past{border-bottom:none; border-top:1px solid var(--line); padding:12px 14px 12px 16px;}
+  .trip-past-list .card-head + .trip-card.past{border-top:none;}
+  .trip-thumb{width:44px; height:44px; border-radius:50%;}
+  .trip-status{background:rgba(255,255,255,0.94);}
+
+  /* ---------- roteiro ---------- */
+  .day-title-row{margin:0 4px 2px;}
+  .day-date{display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 8px; margin:0 4px 18px; font-size:15px; color:var(--ink-soft);}
+  .day-base-pill{font-size:15px; font-weight:400; color:var(--ink-soft);}
+  .day-base-pill::before{content:'Dormida: ';}
+  .day-chip{box-shadow:inset 0 0 0 1px var(--line);}
+  .day-sec, .day-sec.main, .day-sec.secondary, .day-extra .day-sec{margin:0 0 14px; padding:0; border-top:none; border-radius:20px; background:var(--paper);}
+  .day-sec.main .card-head{margin:0; padding:16px 16px 10px;}
+  .timeline, .timeline.plain{margin:0; padding:0;}
+  .timeline::before{display:none;}
+  .stop-wrap{margin:0; position:relative; background:var(--paper);}
+  .stop-wrap + .stop-wrap{border-top:1px solid var(--line);}
+  .stop-card.row, .day-sec.main .stop-card.row, .day-sec.secondary .stop-card.row{padding:0 14px 0 0; border-top:none; background:none; box-shadow:none; gap:8px;}
+  .stop-card.row::before{display:none !important;}
+  .stop-main{
+    flex:1; min-width:0; display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:12px;
+    padding:12px 0 12px 16px; min-height:64px; border:none; background:none; text-align:left; color:var(--ink); cursor:pointer;
+    -webkit-touch-callout:none;
+  }
+  .stop-card.row .stop-name, .day-sec.secondary .stop-card.row .stop-name{font-size:17px; font-weight:600; white-space:nowrap;}
+  .stop-card.row.custom .stop-name::after{display:none;}
+  .stop-card.row.custom .row-lead{background:var(--amber-soft); color:var(--amber-deep);}
+  .stop-desc{white-space:nowrap;}
+  .stop-warn{font-size:13px; font-weight:600; color:var(--rose-deep); margin-top:2px;}
+  .nav-link.round, .day-sec.secondary .nav-link.round{width:44px; height:44px; min-height:44px; background:var(--teal); color:#fff; box-shadow:none;}
+  .leg, .timeline > .leg{display:block; padding:9px 16px; font-size:13px; color:var(--ink-soft); background:var(--strip);}
+  .leg:empty{display:none;}
+  .leg-total, .day-sec.main .leg-total{margin:0; padding:12px 16px 14px; border-top:1px solid var(--line); font-size:14px; font-weight:600; color:var(--ink);}
+  .leg-total:empty{display:none;}
+  .stop-wrap.dragging{z-index:5; box-shadow:0 12px 30px rgba(30,36,32,0.20); border-radius:16px; border-top-color:transparent;}
+  .stop-wrap.dragging .leg{visibility:hidden;}
+  .stop-wrap.dragging .stop-card{box-shadow:none;}
+  .day-sec.main .skel{background:var(--fill); margin:0 16px 10px;}
+  .skel-list{padding-bottom:6px;}
+
+  .resv-list{background:none; border-radius:0;}
+  .resv-item{padding:10px 10px 10px 16px; min-height:64px; border-top:1px solid var(--line);}
+  .resv-item:first-child{border-top:none;}
+  .resv-check{width:44px; height:44px; border-width:2px;}
+  .resv-check svg{width:20px; height:20px;}
+  .resv-title{font-size:17px; font-weight:600;}
+  .resv-item.done .resv-title{font-weight:500;}
+  .add-row{min-height:56px; padding-top:6px; padding-bottom:6px;}
+  .resv-add-input{background:none; border-radius:0; padding:0; min-height:44px;}
+  .notes-input{background:none; border-radius:0; padding:4px 16px 16px; display:block;}
+
+  .today-card{background:var(--paper); color:var(--ink); border-radius:20px; padding:0; margin-bottom:14px;}
+  .today-card .card-head{align-items:center;}
+  .today-card .card-head h3{font-size:16px;}
+  .today-card .card-head .sec-count{flex:1; min-width:0; text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .today-card .nav-link{background:var(--teal); color:#fff; flex:none;}
+  .today-card .stop-warn{color:var(--rose-deep);}
+
+  /* ---------- reservas ---------- */
+  .base-card{padding:0 0 4px; margin-bottom:14px;}
+  .base-card .card-head{align-items:center; padding-bottom:0;}
+  .base-card .card-head h3{font-size:20px; font-weight:800; letter-spacing:-0.03em;}
+  .base-meta{display:flex; flex-wrap:wrap; gap:2px 8px; padding:0 16px 10px; font-size:14px; color:var(--ink-soft);}
+  .base-card .base-no, .base-card.car .base-no{font-size:14px; font-weight:400; color:var(--ink-soft);}
+  .base-card .nights, .base-card.two .nights{margin:0; font-size:14px; color:var(--ink-soft);}
+  .base-meta .nights::before{content:'· ';}
+  .base-card p{margin:0; padding:0 16px 12px; font-size:15px;}
+  .reach{margin:0;}
+  .reach li, .reach li:first-child{padding:12px 16px; border-top:1px solid var(--line); font-size:16px;}
+  .nav-link.booking-nav{margin:6px 16px 14px;}
+  .booking-link{margin:0; padding:0; border-top:1px solid var(--line);}
+  .attachment-list{margin:0;}
+  .attachment-item.row{min-height:56px; padding:8px 8px 8px 16px;}
+  .attachment-item.row:first-child{border-top:none;}
+  .attachment-link{gap:12px;}
+  .attachment-link .attachment-icon{width:36px; height:36px; border-radius:50%; background:var(--fill); color:var(--ink); align-items:center; justify-content:center;}
+  .attachment-list:not(:empty) + .booking-link-edit-row{border-top:1px solid var(--line);}
+  .booking-link-edit-row{padding:4px 14px 4px 16px;}
+  .booking-link-input{box-shadow:none; padding:0;}
+  .booking-link-save{font-weight:600;}
+  .booking-file-btn{margin:0; padding:0 16px; min-height:52px; border-top:1px solid var(--line); border-radius:0;}
+
+  /* ---------- mapa ---------- */
+  #map{border-radius:20px; margin-bottom:14px;}
+  .legend{background:none; border-radius:0; padding:0 16px 4px;}
+
+  /* ---------- despesas ---------- */
+  .cost-tabs{margin-bottom:14px; border-radius:100px; padding:3px; background:var(--bg-deep);}
+  .cost-tabs button{border-radius:100px; min-height:40px;}
+  .cost-list{background:none; border-radius:0;}
+  .cost-item.row{cursor:pointer;}
+  .cost-item.row:first-child{border-top:none;}
+  .settle-item.row{cursor:default;}
+  .cost-cat.row-lead{background:var(--fill); color:var(--ink);}
+  .cost-item-desc{font-size:17px; font-weight:600; letter-spacing:-0.02em;}
+  .cost-item-who{font-size:14px;}
+  .cost-summary{margin:0;}
+  .cost-total-row.row, .cost-total-row.row:first-child, .cost-total-row.row:last-of-type{border-radius:0; background:none; font-size:17px;}
+  .cost-settle.row, .cost-settle.even.row{margin:0; background:none; color:var(--ink); border-radius:0; font-size:17px; font-weight:400;}
+  .cost-settle .row-title{font-weight:500; white-space:normal;}
+  .cost-settle .row-title strong{color:var(--rose-deep); font-weight:700;}
+  .settle-btn{background:var(--teal); min-height:40px;}
+  .settle-list{margin:0;}
+  .cat-list{background:none; border-radius:0; margin:0; padding:0 16px 6px;}
+  .cat-bar{background:var(--fill);} .cat-bar span{background:var(--ink);}
+  .people-list{margin:0; padding:2px 16px 12px;}
+  .person-chip{background:var(--fill);}
+  .person-chip.me{background:var(--fill); box-shadow:inset 0 0 0 1.5px var(--ink);}
+  .person-chip.add{background:none; box-shadow:inset 0 0 0 1px var(--line);}
+  .whoami-row.row{margin:0; padding:10px 14px 10px 16px; min-height:56px;}
+
+  /* ---------- notas ---------- */
+  #ideasList{margin:0;}
+  .idea-item.row{align-items:flex-start;}
+  .idea-item.row:first-child, .note-card.row:first-child{border-top:none;}
+  .idea-item .row-lead{margin-top:2px;}
+  .idea-day-select{
+    -webkit-appearance:none; appearance:none; align-self:flex-start; margin-top:8px; min-height:36px; border:none; border-radius:100px;
+    padding:0 14px; font-size:14px; font-weight:600; color:var(--teal); background:var(--fill); font-family:inherit; max-width:100%;
+  }
+  .note-card.row{cursor:pointer; align-items:flex-start; padding-bottom:14px; font-family:inherit;}
+  .note-card .row-lead{margin-top:2px;}
+  .note-card .row-chevron{margin-top:12px;}
+  .note-card .eyebrow{font-size:13px; font-weight:600; color:var(--ink-soft);}
+
+  /* ---------- sheets ---------- */
+  .sheet{background:var(--bg);}
+  .field-input, .choice-btn, .confirm-card, .place-list, .danger-btn{background:var(--paper);}
+  .chip{background:var(--paper);}
+  .segmented{background:var(--bg-deep);}
 </style>
 </head>
 <body>
@@ -1701,7 +1887,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <main class="screens">
 
       <section class="screen active" id="screen-roteiro">
-        <div class="today-card" id="todayCard" hidden></div>
+        <section class="card today-card" id="todayCard" hidden></section>
         <div class="day-selector" id="daySelector"></div>
         <article class="day-panel active" id="dayPanel"></article>
       </section>
@@ -1712,7 +1898,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       <section class="screen" id="screen-mapa">
         <div id="map" role="img" aria-label="Mapa do roteiro"></div>
-        <div class="legend" id="mapLegend"></div>
+        <section class="card"><div class="card-head"><h3>Legenda</h3></div><div class="legend" id="mapLegend"></div></section>
       </section>
 
       <section class="screen" id="screen-custos">
@@ -1722,29 +1908,37 @@ svg.leaflet-image-layer.leaflet-interactive path {
         </div>
 
         <div id="paneCostList">
-          <div class="cost-list-total" id="costListTotal"></div>
-          <div class="cost-empty" id="costListEmpty">Ainda sem despesas. Regista a primeira com o botão «+».</div>
-          <div class="cost-list" id="costList"></div>
+          <section class="card">
+            <div class="card-head main"><h3>Pagamentos</h3><span class="sec-count" id="costListTotal"></span></div>
+            <div class="row-empty" id="costListEmpty">Ainda sem despesas. Regista a primeira com o botão «+».</div>
+            <div class="cost-list" id="costList"></div>
+          </section>
         </div>
 
         <div id="paneCostBalance" hidden>
-          <div class="stops-group-label">Pessoas</div>
-          <div class="people-list" id="peopleList"></div>
-          <div class="whoami-row">
-            Neste telemóvel és <strong id="whoamiName">—</strong>
-            <button id="whoamiChange">mudar</button>
-          </div>
           <div class="cost-summary" id="costSummary"></div>
           <div id="settleHistory"></div>
           <div id="costCategories"></div>
+          <section class="card">
+            <div class="card-head"><h3>Pessoas</h3></div>
+            <div class="people-list" id="peopleList"></div>
+            <div class="whoami-row row">
+              <span class="row-text"><span class="row-sub">Neste telemóvel és</span><strong class="row-title" id="whoamiName">—</strong></span>
+              <button class="text-btn" id="whoamiChange">mudar</button>
+            </div>
+          </section>
         </div>
       </section>
 
       <section class="screen" id="screen-notas">
-        <div class="stops-group-label">Ideias sem dia</div>
-        <div id="ideasList"></div>
-        <div class="stops-group-label second notes-label">Notas gerais</div>
-        <div id="tipsList"></div>
+        <section class="card">
+          <div class="card-head main"><h3>Ideias sem dia</h3><span class="sec-count" id="ideasCount"></span></div>
+          <div id="ideasList"></div>
+        </section>
+        <section class="card">
+          <div class="card-head"><h3>Notas gerais</h3><span class="sec-count" id="tipsCount"></span></div>
+          <div id="tipsList"></div>
+        </section>
       </section>
 
     </main>
@@ -1832,6 +2026,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
     file: '<path d="M7 3h7l5 5v13H7ZM14 3v5h5M10 13h6M10 17h6"/>',
     image: '<rect x="3.5" y="5" width="17" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M4 17l5-4 4 3 3-2.5 4 3.5"/>',
     clip: '<path d="M20 11.5l-8 8a5 5 0 0 1-7-7l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7L9.8 17.1a1.7 1.7 0 0 1-2.4-2.4l7.6-7.6"/>',
+    pin: '<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/>',
+    note: '<path d="M6 4h12v16l-3-2-3 2-3-2-3 2ZM9 9h6M9 13h4"/>',
+    swap: '<path d="M4 9h14l-3-3M20 15H6l3 3"/>',
     search: '<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>'
   };
   function ic(name){
@@ -2050,7 +2247,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         }).join('');
     }
     if (past.length){
-      html += '<div class="home-label' + (live.length ? ' second' : '') + '">Passadas</div><div class="trip-past-list">'
+      html += '<div class="card trip-past-list"><div class="card-head"><h3>Passadas</h3><span class="sec-count">' + past.length + '</span></div>'
         + past.map(function(x){
           var style = x.t.cover_url ? ' style="background-image:url(\'' + esc(x.t.cover_url) + '\')"' : '';
           return '<button class="trip-card past" data-id="' + esc(x.t.id) + '">'
@@ -2445,18 +2642,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
     $('dayPanel').innerHTML = ''
       + '<div class="day-title-row">'
       +   '<input class="day-title-input" id="dayTitle" type="text" aria-label="Título do dia" placeholder="Título do dia" value="' + esc(S.days[d] || '') + '">'
-      +   (pill ? '<span class="day-base-pill">' + esc(pill) + '</span>' : '')
       + '</div>'
-      + '<div class="day-date">' + longLabel(TRIP, d) + '</div>'
+      + '<div class="day-date">' + longLabel(TRIP, d) + (pill ? '<span class="day-base-pill">' + esc(pill) + '</span>' : '') + '</div>'
       + '<div class="stops-list" id="stopsList"></div>'
-      + '<div class="day-extra">'
-      +   '<div class="extra-block day-sec"><div class="sec-head"><h3>Reservas a fazer</h3><span class="sec-count" id="resvCount"></span></div>'
-      +     '<div class="resv-list" id="resvList"></div>'
-      +     '<div class="resv-add-row"><input type="text" class="resv-add-input" id="resvInput" placeholder="Nova reserva…">'
-      +     '<button class="resv-add-btn" id="resvAddBtn">Adicionar</button></div></div>'
-      +   '<div class="extra-block day-sec"><div class="sec-head"><h3>Notas pessoais</h3></div>'
-      +     '<textarea class="notes-input" id="dayNotes" placeholder="Lembretes e ideias para este dia…"></textarea></div>'
-      + '</div>';
+      + '<section class="card day-sec"><div class="card-head"><h3>Reservas a fazer</h3><span class="sec-count" id="resvCount"></span></div>'
+      +   '<div class="resv-list" id="resvList"></div>'
+      +   '<div class="row add-row"><input type="text" class="resv-add-input" id="resvInput" placeholder="Nova reserva" aria-label="Nova reserva">'
+      +   '<button class="text-btn" id="resvAddBtn">Adicionar</button></div></section>'
+      + '<section class="card day-sec"><div class="card-head"><h3>Notas pessoais</h3></div>'
+      +   '<textarea class="notes-input" id="dayNotes" placeholder="Lembretes e ideias para este dia"></textarea></section>';
     var ta = $('dayNotes'); ta.value = S.notes[d] || ''; autoGrow(ta);
     document.querySelectorAll('.day-chip').forEach(function(c){ c.classList.toggle('active', Number(c.dataset.day) === d); });
     var chip = document.querySelector('.day-chip.active');
@@ -2476,16 +2670,17 @@ svg.leaflet-image-layer.leaflet-interactive path {
     var next = stops.filter(function(s){ return !s.visit_time || s.visit_time >= now; })[0];
     var bodyHtml;
     if (next){
-      bodyHtml = '<div class="today-next"><div class="today-main"><div class="today-kicker">Próxima paragem</div>'
-        + '<div class="today-name">' + (next.visit_time ? '<span class="today-time">' + esc(next.visit_time) + '</span>' : '') + esc(next.name) + '</div>'
-        + (next.warning ? '<div class="today-warn">' + esc(next.warning) + '</div>' : '') + '</div>'
+      bodyHtml = '<div class="row"><span class="row-lead' + (next.visit_time ? ' strong' : '') + '">' + (next.visit_time ? esc(next.visit_time) : PERIOD[periodOf(next)]) + '</span>'
+        + '<span class="row-text"><span class="row-title today-name">' + esc(next.name) + '</span>'
+        + '<span class="row-sub">Próxima paragem</span>'
+        + (next.warning ? '<span class="stop-warn">' + WARN_ICON + '<span>' + esc(next.warning) + '</span></span>' : '') + '</span>'
         + '<a class="nav-link" href="' + navUrl(next) + '" target="_blank" rel="noopener">' + NAV_ICON + 'Navegar</a></div>';
     } else {
-      bodyHtml = '<div class="today-empty">' + (stops.length ? 'As paragens com hora de hoje já passaram.' : 'Sem paragens planeadas para hoje.') + '</div>';
+      bodyHtml = '<div class="row-empty">' + (stops.length ? 'As paragens com hora de hoje já passaram.' : 'Sem paragens planeadas para hoje.') + '</div>';
     }
     box.hidden = false;
-    box.innerHTML = '<div class="today-top"><span class="today-badge">Hoje</span><span class="today-date">' + longLabel(TRIP, idx) + ' · dia ' + (idx + 1) + ' de ' + tripDays(TRIP) + '</span>'
-      + (currentDay !== idx ? '<button class="today-go" id="todayGo">Ver dia</button>' : '') + '</div>' + bodyHtml;
+    box.innerHTML = '<div class="card-head"><h3>Hoje</h3><span class="sec-count">' + longLabel(TRIP, idx) + ', dia ' + (idx + 1) + ' de ' + tripDays(TRIP) + '</span>'
+      + (currentDay !== idx ? '<button class="text-btn" id="todayGo">Ver dia</button>' : '') + '</div>' + bodyHtml;
   }
   $('todayCard').addEventListener('click', function(e){ if (closest(e, '#todayGo')) showDay(todayIndex()); });
   function markChips(){
@@ -2503,28 +2698,51 @@ svg.leaflet-image-layer.leaflet-interactive path {
     panel.classList.add(currentDay > prev ? 'swap-next' : (currentDay < prev ? 'swap-prev' : 'swap'));
     $('screen-roteiro').scrollTop = 0;
   }
-  // Swipe sideways anywhere on the day to move to the next or previous one.
-  var swipe = null;
-  $('screen-roteiro').addEventListener('touchstart', function(e){
-    swipe = null;
-    if (e.touches.length !== 1 || drag) return;
-    var t = e.target;
-    if (t.closest && t.closest('.day-selector, .stop-drag, input, textarea, select, .leaflet-container')) return;
-    swipe = { x: e.touches[0].clientX, y: e.touches[0].clientY, at: Date.now() };
-  }, { passive: true });
-  $('screen-roteiro').addEventListener('touchend', function(e){
-    var sw = swipe; swipe = null;
-    if (!sw || drag || !TRIP || !e.changedTouches.length) return;
-    var dx = e.changedTouches[0].clientX - sw.x, dy = e.changedTouches[0].clientY - sw.y;
-    if (Math.abs(dx) < 64 || Math.abs(dx) < Math.abs(dy) * 1.8 || Date.now() - sw.at > 700) return;
-    var next = currentDay + (dx < 0 ? 1 : -1);
-    if (next < 0 || next >= tripDays(TRIP)){
-      var panel = $('dayPanel'); panel.classList.remove('swap', 'swap-next', 'swap-prev', 'edge-next', 'edge-prev'); void panel.offsetWidth;
-      panel.classList.add(dx < 0 ? 'edge-next' : 'edge-prev');
-      return;
+  // Swipe sideways on the day: the page follows the finger and changes day on release.
+  var swipe = null, swipedAt = 0;
+  function swipeEnd(commit){
+    var sw = swipe, panel = $('dayPanel'); swipe = null;
+    if (!sw || !sw.locked) return;
+    swipedAt = Date.now();
+    var dx = sw.dx, next = currentDay + (dx < 0 ? 1 : -1), valid = TRIP && next >= 0 && next < tripDays(TRIP);
+    panel.classList.remove('swiping');
+    if (commit && valid && Math.abs(dx) > 48){
+      panel.style.transform = ''; panel.style.opacity = '';
+      showDay(next);
+    } else {
+      panel.classList.add('settling');
+      panel.style.transform = ''; panel.style.opacity = '';
+      setTimeout(function(){ panel.classList.remove('settling'); }, 220);
     }
-    showDay(next);
-  }, { passive: true });
+  }
+  $('dayPanel').addEventListener('pointerdown', function(e){
+    swipe = null;
+    if (drag || !TRIP || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    if (e.target.closest && e.target.closest('.stop-drag, input, textarea, select')) return;
+    swipe = { id: e.pointerId, x: e.clientX, y: e.clientY, dx: 0, locked: false };
+  });
+  $('dayPanel').addEventListener('pointermove', function(e){
+    var sw = swipe; if (!sw || e.pointerId !== sw.id) return;
+    if (drag){ swipe = null; return; }
+    var dx = e.clientX - sw.x, dy = e.clientY - sw.y, panel = $('dayPanel');
+    if (!sw.locked){
+      if (Math.abs(dy) > 12 && Math.abs(dy) > Math.abs(dx)){ swipe = null; return; }
+      if (Math.abs(dx) < 12 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+      sw.locked = true; panel.classList.remove('swap', 'swap-next', 'swap-prev', 'settling'); panel.classList.add('swiping');
+      try { panel.setPointerCapture(e.pointerId); } catch (err) {}
+    }
+    var next = currentDay + (dx < 0 ? 1 : -1), valid = next >= 0 && next < tripDays(TRIP);
+    sw.dx = dx;
+    panel.style.transform = 'translateX(' + (valid ? dx : dx * 0.25) + 'px)';
+    panel.style.opacity = String(Math.max(0.35, 1 - Math.abs(dx) / 420));
+  });
+  $('dayPanel').addEventListener('pointerup', function(e){ if (swipe && e.pointerId === swipe.id) swipeEnd(true); });
+  $('dayPanel').addEventListener('pointercancel', function(e){ if (swipe && e.pointerId === swipe.id) swipeEnd(false); });
+  $('dayPanel').addEventListener('dragstart', function(e){ e.preventDefault(); });
+  // A swipe must not also count as a tap on whatever was under the finger.
+  $('dayPanel').addEventListener('click', function(e){
+    if (Date.now() - swipedAt < 400){ e.stopPropagation(); e.preventDefault(); }
+  }, true);
   $('daySelector').addEventListener('click', function(e){ var c = closest(e, '.day-chip'); if (c) showDay(Number(c.dataset.day)); });
 
   /* ---------- debounced text fields ---------- */
@@ -2559,12 +2777,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
   var WARN_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 2.5 20h19Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 10v4.5M12 17.2v.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
   function stopCard(s){
     var per = periodOf(s);
-    return '<div class="stop-card compact ' + per + (s.is_custom ? ' custom' : '') + '" data-id="' + esc(s.id) + '">'
-      + '<button class="stop-drag" aria-label="Arrastar para reordenar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9h14M5 15h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>'
+    return '<div class="stop-card row ' + per + (s.is_custom ? ' custom' : '') + '" data-id="' + esc(s.id) + '">'
       + '<button class="stop-main" aria-label="Editar ' + esc(s.name) + '">'
-      +   '<span class="stop-title">' + (s.visit_time ? '<span class="stop-time-label">' + esc(s.visit_time) + '</span>' : '') + '<span class="stop-name">' + esc(s.name) + '</span></span>'
-      +   (s.description ? '<span class="stop-desc">' + esc(s.description) + '</span>' : '')
+      +   '<span class="row-lead' + (s.visit_time ? ' strong' : '') + '">' + (s.visit_time ? esc(s.visit_time) : PERIOD[per]) + '</span>'
+      +   '<span class="row-text"><span class="row-title stop-name">' + esc(s.name) + '</span>'
+      +   (s.description ? '<span class="row-sub stop-desc">' + esc(s.description) + '</span>' : '')
       +   (s.warning ? '<span class="stop-warn">' + WARN_ICON + '<span>' + esc(s.warning) + '</span></span>' : '')
+      +   '</span>'
       + '</button>'
       + '<a class="nav-link round" href="' + navUrl(s) + '" target="_blank" rel="noopener" aria-label="Navegar até ' + esc(s.name) + '">' + NAV_ICON + '</a>'
       + '</div>';
@@ -2573,12 +2792,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     return '<div class="stop-wrap ' + periodOf(s) + '" data-id="' + esc(s.id) + '" data-group="' + (s.is_custom ? 'c' : 'p') + ':' + periodOf(s) + '">' + (legHtml || '') + stopCard(s) + '</div>';
   }
   function withPeriodHeads(list, legOf){
-    var last = null;
-    return list.map(function(s){
-      var p = periodOf(s), head = p !== last ? '<div class="tl-period ' + p + '">' + PERIOD[p] + '</div>' : '';
-      last = p;
-      return head + wrapStop(s, legOf && legOf[s.id]);
-    }).join('');
+    return list.map(function(s){ return wrapStop(s, legOf && legOf[s.id]); }).join('');
   }
   // Driving route of a day: lodging → planned stops in order → lodging.
   function dayRoute(d){
@@ -2592,7 +2806,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   function renderStops(){
     var box = $('stopsList'); if (!box) return;
-    if (LOADING){ box.innerHTML = '<section class="day-sec main"><div class="sec-head"><h3>Plano do dia</h3></div>' + skeleton(3) + '</section>'; return; }
+    if (LOADING){ box.innerHTML = '<section class="card day-sec main"><div class="card-head"><h3>Plano do dia</h3></div>' + skeleton(3) + '</section>'; return; }
     var items = S.stops.filter(function(s){ return s.day === currentDay; });
     var planned = sortStops(items.filter(function(s){ return !s.is_custom; }));
     var added = sortStops(items.filter(function(s){ return s.is_custom; }));
@@ -2603,11 +2817,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
       if (p.id) legOf[p.id] = html; else tail = html;
     });
     function count(n){ return n + (n === 1 ? ' paragem' : ' paragens'); }
-    box.innerHTML = '<section class="day-sec main"><div class="sec-head"><h3>Plano do dia</h3>' + (planned.length ? '<span class="sec-count">' + count(planned.length) + '</span>' : '') + '</div>'
+    box.innerHTML = '<section class="card day-sec main"><div class="card-head"><h3>Plano do dia</h3>' + (planned.length ? '<span class="sec-count">' + count(planned.length) + '</span>' : '') + '</div>'
       + (planned.length ? '<div class="timeline">' + withPeriodHeads(planned, legOf) + tail + '</div><div class="leg-total" id="legTotal"></div>'
-          : '<div class="stops-group-empty">Sem paragens planeadas para este dia. Usa o botão «+» para juntar a primeira.</div>')
+          : '<div class="row-empty">Sem paragens planeadas para este dia. Usa o botão «+» para juntar a primeira.</div>')
       + '</section>'
-      + (added.length ? '<section class="day-sec secondary"><div class="sec-head"><h3>Paragens secundárias</h3><span class="sec-count">' + count(added.length) + '</span></div>'
+      + (added.length ? '<section class="card day-sec secondary"><div class="card-head"><h3>Paragens secundárias</h3><span class="sec-count">' + count(added.length) + '</span></div>'
           + '<div class="timeline plain">' + withPeriodHeads(added) + '</div></section>' : '');
     fillLegs(pts);
   }
@@ -2625,7 +2839,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     document.querySelectorAll('#stopsList .leg').forEach(function(el){
       var leg = legs[Number(el.dataset.leg)]; if (!leg) return;
       total.d += leg[0]; total.m += leg[1];
-      el.innerHTML = '<span class="leg-text">' + fmtDur(leg[0]) + ' · ' + fmtDist(leg[1])
+      el.innerHTML = '<span class="leg-text">' + fmtDur(leg[0]) + ' de carro · ' + fmtDist(leg[1])
         + (el.dataset.from ? ' desde ' + esc(el.dataset.from) : '') + (el.dataset.to ? ' até ' + esc(el.dataset.to) : '') + '</span>';
     });
     var t = $('legTotal');
@@ -2817,14 +3031,30 @@ svg.leaflet-image-layer.leaflet-interactive path {
     drag.startY += w.getBoundingClientRect().top - t0;
     drag.moved = true;
   }
+  // Hold a stop for a moment to pick it up, then drag it up or down.
+  var press = null;
+  function cancelPress(){ if (press){ clearTimeout(press.timer); press = null; } }
   $('dayPanel').addEventListener('pointerdown', function(e){
-    var h = closest(e, '.stop-drag'); if (!h) return;
-    e.preventDefault(); flushPending();
-    var wrap = h.closest('.stop-wrap'); if (!wrap) return;
-    try { h.setPointerCapture(e.pointerId); } catch (err) {}
-    drag = { wrap: wrap, pid: e.pointerId, startY: e.clientY, moved: false };
-    wrap.classList.add('dragging');
+    cancelPress();
+    var main = closest(e, '.stop-main'); if (!main || drag || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    var wrap = main.closest('.stop-wrap'); if (!wrap) return;
+    var p = press = { id: e.pointerId, x: e.clientX, y: e.clientY, wrap: wrap, timer: setTimeout(function(){
+      if (press !== p) return;
+      press = null; swipe = null; flushPending();
+      drag = { wrap: wrap, pid: p.id, startY: p.y, moved: false };
+      wrap.classList.add('dragging');
+      try { wrap.setPointerCapture(p.id); } catch (err) {}
+      try { if (navigator.vibrate) navigator.vibrate(12); } catch (err) {}
+    }, 420) };
   });
+  $('dayPanel').addEventListener('pointermove', function(e){
+    if (press && e.pointerId === press.id && (Math.abs(e.clientX - press.x) > 8 || Math.abs(e.clientY - press.y) > 8)) cancelPress();
+  });
+  $('dayPanel').addEventListener('pointerup', cancelPress);
+  $('dayPanel').addEventListener('pointercancel', cancelPress);
+  // While a stop is held, the page must not scroll under the finger.
+  $('dayPanel').addEventListener('touchmove', function(e){ if (drag && e.cancelable) e.preventDefault(); }, { passive: false });
+  $('dayPanel').addEventListener('contextmenu', function(e){ if (closest(e, '.stop-main')) e.preventDefault(); });
   $('dayPanel').addEventListener('pointermove', function(e){
     if (!drag || e.pointerId !== drag.pid) return;
     e.preventDefault();
@@ -2839,7 +3069,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   function endDrag(e){
     if (!drag || e.pointerId !== drag.pid) return;
     var w = drag.wrap, moved = drag.moved; drag = null;
-    w.classList.remove('dragging'); w.style.transform = '';
+    w.classList.remove('dragging'); w.style.transform = ''; swipedAt = Date.now();
     if (!moved) return;
     var group = w.dataset.group, n = 0;
     Array.prototype.forEach.call(w.parentNode.children, function(el){
@@ -2867,7 +3097,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         +   '<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 6"/></svg></button>'
         + '<span class="resv-title">' + esc(r.title) + '</span>'
         + '<button class="resv-remove" aria-label="Remover">×</button></div>';
-    }).join('') : '<div class="resv-empty">Nada por reservar neste dia.</div>';
+    }).join('') : '<div class="row-empty">Nada por reservar neste dia.</div>';
   }
   function addChecklistFromInput(){
     var input = $('resvInput'), title = input.value.trim();
@@ -2898,7 +3128,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   function attachmentsHtml(bookingId){
     return S.attachments.filter(function(a){ return a.base_id === bookingId; }).map(function(a){
-      return '<div class="attachment-item" data-id="' + esc(a.id) + '">'
+      return '<div class="attachment-item row" data-id="' + esc(a.id) + '">'
         + '<a class="attachment-link" href="' + esc(a.url) + '" target="_blank" rel="noopener">'
         +   '<span class="attachment-icon">' + attachmentIcon(a.url) + '</span>'
         +   '<span class="attachment-label">' + esc(a.label || a.url) + '</span></a>'
@@ -2909,7 +3139,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     if (LOADING){ $('bookingsList').innerHTML = skeleton(2); return; }
     var all = sortedBookings(), lodgeIdx = 0;
     if (!all.length){
-      $('bookingsList').innerHTML = '<div class="bookings-empty">Ainda sem reservas. Usa o botão «+» e começa pelo alojamento — passa a aparecer no mapa e em cada dia do roteiro.</div>';
+      $('bookingsList').innerHTML = '<div class="card"><div class="row-empty">Ainda sem reservas. Usa o botão «+» e começa pelo alojamento — passa a aparecer no mapa e em cada dia do roteiro.</div></div>';
       return;
     }
     $('bookingsList').innerHTML = all.map(function(b){
@@ -2922,9 +3152,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
           nights = '<div class="nights">' + nightsLabel(TRIP, b.first_night, b.last_night) + '</div>';
         }
       }
-      return '<div class="base-card' + (b.kind === 'transport' ? ' car' : '') + '" data-id="' + esc(b.id) + '">'
-        + '<div class="booking-top"><div class="base-no">' + label + '</div><button class="booking-edit">Editar</button></div>'
-        + '<h3>' + esc(b.title) + '</h3>' + nights + detailsHtml(b.details)
+      return '<div class="card base-card' + (b.kind === 'transport' ? ' car' : '') + '" data-id="' + esc(b.id) + '">'
+        + '<div class="card-head"><h3>' + esc(b.title) + '</h3><button class="text-btn booking-edit">Editar</button></div>'
+        + '<div class="base-meta"><span class="base-no">' + label + '</span>' + nights + '</div>' + detailsHtml(b.details)
         + (b.kind === 'lodging' ? '<a class="nav-link booking-nav" href="' + navUrl(b) + '" target="_blank" rel="noopener">' + NAV_ICON + 'Navegar até aqui</a>' : '')
         + '<div class="booking-link">'
         +   '<div class="attachment-list">' + attachmentsHtml(b.id) + '</div>'
@@ -3249,7 +3479,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     $('costList').innerHTML = S.costs.slice().reverse().map(function(c){
       var cat = catOf(c), sh = sharers(c, all);
       var split = sh.length === all.length ? (all.length > 1 ? 'dividido por todos' : '') : (sh.length === 1 ? 'só de ' + sh[0] : 'dividido por ' + sh.join(', '));
-      return '<div class="cost-item" data-id="' + esc(c.id) + '"><span class="cost-cat" title="' + cat[1] + '">' + cat[2] + '</span><div class="cost-item-main">'
+      return '<div class="cost-item row" data-id="' + esc(c.id) + '"><span class="cost-cat row-lead" title="' + cat[1] + '">' + cat[2] + '</span><div class="cost-item-main">'
         + '<span class="cost-item-desc">' + esc(c.description) + '</span>'
         + '<span class="cost-item-who">' + cat[1] + ' · pago por ' + esc(c.paid_by) + (split ? ' · ' + esc(split) : '') + '</span></div>'
         + '<span class="cost-item-amount">' + money(c.amount) + '</span>'
@@ -3295,39 +3525,41 @@ svg.leaflet-image-layer.leaflet-interactive path {
   function renderCostSummary(){
     var box = $('costSummary'), cbox = $('costCategories');
     if (!S.costs.length && !S.settlements.length){
-      box.innerHTML = '<div class="cost-empty">Ainda sem despesas registadas.</div>'; cbox.innerHTML = ''; $('settleHistory').innerHTML = ''; return;
+      box.innerHTML = '<section class="card"><div class="row-empty">Ainda sem despesas registadas.</div></section>'; cbox.innerHTML = ''; $('settleHistory').innerHTML = ''; return;
     }
     var b = balances(), total = S.costs.reduce(function(s, c){ return s + c.amount; }, 0);
     var rows = b.people.map(function(p){
-      return '<div class="cost-total-row"><span>' + esc(p) + '<small>parte: ' + money(b.owed[p] || 0) + '</small></span><span>pagou ' + money(b.paid[p] || 0) + '</span></div>';
+      return '<div class="cost-total-row row"><span class="row-lead">' + esc(p.charAt(0).toUpperCase()) + '</span>'
+        + '<span class="row-text"><span class="row-title">' + esc(p) + '</span><small class="row-sub">parte: ' + money(b.owed[p] || 0) + '</small></span>'
+        + '<span class="row-value">pagou ' + money(b.paid[p] || 0) + '</span></div>';
     }).join('');
     var st = settlements(b), settle = '';
     PENDING = st;
     if (b.people.length > 1){
-      settle = '<div class="stops-group-label settle-label">Por regularizar</div>' + (st.length ? st.map(function(x, i){
-        return '<div class="cost-settle"><span>' + esc(x.from) + ' deve <strong>' + money(x.amount) + '</strong> a ' + esc(x.to) + '</span>'
+      settle = '<section class="card"><div class="card-head"><h3>Por regularizar</h3>' + (st.length ? '<span class="sec-count">' + st.length + '</span>' : '') + '</div>' + (st.length ? st.map(function(x, i){
+        return '<div class="cost-settle row"><span class="row-lead debt">' + ic('swap') + '</span><span class="row-text"><span class="row-title">' + esc(x.from) + ' deve <strong>' + money(x.amount) + '</strong> a ' + esc(x.to) + '</span></span>'
           + '<button class="settle-btn" data-i="' + i + '">Regularizar</button></div>';
-      }).join('') : '<div class="cost-settle even">' + ic('check') + 'Contas equilibradas.</div>');
+      }).join('') : '<div class="cost-settle even row"><span class="row-lead">' + ic('check') + '</span><span class="row-text"><span class="row-title">Contas equilibradas.</span></span></div>') + '</section>';
     }
     var hist = S.settlements.slice().reverse();
-    $('settleHistory').innerHTML = hist.length ? '<div class="stops-group-label">Pagamentos feitos</div><div class="cost-list settle-list">' + hist.map(function(x){
+    $('settleHistory').innerHTML = hist.length ? '<section class="card"><div class="card-head"><h3>Pagamentos feitos</h3><span class="sec-count">' + hist.length + '</span></div><div class="settle-list">' + hist.map(function(x){
       var d = parseDate(x.paid_on);
-      return '<div class="cost-item settle-item" data-id="' + esc(x.id) + '"><span class="cost-cat">' + ic('check') + '</span><div class="cost-item-main">'
+      return '<div class="cost-item settle-item row" data-id="' + esc(x.id) + '"><span class="cost-cat row-lead">' + ic('check') + '</span><div class="cost-item-main">'
         + '<span class="cost-item-desc">' + esc(x.from_person) + ' pagou ' + money(x.amount) + ' a ' + esc(x.to_person) + '</span>'
         + '<span class="cost-item-who">' + d.getDate() + ' ' + MO[d.getMonth()] + ' ' + d.getFullYear() + (x.recorded_by ? ' · registado por ' + esc(x.recorded_by) : '') + '</span></div>'
-        + '<button class="settle-undo">Retirar</button></div>';
-    }).join('') + '</div>' : '';
-    box.innerHTML = '<div class="cost-total-row total"><span>Total gasto</span><span>' + money(total) + '</span></div>' + rows + settle;
+        + '<button class="text-btn settle-undo">Retirar</button></div>';
+    }).join('') + '</div></section>' : '';
+    box.innerHTML = '<section class="card"><div class="card-head main"><h3>Total gasto</h3><span class="total-value">' + money(total) + '</span></div>' + rows + '</section>' + settle;
 
     var byCat = {};
     S.costs.forEach(function(c){ var k = catOf(c)[0]; byCat[k] = (byCat[k] || 0) + c.amount; });
     var used = CATS.filter(function(c){ return byCat[c[0]]; }).sort(function(a, z){ return byCat[z[0]] - byCat[a[0]]; });
     var max = used.length ? byCat[used[0][0]] : 1;
-    cbox.innerHTML = '<div class="stops-group-label">Por categoria</div><div class="cat-list">' + used.map(function(c){
+    cbox.innerHTML = '<section class="card"><div class="card-head"><h3>Por categoria</h3></div><div class="cat-list">' + used.map(function(c){
       var v = byCat[c[0]];
       return '<div class="cat-row"><div class="cat-head"><span>' + c[2] + ' ' + c[1] + '</span><span>' + money(v) + ' · ' + Math.round(v / total * 100) + '%</span></div>'
         + '<div class="cat-bar"><span style="width:' + Math.max(2, v / max * 100).toFixed(1) + '%"></span></div></div>';
-    }).join('') + '</div>';
+    }).join('') + '</div></section>';
   }
   function costsChanged(){ cacheState(); renderPeople(); renderCostList(); renderCostSummary(); }
 
@@ -3473,12 +3705,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
     var box = $('ideasList'); if (!box || !TRIP) return;
     var ideas = S.stops.filter(function(s){ return s.day < 0; }), n = tripDays(TRIP), opts = '<option value="-1">Mover para um dia…</option>';
     for (var i = 0; i < n; i++) opts += '<option value="' + i + '">' + shortLabel(TRIP, i) + '</option>';
-    box.innerHTML = ideas.length ? '<div class="idea-list">' + ideas.map(function(s){
-      return '<div class="idea-item" data-id="' + esc(s.id) + '"><div class="idea-main"><div class="idea-name">' + esc(s.name) + '</div>'
-        + (s.description ? '<div class="idea-desc">' + esc(s.description) + '</div>' : '')
-        + '<select class="stop-select idea-day-select" aria-label="Mover para um dia">' + opts + '</select></div>'
+    $('ideasCount').textContent = ideas.length || '';
+    box.innerHTML = ideas.length ? ideas.map(function(s){
+      return '<div class="idea-item row" data-id="' + esc(s.id) + '"><span class="row-lead">' + ic('pin') + '</span><div class="idea-main row-text"><span class="row-title idea-name">' + esc(s.name) + '</span>'
+        + (s.description ? '<span class="row-sub idea-desc">' + esc(s.description) + '</span>' : '')
+        + '<select class="idea-day-select" aria-label="Mover para um dia">' + opts + '</select></div>'
         + '<button class="stop-remove idea-remove" aria-label="Remover">×</button></div>';
-    }).join('') + '</div>' : '<div class="tips-empty">Sem ideias guardadas. Usa o botão «+» para juntar sítios que ainda não têm dia.</div>';
+    }).join('') : '<div class="row-empty">Sem ideias guardadas. Usa o botão «+» para juntar sítios que ainda não têm dia.</div>';
   }
   $('ideasList').addEventListener('change', function(e){
     if (!e.target.classList.contains('idea-day-select')) return;
@@ -3493,11 +3726,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
     deleteStop(s);
   });
   function renderTips(){
+    $('tipsCount').textContent = S.tips.length || '';
     $('tipsList').innerHTML = S.tips.length ? S.tips.map(function(t){
-      return '<div class="note-card" data-id="' + esc(t.id) + '">'
-        + '<div class="tip-top"><div class="eyebrow">' + esc(t.tag) + '</div><button class="booking-edit tip-edit">Editar</button></div>'
-        + '<h4>' + esc(t.title) + '</h4>' + (t.body ? '<p>' + esc(t.body) + '</p>' : '') + '</div>';
-    }).join('') : '<div class="tips-empty">Ainda sem notas. Usa o botão «+» para guardar o que convém saber antes de partir.</div>';
+      return '<button class="note-card row" data-id="' + esc(t.id) + '"><span class="row-lead">' + ic('note') + '</span>'
+        + '<span class="row-text"><span class="row-title">' + esc(t.title) + '</span>'
+        + (t.tag ? '<span class="row-sub eyebrow">' + esc(t.tag) + '</span>' : '')
+        + (t.body ? '<span class="row-body">' + esc(t.body) + '</span>' : '') + '</span>'
+        + '<span class="row-chevron" aria-hidden="true">›</span></button>';
+    }).join('') : '<div class="row-empty">Ainda sem notas. Usa o botão «+» para guardar o que convém saber antes de partir.</div>';
   }
   function openTipSheet(t){
     var editing = !!t;
@@ -3530,8 +3766,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
     });
   }
   $('tipsList').addEventListener('click', function(e){
-    if (!closest(e, '.tip-edit')) return;
-    var card = closest(e, '.note-card'), t = S.tips.filter(function(x){ return x.id === card.dataset.id; })[0];
+    var card = closest(e, '.note-card'); if (!card) return;
+    var t = S.tips.filter(function(x){ return x.id === card.dataset.id; })[0];
     if (t) openTipSheet(t);
   });
 
