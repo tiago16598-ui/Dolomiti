@@ -1344,6 +1344,286 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .cost-tabs{margin-bottom:16px;}
   .cost-list-total{font-size:13px; text-transform:uppercase; letter-spacing:0.01em; color:var(--ink-soft); margin:0 4px 8px;}
   .cost-list-total:empty{display:none;}
+
+  /* Settle up */
+  .settle-label{margin:18px 4px 8px;}
+  .cost-settle{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .cost-settle.even{display:block;}
+  .settle-btn{
+    flex:none; border:none; border-radius:100px; min-height:36px; padding:0 14px; cursor:pointer;
+    background:var(--rose); color:#fff; font-size:15px; font-weight:600;
+  }
+  .settle-btn:active{opacity:0.75;}
+  .settle-list{margin:10px 0 20px;}
+  .settle-item{cursor:default;}
+  .settle-item .cost-cat{background:var(--teal-soft); color:var(--teal-deep); font-weight:700;}
+  .settle-undo{flex:none; border:none; background:none; color:var(--teal); font-size:15px; cursor:pointer; min-height:var(--tap); padding:0 2px;}
+
+  /* ============ UX: FAB, toast with undo ============ */
+  .device{position:relative;}
+  .fab{
+    position:absolute; right:18px; bottom:calc(22px + var(--safe-b)); z-index:900;
+    width:56px; height:56px; border-radius:50%; border:none; cursor:pointer;
+    background:var(--teal); color:#fff; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 18px rgba(35,44,36,0.28);
+  }
+  .fab.in-trip{bottom:calc(74px + var(--safe-b));}
+  .fab:active{transform:scale(0.94);}
+  .fab svg{width:26px; height:26px;}
+  .screen, .home-scroll{padding-bottom:calc(96px + var(--safe-b));}
+  .toast{bottom:calc(142px + var(--safe-b)); display:flex; align-items:center; justify-content:center; gap:14px; text-align:left;}
+  .toast-undo{flex:none; border:none; background:none; color:#F0C96A; font-size:15px; font-weight:700; cursor:pointer; min-height:32px; padding:0 2px;}
+  .choice-btn{
+    display:block; width:100%; text-align:left; border:none; background:var(--paper); border-radius:var(--radius-lg);
+    padding:14px 16px; margin-bottom:10px; cursor:pointer; color:var(--ink);
+  }
+  .choice-btn strong{display:block; font-size:17px; font-weight:600;}
+  .choice-btn span{display:block; font-size:14px; color:var(--ink-soft); margin-top:2px;}
+  .choice-btn:active{background:var(--bg-deep);}
+  .inline-add{display:flex; gap:8px; align-items:center; margin-top:10px;}
+  .inline-add .field-input{flex:1; min-width:0;}
+
+  /* ============ Home with context ============ */
+  .home-label{font-size:13px; text-transform:uppercase; letter-spacing:0.01em; color:var(--ink-soft); margin:0 4px -4px;}
+  .home-label.second{margin-top:12px;}
+  .trip-cover-days.now{background:var(--teal); }
+  .trip-past-list{background:var(--paper); border-radius:var(--radius-lg); overflow:hidden;}
+  .trip-card.past{display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:0; background:none; border-bottom:0.5px solid var(--line);}
+  .trip-card.past:last-child{border-bottom:none;}
+  .trip-thumb{flex:none; width:44px; height:44px; border-radius:10px; background-size:cover; background-position:center; opacity:0.75;}
+  .trip-card.past .trip-card-body{flex:1; min-width:0; padding:0; display:block;}
+  .trip-card.past .trip-card-name{display:block; font-size:17px; font-weight:600;}
+  .trip-card.past .trip-card-meta{display:block; font-size:13px;}
+  .trip-chevron{flex:none; color:var(--ink-faint); font-size:22px; line-height:1;}
+
+  /* ============ Today card ============ */
+  .today-card{background:var(--ink); color:var(--bg); border-radius:var(--radius-lg); padding:14px 16px; margin-bottom:14px;}
+  .today-top{display:flex; align-items:center; gap:8px; font-size:13px;}
+  .today-badge{background:var(--amber); color:var(--ink); font-weight:700; border-radius:100px; padding:3px 9px; font-size:12px; text-transform:uppercase; letter-spacing:0.02em;}
+  .today-date{flex:1; min-width:0; opacity:0.8; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .today-go{border:none; background:none; color:#F0C96A; font-size:14px; font-weight:600; cursor:pointer; min-height:28px; padding:0;}
+  .today-next{display:flex; align-items:center; gap:12px; margin-top:12px;}
+  .today-main{flex:1; min-width:0;}
+  .today-kicker{font-size:12px; text-transform:uppercase; letter-spacing:0.02em; opacity:0.65;}
+  .today-name{font-size:20px; font-weight:700; letter-spacing:-0.024em; margin-top:1px;}
+  .today-time{font-variant-numeric:tabular-nums; margin-right:8px; color:#F0C96A;}
+  .today-warn{font-size:13px; opacity:0.85; margin-top:3px;}
+  .today-empty{font-size:15px; opacity:0.85; margin-top:10px;}
+  .today-card .nav-link{background:var(--bg); color:var(--ink); flex:none;}
+
+  /* ============ Compact stop cards + timeline ============ */
+  .timeline{position:relative; margin-top:10px; padding-left:22px;}
+  .timeline::before{content:''; position:absolute; left:6px; top:8px; bottom:14px; width:2px; border-radius:2px; background:var(--line);}
+  .timeline.plain{padding-left:0;}
+  .timeline.plain::before{display:none;}
+  .tl-period{
+    position:relative; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--ink-soft);
+    margin:14px 0 6px;
+  }
+  .tl-period:first-child{margin-top:0;}
+  .tl-period.am{color:var(--rose-deep);} .tl-period.pm{color:var(--teal-deep);}
+  .timeline:not(.plain) .tl-period::before{
+    content:''; position:absolute; left:-22px; top:50%; width:14px; height:2px; background:var(--bg); 
+  }
+  .stop-wrap{position:relative; margin-top:8px;}
+  .stop-card.compact{position:relative;}
+  .timeline:not(.plain) .stop-card.compact::before{
+    content:''; position:absolute; left:-22px; top:50%; margin-top:-6px; width:12px; height:12px; border-radius:50%;
+    background:var(--teal); border:2.5px solid var(--bg); box-sizing:border-box;
+  }
+  .timeline .stop-card.compact.am::before{background:var(--rose);}
+  .timeline .stop-card.compact.travel::before{background:var(--ink);}
+  .stop-card.compact{
+    display:flex; align-items:center; gap:4px; margin-top:0; padding:6px 10px 6px 2px;
+    background:var(--paper); border-radius:var(--radius-lg); border-left:none;
+  }
+  .stop-card.compact.custom{box-shadow:inset 3px 0 0 var(--amber);}
+  .stop-card.compact .stop-drag{margin-left:0; width:30px; height:44px;}
+  .stop-main{
+    flex:1; min-width:0; text-align:left; border:none; background:none; cursor:pointer; color:var(--ink);
+    padding:6px 4px; min-height:var(--tap); display:flex; flex-direction:column; justify-content:center; gap:2px;
+  }
+  .stop-title{display:flex; align-items:baseline; gap:8px; min-width:0;}
+  .stop-card.compact .stop-name{font-size:17px; font-weight:600; letter-spacing:-0.022em; margin:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .stop-time-label{flex:none; font-size:15px; font-weight:700; font-variant-numeric:tabular-nums; color:var(--teal-deep);}
+  .stop-desc{font-size:14px; color:var(--ink-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .stop-warn{display:flex; align-items:flex-start; gap:5px; font-size:13px; color:var(--rose-deep); line-height:1.3;}
+  .stop-warn svg{flex:none; width:14px; height:14px; margin-top:1px;}
+  .nav-link.round{width:40px; height:40px; min-height:40px; padding:0; justify-content:center; flex:none; border-radius:50%;}
+  .nav-link.round svg{width:17px; height:17px;}
+  .leg{padding:0 0 8px 2px; font-size:13px; color:var(--ink-soft); display:block;}
+  .timeline > .leg{padding:8px 0 0 2px;}
+  .leg:empty{display:none;}
+  .stop-wrap.dragging .stop-card{box-shadow:0 10px 28px rgba(35,44,36,0.22);}
+  .sheet-body .stop-links{margin:0 0 18px;}
+  select.field-input{background-image:none;}
+
+  /* ============================================================
+     DESIGN PASS — two surface levels, sentence-case labels,
+     colour by role (teal = actions, rose = warnings and debts,
+     amber = secondary stops, ink = structure), drawn icons.
+     ============================================================ */
+  :root{
+    --bg:#F1F3EC; --bg-deep:#E7EADF; --paper:#FCFCF9; --fill:#E9ECE2;
+    --line:rgba(35,44,36,0.10); --radius:12px; --radius-lg:18px;
+  }
+  body{background:#D9DDD1;}
+  .ic{width:18px; height:18px; flex:none; display:inline-block; vertical-align:-3px;}
+
+  /* ---------- type ---------- */
+  .stops-group-label, .extra-label, .home-label{
+    font-size:17px; font-weight:700; letter-spacing:-0.02em; text-transform:none; color:var(--ink); margin:0 4px 10px;
+  }
+  .stops-group-label.second, .home-label.second{margin-top:28px;}
+  .home-label{margin-bottom:-2px;}
+  .field-label{text-transform:none; letter-spacing:0; font-size:14px; font-weight:600; color:var(--ink-soft);}
+  .day-date{text-transform:none; letter-spacing:0; font-size:15px; margin:-6px 4px 22px;}
+  .cost-list-total{text-transform:none; letter-spacing:0; font-size:14px;}
+  .section-lede{font-size:14px;}
+  .day-title-input{font-size:30px; font-weight:800; letter-spacing:-0.034em;}
+  .cost-item-amount, .cost-total-row span:last-child, .cat-head span:last-child, .stop-time-label, .leg, .leg-total,
+  .reach li span:last-child, .today-time, .confirm-meta{font-variant-numeric:tabular-nums;}
+
+  /* ---------- home ---------- */
+  #viewHome .appbar{background:var(--bg); border-bottom:none; -webkit-backdrop-filter:none; backdrop-filter:none; padding-bottom:6px;}
+  #viewHome .appbar .title{font-size:32px; font-weight:800; letter-spacing:-0.036em;}
+  #viewHome .appbar .subtitle{font-size:14px; letter-spacing:0;}
+  .appbar .mark{border-radius:12px; color:var(--paper);}
+  .appbar .mark svg{width:22px; height:22px;}
+  .trip-card.hero-card{
+    position:relative; display:flex; flex-direction:column; justify-content:space-between; align-items:flex-start;
+    height:188px; padding:14px 16px 16px; border-radius:22px; color:#fff; overflow:hidden;
+    background-size:cover; background-position:center; text-align:left;
+  }
+  .trip-card.hero-card > svg{position:absolute; inset:auto 0 0 0; width:100%; height:70%;}
+  .trip-card.hero-card::after{
+    content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(35,44,36,0.05) 30%, rgba(35,44,36,0.62) 100%);
+  }
+  .trip-status{
+    position:relative; z-index:1; font-size:13px; font-weight:600; color:var(--ink); background:rgba(252,252,249,0.92);
+    border-radius:100px; padding:5px 11px;
+  }
+  .trip-status.now{background:var(--ink); color:var(--paper);}
+  .trip-card-text{position:relative; z-index:1; display:block; min-width:0; max-width:100%;}
+  .hero-card .trip-card-name{display:block; font-size:28px; font-weight:800; letter-spacing:-0.034em; line-height:1.1;}
+  .hero-card .trip-card-meta{display:block; font-size:14px; color:rgba(255,255,255,0.88); margin-top:4px;}
+  .trip-card.hero-card:active{opacity:1; transform:scale(0.985);}
+  .trip-card{transition:transform .14s ease;}
+  .trip-thumb{border-radius:12px; opacity:1;}
+  .home-empty{border-radius:var(--radius-lg);}
+
+  /* ---------- trip cover header ---------- */
+  .hero{
+    position:relative; flex:none; overflow:hidden; color:#fff; z-index:20;
+    height:calc(150px + var(--safe-t)); transition:height .24s cubic-bezier(.2,.7,.2,1);
+    background-size:cover; background-position:center;
+  }
+  .hero::after{content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(35,44,36,0.22) 0%, rgba(35,44,36,0.10) 40%, rgba(35,44,36,0.58) 100%); transition:background .24s ease;}
+  .hero-art{position:absolute; inset:auto 0 0 0; height:75%;}
+  .hero-art svg{width:100%; height:100%; display:block;}
+  .hero-bar{
+    position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between;
+    padding:calc(6px + var(--safe-t)) 10px 0 6px;
+  }
+  .hero .back-btn{margin:0; width:var(--tap); height:var(--tap); color:#fff; padding:0; display:flex; align-items:center; justify-content:center;}
+  .hero .back-btn svg{width:26px; height:26px;}
+  .hero .appbar-action{color:#fff; font-weight:600; padding:0 10px;}
+  .hero-text{
+    position:absolute; z-index:1; left:20px; right:20px; bottom:16px; min-width:0;
+    transition:left .24s cubic-bezier(.2,.7,.2,1), right .24s cubic-bezier(.2,.7,.2,1), bottom .24s cubic-bezier(.2,.7,.2,1);
+  }
+  .hero .title{
+    font-size:32px; font-weight:800; letter-spacing:-0.036em; line-height:1.1;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap; transition:font-size .24s cubic-bezier(.2,.7,.2,1);
+  }
+  .hero .subtitle{font-size:14px; color:rgba(255,255,255,0.88); margin-top:3px; transition:font-size .24s ease, margin .24s ease;}
+  .hero.collapsed{height:calc(56px + var(--safe-t));}
+  .hero.collapsed::after{background:rgba(35,44,36,0.40);}
+  .hero.collapsed .hero-text{left:54px; right:86px; bottom:8px;}
+  .hero.collapsed .title{font-size:18px;}
+  .hero.collapsed .subtitle{font-size:12px; margin-top:0;}
+  .hero.collapsed .hero-art{opacity:0.5;}
+  .screen{padding-top:20px;}
+
+  /* ---------- roteiro ---------- */
+  .day-selector{padding-bottom:16px;}
+  .day-chip{background:transparent; color:var(--ink-soft); box-shadow:inset 0 0 0 1px var(--line); font-weight:600;}
+  .day-chip.active{box-shadow:none;}
+  .day-base-pill{background:none; padding:0; font-size:13px; font-weight:500;}
+  .day-title-row{margin-bottom:8px;}
+  @keyframes daySwap{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+  .day-panel.swap{animation:daySwap .2s ease;}
+  .tl-period, .tl-period.am, .tl-period.pm{text-transform:none; letter-spacing:0; font-size:14px; font-weight:600; color:var(--ink-soft);}
+  .timeline .stop-card.compact::before, .timeline .stop-card.compact.am::before, .timeline .stop-card.compact.travel::before{background:var(--ink);}
+  .stop-card.compact{padding:8px 12px 8px 4px;}
+  .stop-card.compact.custom{box-shadow:none;}
+  .stop-card.compact.custom .stop-name::after{
+    content:''; display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--amber); margin-left:8px; vertical-align:2px;
+  }
+  .stop-time-label{color:var(--ink);}
+  .stop-desc{font-size:15px;}
+  .leg{font-size:13px;}
+  .leg-total{font-weight:500;}
+  .arrow-btn{background:none; box-shadow:inset 0 0 0 1px var(--line);}
+  .today-card{border-radius:22px; padding:16px 18px;}
+  .today-badge{background:var(--paper); color:var(--ink); text-transform:none; letter-spacing:0; font-size:13px;}
+  .today-kicker{text-transform:none; letter-spacing:0; font-size:13px;}
+  .today-time{color:#fff;}
+  .today-go{color:#fff; text-decoration:underline; text-underline-offset:3px;}
+  .resv-remove, .attachment-remove, .stop-remove, .person-remove{color:var(--ink-faint);}
+  .resv-add-btn, .booking-link-save{border-radius:100px;}
+  .resv-add-input{border-radius:100px; padding-left:16px;}
+
+  /* ---------- reservas ---------- */
+  .base-card{padding:18px; margin-bottom:14px;}
+  .base-card .base-no, .base-card.car .base-no{font-size:14px; font-weight:600; color:var(--ink-soft);}
+  .base-card h3{font-size:22px; font-weight:800; letter-spacing:-0.03em;}
+  .base-card .nights, .base-card.two .nights{color:var(--ink-soft); font-weight:400;}
+  .attachment-icon{color:var(--ink-soft); display:flex;}
+  .booking-link-input{background:none; border-radius:0; padding:11px 0; box-shadow:inset 0 -1px 0 var(--line);}
+  .booking-link-save{background:none; color:var(--teal); padding:11px 4px;}
+  .booking-file-btn{background:none; justify-content:flex-start; gap:8px; color:var(--teal); font-weight:600; margin-top:2px;}
+  .booking-file-btn:active{background:none; opacity:0.6;}
+  .nav-link.booking-nav{margin-top:14px;}
+
+  /* ---------- despesas ---------- */
+  .cost-cat{background:var(--fill); color:var(--ink-soft);}
+  .settle-item .cost-cat{background:var(--fill); color:var(--ink);}
+  .row-chevron{flex:none; color:var(--ink-faint); font-size:22px; line-height:1;}
+  .cost-item-amount{color:var(--ink); font-weight:600;}
+  .person-chip.me{background:var(--paper); color:var(--ink); box-shadow:inset 0 0 0 1.5px var(--ink);}
+  .cost-settle.even{background:var(--fill); color:var(--ink); display:flex; justify-content:flex-start; gap:8px;}
+  .settle-btn{background:var(--teal);}
+  .cat-bar span{background:var(--ink);}
+  .cat-head .ic{margin-right:6px; color:var(--ink-soft);}
+  .chip .ic{margin-right:5px; width:16px; height:16px;}
+  .whoami-row{background:none; padding:4px; margin-bottom:22px; font-size:15px;}
+  .cost-total-row.total{font-size:20px; font-weight:800; letter-spacing:-0.02em;}
+  .settle-label{margin-top:24px;}
+
+  /* ---------- notas ---------- */
+  .note-card .eyebrow{text-transform:none; letter-spacing:0; font-size:13px; font-weight:600; color:var(--ink-soft);}
+  .idea-day-select{background-color:var(--fill);}
+
+  /* ---------- chrome ---------- */
+  .tab.active{color:var(--ink);} .tab.active svg{stroke:var(--ink);}
+  .tab span{font-size:11px;}
+  .loc-google-link{gap:6px;} .loc-google-link::after{content:none;}
+  .toast{border-radius:100px; padding:12px 20px;}
+  .toast-undo{color:#fff; text-decoration:underline; text-underline-offset:3px;}
+  .fab{box-shadow:0 8px 22px rgba(46,110,106,0.38); transition:transform .12s ease;}
+  .sheet{border-radius:24px 24px 0 0;}
+  .sheet-title{font-weight:700;}
+  .sheet-backdrop{animation:fadeIn .18s ease;}
+  .legend{font-size:15px;}
+
+  /* ---------- loading ---------- */
+  @keyframes skel{0%{opacity:0.55;} 50%{opacity:1;} 100%{opacity:0.55;}}
+  .skel{height:64px; border-radius:var(--radius-lg); background:var(--paper); margin-top:10px; animation:skel 1.2s ease-in-out infinite;}
+  .skel.tall{height:188px; border-radius:22px; margin-top:0;}
+  .skel-list .skel:nth-child(2){animation-delay:.12s;} .skel-list .skel:nth-child(3){animation-delay:.24s;}
+  .timeline:not(.plain) .stop-card.compact::before{background:var(--ink);}
+  .legend .dot{padding:0; border-top:none; display:block;}
 </style>
 </head>
 <body>
@@ -1352,33 +1632,35 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <!-- ============ MENU INICIAL ============ -->
   <div class="view" id="viewHome">
     <header class="appbar">
-      <div class="mark">△</div>
+      <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19 9 8l4 6 3-4 5 9Z"/></svg></div>
       <div>
         <div class="title">Viagens</div>
         <div class="subtitle" id="homeSubtitle">A carregar…</div>
       </div>
     </header>
     <div class="home-scroll">
-      <div class="trip-list" id="tripList"></div>
-      <button class="primary-btn" id="newTripBtn">+ Nova viagem</button>
+      <div class="trip-list" id="tripList"><div class="skel tall"></div><div class="skel tall"></div></div>
     </div>
   </div>
 
   <!-- ============ VIAGEM ============ -->
   <div class="view" id="viewTrip" hidden>
-    <header class="appbar">
-      <button class="back-btn" id="backBtn" aria-label="Voltar às viagens">‹</button>
-      <div class="appbar-text">
+    <header class="hero" id="tripHero">
+      <div class="hero-art" id="heroArt"></div>
+      <div class="hero-bar">
+        <button class="back-btn" id="backBtn" aria-label="Voltar às viagens"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="appbar-action" id="editTripBtn">Editar</button>
+      </div>
+      <div class="hero-text">
         <div class="title" id="tripTitle"></div>
         <div class="subtitle" id="tabSubtitle"></div>
       </div>
-      <button class="appbar-action" id="editTripBtn">Editar</button>
     </header>
 
     <main class="screens">
 
       <section class="screen active" id="screen-roteiro">
-        <p class="section-lede">Manhã a rosa = o plano principal do dia. Tarde a verde = a parte tranquila.</p>
+        <div class="today-card" id="todayCard" hidden></div>
         <div class="day-selector" id="daySelector"></div>
         <article class="day-panel active" id="dayPanel"></article>
         <div class="day-arrows">
@@ -1388,13 +1670,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </section>
 
       <section class="screen" id="screen-reservas">
-        <p class="section-lede">Alojamento, transporte e outras reservas — com os links e ficheiros de cada uma.</p>
         <div id="bookingsList"></div>
-        <button class="extra-booking-add-btn" id="bookingAddBtn">+ Adicionar reserva</button>
       </section>
 
       <section class="screen" id="screen-mapa">
-        <p class="section-lede">Todas as paragens com localização, ligadas por dia a partir do alojamento.</p>
         <div id="map" role="img" aria-label="Mapa do roteiro"></div>
         <div class="legend" id="mapLegend"></div>
       </section>
@@ -1406,9 +1685,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
         </div>
 
         <div id="paneCostList">
-          <button class="cost-add-btn" id="costAddBtn">+ Adicionar despesa</button>
           <div class="cost-list-total" id="costListTotal"></div>
-          <div class="cost-empty" id="costListEmpty">Ainda sem despesas. Regista a primeira com o botão acima.</div>
+          <div class="cost-empty" id="costListEmpty">Ainda sem despesas. Regista a primeira com o botão «+».</div>
           <div class="cost-list" id="costList"></div>
         </div>
 
@@ -1420,18 +1698,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
             <button id="whoamiChange">mudar</button>
           </div>
           <div class="cost-summary" id="costSummary"></div>
+          <div id="settleHistory"></div>
           <div id="costCategories"></div>
         </div>
       </section>
 
       <section class="screen" id="screen-notas">
-        <p class="section-lede">Ideias ainda sem dia e o que convém saber antes de partir.</p>
         <div class="stops-group-label">Ideias sem dia</div>
         <div id="ideasList"></div>
-        <button class="extra-booking-add-btn" id="ideaAddBtn">+ Adicionar ideia</button>
         <div class="stops-group-label second notes-label">Notas gerais</div>
         <div id="tipsList"></div>
-        <button class="extra-booking-add-btn" id="tipAddBtn">+ Adicionar nota</button>
       </section>
 
     </main>
@@ -1472,6 +1748,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
   </div>
 
+  <button class="fab" id="fab" aria-label="Nova viagem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
   <div class="toast" id="toast" hidden></div>
 </div>
 
@@ -1492,7 +1769,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   var BUCKET = 'dolomiti-files';
   var TB = {
     trips: 'trips', days: 'trip_days', notes: 'trip_day_notes', bookings: 'trip_bookings', tips: 'trip_tips',
-    stops: 'dolomiti_stops', checklist: 'dolomiti_reservations', costs: 'dolomiti_costs', attachments: 'dolomiti_booking_attachments'
+    stops: 'dolomiti_stops', checklist: 'dolomiti_reservations', costs: 'dolomiti_costs', settlements: 'trip_settlements', attachments: 'dolomiti_booking_attachments'
   };
 
   /* ---------- helpers ---------- */
@@ -1506,12 +1783,58 @@ svg.leaflet-image-layer.leaflet-interactive path {
   function closest(e, sel){ return e.target.closest ? e.target.closest(sel) : null; }
   function autoGrow(el){ el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
 
+  var ICON_PATHS = {
+    bed: '<path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6M3 18h18M6 10V7a2 2 0 0 1 2-2h3v5"/>',
+    car: '<path d="M5 16v2M19 16v2M3.5 16.5v-4l2-5.5h13l2 5.5v4ZM3.5 12.5h17"/><circle cx="7.5" cy="14.5" r="0.6"/><circle cx="16.5" cy="14.5" r="0.6"/>',
+    fork: '<path d="M7 3v8M4.5 3v4.5a2.5 2.5 0 0 0 5 0V3M7 11v10M17 3c-2 1.5-3 4-3 7h3ZM17 3v18"/>',
+    ticket: '<path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4ZM14 6v12"/>',
+    bag: '<path d="M5 8h14l-1 12H6ZM9 8V6a3 3 0 0 1 6 0v2"/>',
+    dots: '<circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/>',
+    check: '<path d="M5 12.5l4.5 4.5L19 7"/>',
+    link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+    file: '<path d="M7 3h7l5 5v13H7ZM14 3v5h5M10 13h6M10 17h6"/>',
+    image: '<rect x="3.5" y="5" width="17" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M4 17l5-4 4 3 3-2.5 4 3.5"/>',
+    clip: '<path d="M20 11.5l-8 8a5 5 0 0 1-7-7l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7L9.8 17.1a1.7 1.7 0 0 1-2.4-2.4l7.6-7.6"/>',
+    search: '<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>'
+  };
+  function ic(name){
+    return '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICON_PATHS[name] || '') + '</svg>';
+  }
   var toastTimer = null;
   function toast(msg){
+    commitUndo();
     var t = $('toast');
     t.textContent = msg; t.hidden = false;
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function(){ t.hidden = true; }, 3200);
+  }
+  // Deleting is instant on screen; the server delete waits a few seconds so "Anular" can bring it back intact.
+  var undoState = null;
+  function commitUndo(){
+    if (!undoState) return;
+    var u = undoState; undoState = null;
+    clearTimeout(u.timer); $('toast').hidden = true;
+    u.commit();
+  }
+  function offerUndo(msg, restore, commit){
+    commitUndo();
+    var t = $('toast');
+    clearTimeout(toastTimer);
+    t.innerHTML = '<span></span><button class="toast-undo" id="toastUndo">Anular</button>';
+    t.firstChild.textContent = msg; t.hidden = false;
+    undoState = { restore: restore, commit: commit, timer: setTimeout(commitUndo, 6000) };
+  }
+  $('toast').addEventListener('click', function(e){
+    if (!closest(e, '#toastUndo') || !undoState) return;
+    var u = undoState; undoState = null;
+    clearTimeout(u.timer); $('toast').hidden = true;
+    u.restore();
+  });
+  window.addEventListener('pagehide', commitUndo);
+  function removeWithUndo(key, item, msg, path, after){
+    var i = S[key].indexOf(item); if (i < 0) return;
+    S[key].splice(i, 1); after();
+    offerUndo(msg, function(){ S[key].splice(Math.min(i, S[key].length), 0, item); after(); }, function(){ save('DELETE', path); });
   }
 
   /* ---------- Supabase ---------- */
@@ -1522,7 +1845,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   function api(method, path, body, prefer){
     return fetch(SB_URL + '/rest/v1/' + path, {
-      method: method,
+      method: method, keepalive: method !== 'GET',
       headers: headers(method === 'GET' ? null : { 'Prefer': prefer || 'return=minimal' }),
       body: body === undefined ? undefined : JSON.stringify(body)
     }).then(function(r){
@@ -1593,11 +1916,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
   var S = emptyState();
   var currentDay = 0;
   var map = null, mapLayers = [];
-  function emptyState(){ return { days: {}, notes: {}, stops: [], checklist: [], bookings: [], attachments: [], costs: [], tips: [] }; }
+  function emptyState(){ return { days: {}, notes: {}, stops: [], checklist: [], bookings: [], attachments: [], costs: [], tips: [], settlements: [] }; }
   function cacheGet(key){ try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
   function cacheSet(key, val){ try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
   function cacheState(){ if (TRIP) cacheSet('viagens_trip_' + TRIP.id, S); }
 
+  var LOADING = false;
+  function skeleton(n){ var h = ''; for (var i = 0; i < n; i++) h += '<div class="skel"></div>'; return '<div class="skel-list" aria-label="A carregar">' + h + '</div>'; }
   var COVERS = ['rose', 'teal', 'amber', 'moss', 'ink'];
   var COVER_HEX = { rose: '#B8523E', teal: '#2E6E6A', amber: '#C99A2E', moss: '#6B7F4F', ink: '#232C24' };
   var COVER_ART = '<svg viewBox="0 0 400 104" preserveAspectRatio="none" aria-hidden="true">'
@@ -1613,6 +1938,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     $('sheetSave').textContent = opts.saveLabel || 'Guardar';
     $('sheetSave').disabled = false;
     $('sheetSave').classList.toggle('danger', !!opts.danger);
+    $('sheetSave').hidden = !!opts.hideSave;
     $('sheetBody').innerHTML = opts.html;
     sheetOnSave = opts.onSave;
     $('sheet').hidden = false;
@@ -1635,6 +1961,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     Promise.resolve().then(function(){ return sheetOnSave($('sheetBody')); }).then(function(ok){
       btn.disabled = false;
       if (ok !== false) closeSheet();
+      if (typeof ok === 'function') ok();
     }).catch(function(){
       btn.disabled = false;
       sheetError('Não foi possível guardar. Verifica a ligação à internet e tenta outra vez.');
@@ -1644,32 +1971,58 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* ============================================================
      HOME — list of trips
      ============================================================ */
-  function coverHtml(t){
-    var style = t.cover_url ? ' style="background-image:url(\'' + esc(t.cover_url) + '\')"' : '';
-    var n = tripDays(t);
-    return '<div class="trip-cover cover-' + esc(COVER_HEX[t.cover_color] ? t.cover_color : 'rose') + '"' + style + '>'
-      + (t.cover_url ? '' : COVER_ART)
-      + '<span class="trip-cover-days">' + n + (n === 1 ? ' dia' : ' dias') + '</span></div>';
+  function tripStatus(t){
+    var today = isoDate(new Date()), toStart = diffDays(t.start_date, today), toEnd = diffDays(t.end_date, today);
+    if (toEnd < 0) return { k: 'past', label: 'Terminada' };
+    if (toStart <= 0) return { k: 'now', label: 'A decorrer · dia ' + (1 - toStart) + ' de ' + tripDays(t) };
+    return { k: 'next', label: toStart === 1 ? 'Começa amanhã' : 'Faltam ' + toStart + ' dias' };
   }
+  function tripMeta(t){
+    var n = tripDays(t);
+    return (t.destination ? esc(t.destination) + ' · ' : '') + rangeLabel(t) + ' · ' + n + (n === 1 ? ' dia' : ' dias');
+  }
+  var homeBlocked = false;
   function renderHome(problem){
     var list = $('tripList');
+    homeBlocked = !!(problem && problem.blockCreate);
+    updateFab();
     if (problem){
       list.innerHTML = '<div class="home-empty"><strong>' + esc(problem.title) + '</strong>' + esc(problem.text) + '</div>';
       $('homeSubtitle').textContent = 'Sem dados';
-      $('newTripBtn').hidden = !!problem.blockCreate;
       return;
     }
-    $('newTripBtn').hidden = false;
     $('homeSubtitle').textContent = TRIPS.length === 0 ? 'Nenhuma viagem ainda' : TRIPS.length + (TRIPS.length === 1 ? ' viagem' : ' viagens');
     if (!TRIPS.length){
-      list.innerHTML = '<div class="home-empty"><strong>Ainda não há viagens.</strong>Cria a primeira: dá-lhe um nome e escolhe as datas.</div>';
+      list.innerHTML = '<div class="home-empty"><strong>Ainda não há viagens.</strong>Cria a primeira com o botão «+»: dá-lhe um nome e escolhe as datas.</div>';
       return;
     }
-    list.innerHTML = TRIPS.map(function(t){
-      return '<button class="trip-card" data-id="' + esc(t.id) + '">' + coverHtml(t)
-        + '<div class="trip-card-body"><div class="trip-card-name">' + esc(t.name) + '</div>'
-        + '<div class="trip-card-meta">' + (t.destination ? esc(t.destination) + ' · ' : '') + rangeLabel(t) + '</div></div></button>';
-    }).join('');
+    var live = [], past = [];
+    TRIPS.forEach(function(t){ var st = tripStatus(t); (st.k === 'past' ? past : live).push({ t: t, st: st }); });
+    live.sort(function(a, b){ return a.t.start_date < b.t.start_date ? -1 : 1; });
+    past.sort(function(a, b){ return a.t.end_date < b.t.end_date ? 1 : -1; });
+    var html = '';
+    if (live.length){
+      html += '<div class="home-label">' + (live.some(function(x){ return x.st.k === 'now'; }) ? 'A decorrer e próximas' : 'Próximas') + '</div>'
+        + live.map(function(x){
+          var style = x.t.cover_url ? ' style="background-image:url(\'' + esc(x.t.cover_url) + '\')"' : '';
+          return '<button class="trip-card hero-card cover-' + esc(COVER_HEX[x.t.cover_color] ? x.t.cover_color : 'rose') + '" data-id="' + esc(x.t.id) + '"' + style + '>'
+            + (x.t.cover_url ? '' : COVER_ART)
+            + '<span class="trip-status' + (x.st.k === 'now' ? ' now' : '') + '">' + x.st.label + '</span>'
+            + '<span class="trip-card-text"><span class="trip-card-name">' + esc(x.t.name) + '</span>'
+            + '<span class="trip-card-meta">' + tripMeta(x.t) + '</span></span></button>';
+        }).join('');
+    }
+    if (past.length){
+      html += '<div class="home-label' + (live.length ? ' second' : '') + '">Passadas</div><div class="trip-past-list">'
+        + past.map(function(x){
+          var style = x.t.cover_url ? ' style="background-image:url(\'' + esc(x.t.cover_url) + '\')"' : '';
+          return '<button class="trip-card past" data-id="' + esc(x.t.id) + '">'
+            + '<span class="trip-thumb cover-' + esc(COVER_HEX[x.t.cover_color] ? x.t.cover_color : 'rose') + '"' + style + '></span>'
+            + '<span class="trip-card-body"><span class="trip-card-name">' + esc(x.t.name) + '</span>'
+            + '<span class="trip-card-meta">' + tripMeta(x.t) + '</span></span><span class="trip-chevron">›</span></button>';
+        }).join('') + '</div>';
+    }
+    list.innerHTML = html;
   }
   function sortTrips(){ TRIPS.sort(function(a, b){ return a.start_date < b.start_date ? 1 : (a.start_date > b.start_date ? -1 : 0); }); }
   function loadTrips(){
@@ -1691,7 +2044,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
     var card = closest(e, '.trip-card');
     if (card) location.hash = '#/v/' + encodeURIComponent(card.dataset.id);
   });
-  $('newTripBtn').addEventListener('click', function(){ openTripSheet(null); });
 
   /* ---------- trip form (create / edit) ---------- */
   function openTripSheet(trip){
@@ -1699,7 +2051,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     var today = isoDate(new Date());
     var color = editing ? trip.cover_color : COVERS[TRIPS.length % COVERS.length];
     var coverUrl = editing ? trip.cover_url : null;
-    var pendingFile = null;
+    var pendingFile = null, shortOk = '';
     var html = ''
       + '<div class="field"><label class="field-label" for="fName">Nome</label>'
       +   '<input class="field-input" id="fName" type="text" placeholder="Ex.: Açores com a família" value="' + esc(editing ? trip.name : '') + '"></div>'
@@ -1740,7 +2092,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
           if (!/^image\//.test(f.type)){ sheetError('A capa tem de ser uma imagem.'); return; }
           if (f.size > 15 * 1024 * 1024){ sheetError('Imagem demasiado grande (máx. 15MB).'); return; }
           pendingFile = f;
-          body.querySelector('#fCoverText').textContent = '✓ ' + f.name;
+          body.querySelector('#fCoverText').textContent = 'Foto escolhida: ' + f.name;
         });
         var rm = body.querySelector('#fCoverRemove');
         if (rm) rm.addEventListener('click', function(){
@@ -1760,8 +2112,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
         if (end < start){ sheetError('A data de fim tem de ser igual ou posterior à de início.'); return false; }
         var n = diffDays(end, start) + 1;
         if (n > MAX_DAYS){ sheetError('A viagem pode ter no máximo ' + MAX_DAYS + ' dias.'); return false; }
-        if (editing && n < tripDays(trip)
-            && !window.confirm('A viagem fica mais curta. O que estiver nos dias que desaparecem passa para o último dia. Continuar?')) return false;
+        if (editing && n < tripDays(trip) && shortOk !== start + end){
+          shortOk = start + end;
+          sheetError('A viagem fica mais curta: o que estiver nos dias que desaparecem passa para o último dia. Carrega em «Guardar» outra vez para confirmar.');
+          return false;
+        }
 
         var fields = { name: name, destination: dest, start_date: start, end_date: end, cover_color: color, cover_url: coverUrl };
         var steps = Promise.resolve();
@@ -1862,15 +2217,41 @@ svg.leaflet-image-layer.leaflet-interactive path {
     var id = m ? decodeURIComponent(m[1]) : null;
     var trip = id ? TRIPS.filter(function(t){ return t.id === id; })[0] : null;
     if (!trip){
-      TRIP = null; destroyMap();
+      commitUndo(); TRIP = null; destroyMap(); updateFab();
       $('viewTrip').hidden = true; $('viewHome').hidden = false;
       document.title = 'Viagens';
       return;
     }
-    if (TRIP && TRIP.id === trip.id) return;
+    if (TRIP && TRIP.id === trip.id){
+      // The list was refreshed from the server: keep working on the fresh copy of this trip.
+      if (TRIP !== trip){ TRIP = trip; renderAll(); }
+      return;
+    }
     openTrip(trip);
   }
   window.addEventListener('hashchange', route);
+  function updateFab(){
+    var fab = $('fab'), inTrip = !!TRIP, a = inTrip ? activeScreen() : '';
+    fab.classList.toggle('in-trip', inTrip);
+    fab.hidden = inTrip ? a === 'screen-mapa' : homeBlocked;
+    fab.setAttribute('aria-label', !inTrip ? 'Nova viagem' : ({ 'screen-roteiro': 'Adicionar localização', 'screen-reservas': 'Adicionar reserva', 'screen-custos': 'Adicionar despesa', 'screen-notas': 'Adicionar ideia ou nota' }[a] || 'Adicionar'));
+  }
+  $('fab').addEventListener('click', function(){
+    if (!TRIP){ openTripSheet(null); return; }
+    var a = activeScreen();
+    if (a === 'screen-roteiro') addStop(currentDay);
+    else if (a === 'screen-reservas') openBookingSheet(null);
+    else if (a === 'screen-custos') openCostSheet(null);
+    else if (a === 'screen-notas') openSheet({
+      title: 'Adicionar', hideSave: true,
+      html: '<button type="button" class="choice-btn" id="chIdea"><strong>Ideia sem dia</strong><span>Um sítio que ainda não tem dia no roteiro.</span></button>'
+        + '<button type="button" class="choice-btn" id="chTip"><strong>Nota geral</strong><span>Algo que convém saber antes de partir.</span></button>',
+      onOpen: function(body){
+        body.querySelector('#chIdea').addEventListener('click', function(){ closeSheet(); addStop(-1); });
+        body.querySelector('#chTip').addEventListener('click', function(){ closeSheet(); openTipSheet(null); });
+      }
+    });
+  });
   $('backBtn').addEventListener('click', function(){ location.hash = ''; });
   $('editTripBtn').addEventListener('click', function(){ if (TRIP) openTripSheet(TRIP); });
 
@@ -1884,6 +2265,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
   function activeScreen(){ var el = document.querySelector('.screen.active'); return el ? el.id : 'screen-roteiro'; }
   function renderTripChrome(){
     $('tripTitle').textContent = TRIP.name;
+    var hero = $('tripHero'), color = COVER_HEX[TRIP.cover_color] ? TRIP.cover_color : 'rose';
+    COVERS.forEach(function(c){ hero.classList.toggle('cover-' + c, c === color); });
+    hero.style.backgroundImage = TRIP.cover_url ? "url('" + String(TRIP.cover_url).replace(/'/g, '%27') + "')" : '';
+    $('heroArt').innerHTML = TRIP.cover_url ? '' : COVER_ART;
     $('tabSubtitle').textContent = SUBTITLES[activeScreen()] + ' · ' + rangeLabel(TRIP);
     document.title = TRIP.name + ' — Viagens';
   }
@@ -1891,22 +2276,35 @@ svg.leaflet-image-layer.leaflet-interactive path {
     document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('active', t.dataset.target === target); });
     document.querySelectorAll('.screen').forEach(function(s){ s.classList.toggle('active', s.id === target); });
     if (TRIP) renderTripChrome();
+    updateFab();
+    var scr = $(target); $('tripHero').classList.toggle('collapsed', target === 'screen-mapa' || (scr && scr.scrollTop > 24));
     if (target === 'screen-mapa'){
       if (!map) initMap();
       setTimeout(function(){ if (map) map.invalidateSize(); }, 60);
     }
     if (target === 'screen-roteiro'){ var ta = document.querySelector('#dayPanel .notes-input'); if (ta) autoGrow(ta); }
   }
+  // The cover shrinks into a compact bar as soon as the content is scrolled.
+  document.querySelectorAll('.screen').forEach(function(scr){
+    scr.addEventListener('scroll', function(){
+      if (!scr.classList.contains('active') || scr.id === 'screen-mapa') return;
+      var hero = $('tripHero');
+      if (scr.scrollTop > 24) hero.classList.add('collapsed');
+      else if (scr.scrollTop <= 0) hero.classList.remove('collapsed');
+    }, { passive: true });
+  });
   document.querySelectorAll('.tab').forEach(function(tab){
     tab.addEventListener('click', function(){ activateTab(tab.dataset.target); });
   });
 
   function openTrip(trip){
-    TRIP = trip; S = emptyState(); currentDay = 0; destroyMap(); showCostPane('list');
+    commitUndo(); TRIP = trip; S = emptyState(); currentDay = 0; destroyMap(); showCostPane('list');
     // Open on today's date when the trip is under way.
     var todayIdx = diffDays(isoDate(new Date()), trip.start_date);
-    if (todayIdx > 0 && todayIdx < tripDays(trip)) currentDay = todayIdx;
+    if (todayIdx >= 0 && todayIdx < tripDays(trip)) currentDay = todayIdx;
     $('viewHome').hidden = true; $('viewTrip').hidden = false;
+    var cachedNow = cacheGet('viagens_trip_' + trip.id);
+    if (cachedNow) S = Object.assign(emptyState(), cachedNow); else LOADING = true;
     activateTab('screen-roteiro');
     renderAll();
     var q = '?trip_id=eq.' + encodeURIComponent(trip.id);
@@ -1918,7 +2316,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
       api('GET', TB.bookings + q + '&select=id,kind,title,details,first_night,last_night,lat,lng,created_at&order=created_at.asc'),
       api('GET', TB.attachments + q + '&select=id,base_id,url,label&order=created_at.asc'),
       api('GET', TB.costs + q + '&select=id,description,amount,paid_by,category,split_with&order=created_at.asc'),
-      api('GET', TB.tips + q + '&select=id,tag,title,body&order=created_at.asc')
+      api('GET', TB.tips + q + '&select=id,tag,title,body&order=created_at.asc'),
+      api('GET', TB.settlements + q + '&select=id,from_person,to_person,amount,paid_on,recorded_by&order=created_at.asc')
     ]).then(function(r){
       if (!TRIP || TRIP.id !== trip.id) return;
       var st = emptyState();
@@ -1930,11 +2329,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
       st.attachments = r[5];
       st.costs = r[6].map(function(x){ x.amount = Number(x.amount); return x; });
       st.tips = r[7];
-      S = st; cacheState(); renderAll();
+      st.settlements = r[8].map(function(x){ x.amount = Number(x.amount); return x; });
+      LOADING = false; S = st; cacheState(); renderAll();
     }).catch(function(){
       if (!TRIP || TRIP.id !== trip.id) return;
-      var cached = cacheGet('viagens_trip_' + trip.id);
-      if (cached){ S = Object.assign(emptyState(), cached); renderAll(); }
+      LOADING = false; renderAll();
       toast('Sem ligação — a mostrar a última cópia guardada neste aparelho.');
     });
   }
@@ -1998,6 +2397,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     }
     $('daySelector').innerHTML = chips;
     renderDay();
+    renderToday();
   }
   function renderDay(){
     var d = currentDay, n = tripDays(TRIP);
@@ -2011,7 +2411,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
       + '</div>'
       + '<div class="day-date">' + longLabel(TRIP, d) + '</div>'
       + '<div class="stops-list" id="stopsList"></div>'
-      + '<button class="stop-add-btn" id="stopAddBtn">+ Adicionar localização</button>'
       + '<div class="day-extra">'
       +   '<div class="extra-block"><div class="extra-label">Reservas a fazer</div>'
       +     '<div class="resv-list" id="resvList"></div>'
@@ -2027,10 +2426,36 @@ svg.leaflet-image-layer.leaflet-interactive path {
     if (chip && chip.scrollIntoView) chip.scrollIntoView({ inline: 'center', block: 'nearest' });
     renderStops(); renderChecklist();
   }
+  function todayIndex(){
+    var i = diffDays(isoDate(new Date()), TRIP.start_date);
+    return i >= 0 && i < tripDays(TRIP) ? i : -1;
+  }
+  function renderToday(){
+    var box = $('todayCard'); if (!box || !TRIP) return;
+    var idx = todayIndex();
+    if (idx < 0){ box.hidden = true; box.innerHTML = ''; return; }
+    var stops = sortStops(S.stops.filter(function(s){ return s.day === idx && !s.is_custom; }));
+    var d = new Date(), now = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+    var next = stops.filter(function(s){ return !s.visit_time || s.visit_time >= now; })[0];
+    var bodyHtml;
+    if (next){
+      bodyHtml = '<div class="today-next"><div class="today-main"><div class="today-kicker">Próxima paragem</div>'
+        + '<div class="today-name">' + (next.visit_time ? '<span class="today-time">' + esc(next.visit_time) + '</span>' : '') + esc(next.name) + '</div>'
+        + (next.warning ? '<div class="today-warn">' + esc(next.warning) + '</div>' : '') + '</div>'
+        + '<a class="nav-link" href="' + navUrl(next) + '" target="_blank" rel="noopener">' + NAV_ICON + 'Navegar</a></div>';
+    } else {
+      bodyHtml = '<div class="today-empty">' + (stops.length ? 'As paragens com hora de hoje já passaram.' : 'Sem paragens planeadas para hoje.') + '</div>';
+    }
+    box.hidden = false;
+    box.innerHTML = '<div class="today-top"><span class="today-badge">Hoje</span><span class="today-date">' + longLabel(TRIP, idx) + ' · dia ' + (idx + 1) + ' de ' + tripDays(TRIP) + '</span>'
+      + (currentDay !== idx ? '<button class="today-go" id="todayGo">Ver dia</button>' : '') + '</div>' + bodyHtml;
+  }
+  $('todayCard').addEventListener('click', function(e){ if (closest(e, '#todayGo')) showDay(todayIndex()); });
   function showDay(i){
     flushPending();
     currentDay = Math.max(0, Math.min(tripDays(TRIP) - 1, i));
-    renderDay();
+    renderDay(); renderToday();
+    var panel = $('dayPanel'); panel.classList.remove('swap'); void panel.offsetWidth; panel.classList.add('swap');
     $('screen-roteiro').scrollTop = 0;
   }
   $('daySelector').addEventListener('click', function(e){ var c = closest(e, '.day-chip'); if (c) showDay(Number(c.dataset.day)); });
@@ -2066,34 +2491,29 @@ svg.leaflet-image-layer.leaflet-interactive path {
       : (x.name || x.title) + (TRIP.destination ? ', ' + TRIP.destination : '');
     return 'https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=' + encodeURIComponent(dest);
   }
+  var WARN_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 2.5 20h19Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 10v4.5M12 17.2v.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
   function stopCard(s){
-    var n = tripDays(TRIP), dayOpts = '', perOpts = '';
-    for (var i = 0; i < n; i++) dayOpts += '<option value="' + i + '"' + (i === s.day ? ' selected' : '') + '>' + shortLabel(TRIP, i) + '</option>';
-    ['am', 'pm', 'travel'].forEach(function(p){ perOpts += '<option value="' + p + '"' + (p === s.period ? ' selected' : '') + '>' + PERIOD[p] + '</option>'; });
     var per = periodOf(s);
-    dayOpts += '<option value="-1">Sem dia</option>';
-    var q = s.name + (TRIP.destination ? ' ' + TRIP.destination : '');
-    return '<div class="block stop-card ' + per + (s.is_custom ? ' custom' : '') + '" data-id="' + esc(s.id) + '">'
-      + '<div class="stop-top">'
-      +   '<select class="stop-select stop-period-select ' + per + '" aria-label="Período">' + perOpts + '</select>'
-      +   (s.is_custom ? '<span class="stop-custom-badge">Secundária</span>' : '')
-      +   '<span class="stop-top-spacer"></span>'
-      +   '<select class="stop-select stop-day-select" aria-label="Dia">' + dayOpts + '</select>'
-      +   '<button class="stop-remove" aria-label="Remover">×</button>'
-      + '</div>'
-      + '<div class="stop-name-row"><button class="stop-drag" aria-label="Arrastar para reordenar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9h14M5 15h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button><div class="stop-name">' + esc(s.name) + '</div>'
-      +   '<label class="stop-time' + (s.visit_time ? ' set' : '') + '"><span>Hora</span><input type="time" class="stop-time-input" value="' + esc(s.visit_time || '') + '"></label></div>'
-      + '<textarea class="stop-desc-input" placeholder="Descrição…">' + esc(s.description) + '</textarea>'
-      + '<input type="text" class="stop-warning-input" placeholder="Aviso (opcional)" value="' + esc(s.warning) + '">'
-      + '<div class="stop-links">'
-      +   '<a class="nav-link" href="' + navUrl(s) + '" target="_blank" rel="noopener">' + NAV_ICON + 'Navegar</a>'
-      +   '<a class="loc-google-link" href="https://www.google.com/search?q=' + encodeURIComponent(q) + '" target="_blank" rel="noopener">🔍 Pesquisar no Google</a>'
-      + '</div>'
-      + (s.is_custom ? '<button class="stop-promote">↑ Passar para o plano do dia</button>' : '')
+    return '<div class="stop-card compact ' + per + (s.is_custom ? ' custom' : '') + '" data-id="' + esc(s.id) + '">'
+      + '<button class="stop-drag" aria-label="Arrastar para reordenar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9h14M5 15h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>'
+      + '<button class="stop-main" aria-label="Editar ' + esc(s.name) + '">'
+      +   '<span class="stop-title">' + (s.visit_time ? '<span class="stop-time-label">' + esc(s.visit_time) + '</span>' : '') + '<span class="stop-name">' + esc(s.name) + '</span></span>'
+      +   (s.description ? '<span class="stop-desc">' + esc(s.description) + '</span>' : '')
+      +   (s.warning ? '<span class="stop-warn">' + WARN_ICON + '<span>' + esc(s.warning) + '</span></span>' : '')
+      + '</button>'
+      + '<a class="nav-link round" href="' + navUrl(s) + '" target="_blank" rel="noopener" aria-label="Navegar até ' + esc(s.name) + '">' + NAV_ICON + '</a>'
       + '</div>';
   }
   function wrapStop(s, legHtml){
-    return '<div class="stop-wrap" data-id="' + esc(s.id) + '" data-group="' + (s.is_custom ? 'c' : 'p') + ':' + periodOf(s) + '">' + (legHtml || '') + stopCard(s) + '</div>';
+    return '<div class="stop-wrap ' + periodOf(s) + '" data-id="' + esc(s.id) + '" data-group="' + (s.is_custom ? 'c' : 'p') + ':' + periodOf(s) + '">' + (legHtml || '') + stopCard(s) + '</div>';
+  }
+  function withPeriodHeads(list, legOf){
+    var last = null;
+    return list.map(function(s){
+      var p = periodOf(s), head = p !== last ? '<div class="tl-period ' + p + '">' + PERIOD[p] + '</div>' : '';
+      last = p;
+      return head + wrapStop(s, legOf && legOf[s.id]);
+    }).join('');
   }
   // Driving route of a day: lodging → planned stops in order → lodging.
   function dayRoute(d){
@@ -2107,6 +2527,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   function renderStops(){
     var box = $('stopsList'); if (!box) return;
+    if (LOADING){ box.innerHTML = '<div class="stops-group-label">Plano do dia</div>' + skeleton(3); return; }
     var items = S.stops.filter(function(s){ return s.day === currentDay; });
     var planned = sortStops(items.filter(function(s){ return !s.is_custom; }));
     var added = sortStops(items.filter(function(s){ return s.is_custom; }));
@@ -2117,10 +2538,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
       if (p.id) legOf[p.id] = html; else tail = html;
     });
     box.innerHTML = '<div class="stops-group-label">Plano do dia</div>'
-      + (planned.length ? planned.map(function(s){ return wrapStop(s, legOf[s.id]); }).join('') + tail + '<div class="leg-total" id="legTotal"></div>'
-          : '<div class="stops-group-empty">Sem paragens planeadas para este dia.</div>')
-      + '<div class="stops-group-label second">Paragens secundárias</div>'
-      + (added.length ? added.map(function(s){ return wrapStop(s); }).join('') : '<div class="stops-group-empty">Sem paragens secundárias neste dia.</div>');
+      + (planned.length ? '<div class="timeline">' + withPeriodHeads(planned, legOf) + tail + '</div><div class="leg-total" id="legTotal"></div>'
+          : '<div class="stops-group-empty">Sem paragens planeadas para este dia. Usa o botão «+» para juntar a primeira.</div>')
+      + (added.length ? '<div class="stops-group-label second">Paragens secundárias</div><div class="timeline plain">' + withPeriodHeads(added) + '</div>' : '');
     fillLegs(pts);
   }
 
@@ -2137,7 +2557,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     document.querySelectorAll('#stopsList .leg').forEach(function(el){
       var leg = legs[Number(el.dataset.leg)]; if (!leg) return;
       total.d += leg[0]; total.m += leg[1];
-      el.innerHTML = '<span class="leg-line"></span><span class="leg-text">🚗 ' + fmtDur(leg[0]) + ' · ' + fmtDist(leg[1])
+      el.innerHTML = '<span class="leg-text">' + fmtDur(leg[0]) + ' · ' + fmtDist(leg[1])
         + (el.dataset.from ? ' desde ' + esc(el.dataset.from) : '') + (el.dataset.to ? ' até ' + esc(el.dataset.to) : '') + '</span>';
     });
     var t = $('legTotal');
@@ -2160,7 +2580,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   function findStop(id){ return S.stops.filter(function(s){ return s.id === id; })[0]; }
   function patchStop(id, fields){ return save('PATCH', TB.stops + '?id=eq.' + encodeURIComponent(id), fields); }
-  function stopsChanged(){ cacheState(); renderStops(); renderIdeas(); if (map) refreshMap(); }
+  function stopsChanged(){ cacheState(); renderStops(); renderIdeas(); renderToday(); if (map) refreshMap(); }
   function searchPlaces(query, near){
     var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&q=' + encodeURIComponent(query);
     if (near && near.lat != null && near.lng != null){
@@ -2224,17 +2644,67 @@ svg.leaflet-image-layer.leaflet-interactive path {
       }
     });
   }
+  function deleteStop(s){
+    removeWithUndo('stops', s, '«' + s.name + '» removida.', TB.stops + '?id=eq.' + encodeURIComponent(s.id), stopsChanged);
+  }
+  function openStopSheet(s){
+    var per = periodOf(s), custom = !!s.is_custom, n = tripDays(TRIP), dayOpts = '';
+    for (var i = 0; i < n; i++) dayOpts += '<option value="' + i + '"' + (i === s.day ? ' selected' : '') + '>' + shortLabel(TRIP, i) + '</option>';
+    dayOpts += '<option value="-1"' + (s.day < 0 ? ' selected' : '') + '>Sem dia (ideia)</option>';
+    var q = s.name + (TRIP.destination ? ' ' + TRIP.destination : '');
+    function seg(id, opts, cur){
+      return '<div class="segmented" id="' + id + '">' + opts.map(function(o){
+        return '<button type="button" data-v="' + o[0] + '" class="' + (o[0] === cur ? 'selected' : '') + '">' + o[1] + '</button>';
+      }).join('') + '</div>';
+    }
+    openSheet({
+      title: s.name, saveLabel: 'Guardar',
+      html: '<div class="stop-links"><a class="nav-link" href="' + navUrl(s) + '" target="_blank" rel="noopener">' + NAV_ICON + 'Navegar</a>'
+        +   '<a class="loc-google-link" href="https://www.google.com/search?q=' + encodeURIComponent(q) + '" target="_blank" rel="noopener">' + ic('search') + 'Pesquisar no Google</a></div>'
+        + '<div class="field"><span class="field-label">Período</span>' + seg('ePer', [['am', 'Manhã'], ['pm', 'Tarde'], ['travel', 'Viagem']], per) + '</div>'
+        + '<div class="field-row">'
+        +   '<div class="field"><label class="field-label" for="eDay">Dia</label><select class="field-input" id="eDay">' + dayOpts + '</select></div>'
+        +   '<div class="field"><label class="field-label" for="eTime">Hora (opcional)</label><input class="field-input" id="eTime" type="time" value="' + esc(s.visit_time || '') + '"></div>'
+        + '</div>'
+        + '<div class="field"><label class="field-label" for="eDesc">Descrição</label><textarea class="field-input" id="eDesc" placeholder="O que fazer, quanto tempo, por onde ir…">' + esc(s.description) + '</textarea></div>'
+        + '<div class="field"><label class="field-label" for="eWarn">Aviso</label><input class="field-input" id="eWarn" type="text" placeholder="Ex.: reserva obrigatória, chegar cedo" value="' + esc(s.warning) + '"></div>'
+        + '<div class="field"><span class="field-label">Tipo</span>' + seg('eKind', [['p', 'Plano do dia'], ['c', 'Secundária']], custom ? 'c' : 'p')
+        +   '<div class="field-hint">As paragens do plano ficam ligadas no mapa e contam para os tempos de condução.</div></div>'
+        + '<button type="button" class="danger-btn" id="eDelete">Apagar localização</button>',
+      onOpen: function(body){
+        body.querySelectorAll('.segmented').forEach(function(box){
+          box.addEventListener('click', function(e){
+            var btn = closest(e, 'button'); if (!btn) return;
+            box.querySelectorAll('button').forEach(function(x){ x.classList.toggle('selected', x === btn); });
+            if (box.id === 'ePer') per = btn.dataset.v; else custom = btn.dataset.v === 'c';
+          });
+        });
+        body.querySelector('#eDelete').addEventListener('click', function(){ closeSheet(); deleteStop(s); });
+      },
+      onSave: function(body){
+        var f = {}, day = Number(body.querySelector('#eDay').value), time = body.querySelector('#eTime').value || null;
+        var desc = body.querySelector('#eDesc').value.trim(), warn = body.querySelector('#eWarn').value.trim();
+        if (per !== s.period) f.period = per;
+        if (day !== s.day) f.day = day;
+        if (time !== (s.visit_time || null)) f.visit_time = time;
+        if (desc !== s.description) f.description = desc;
+        if (warn !== s.warning) f.warning = warn;
+        if (custom !== !!s.is_custom) f.is_custom = custom;
+        if ('day' in f || 'period' in f || 'is_custom' in f) f.sort_order = null;
+        if (!Object.keys(f).length) return;
+        for (var k in f) s[k] = f[k];
+        patchStop(s.id, f); stopsChanged();
+        if (f.day === -1) return function(){ toast('«' + s.name + '» passou para as ideias, no separador Notas.'); };
+        if ('day' in f) return function(){ toast('«' + s.name + '» passou para ' + shortLabel(TRIP, f.day) + '.'); };
+      }
+    });
+  }
   $('dayPanel').addEventListener('click', function(e){
-    if (closest(e, '#stopAddBtn')){ addStop(currentDay); return; }
     var card = closest(e, '.stop-card');
     if (card){
-      var s = findStop(card.dataset.id); if (!s) return;
-      if (closest(e, '.stop-promote')){ s.is_custom = false; stopsChanged(); patchStop(s.id, { is_custom: false }); return; }
-      if (closest(e, '.stop-remove')){
-        if (!window.confirm('Remover «' + s.name + '» do roteiro? Esta ação não pode ser desfeita.')) return;
-        S.stops = S.stops.filter(function(x){ return x.id !== s.id; }); stopsChanged();
-        save('DELETE', TB.stops + '?id=eq.' + encodeURIComponent(s.id));
-      }
+      if (closest(e, '.stop-drag') || closest(e, '.nav-link')) return;
+      var s = findStop(card.dataset.id);
+      if (s && closest(e, '.stop-main')) openStopSheet(s);
       return;
     }
     if (closest(e, '#resvAddBtn')){ addChecklistFromInput(); return; }
@@ -2245,19 +2715,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
         r.done = !r.done; cacheState(); renderChecklist();
         save('PATCH', TB.checklist + '?id=eq.' + encodeURIComponent(r.id), { done: r.done });
       } else if (closest(e, '.resv-remove')){
-        S.checklist = S.checklist.filter(function(x){ return x.id !== r.id; }); cacheState(); renderChecklist();
-        save('DELETE', TB.checklist + '?id=eq.' + encodeURIComponent(r.id));
+        removeWithUndo('checklist', r, '«' + r.title + '» removida.', TB.checklist + '?id=eq.' + encodeURIComponent(r.id), function(){ cacheState(); renderChecklist(); });
       }
-    }
-  });
-  $('dayPanel').addEventListener('change', function(e){
-    var card = closest(e, '.stop-card'); if (!card) return;
-    var s = findStop(card.dataset.id); if (!s) return;
-    if (e.target.classList.contains('stop-period-select')){
-      flushPending(); s.period = e.target.value; stopsChanged(); patchStop(s.id, { period: s.period });
-    } else if (e.target.classList.contains('stop-day-select')){
-      flushPending(); s.day = Number(e.target.value); s.sort_order = null; stopsChanged(); patchStop(s.id, { day: s.day, sort_order: null });
-      if (s.day < 0) toast('«' + s.name + '» passou para as ideias, no separador Notas.');
     }
   });
   $('dayPanel').addEventListener('input', function(e){
@@ -2276,15 +2735,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
     }
   });
   $('dayPanel').addEventListener('focusout', flushPending);
-  // Time is committed when the picker closes, so the list does not re-sort under the user's finger.
-  $('dayPanel').addEventListener('focusout', function(e){
-    if (!e.target.classList || !e.target.classList.contains('stop-time-input')) return;
-    var card = e.target.closest('.stop-card'), s = card && findStop(card.dataset.id); if (!s) return;
-    var v = e.target.value || null;
-    if (v === (s.visit_time || null)) return;
-    s.visit_time = v; stopsChanged(); patchStop(s.id, { visit_time: v });
-  });
-
   /* ---------- drag to reorder (inside the same period group) ---------- */
   var drag = null;
   function dragSibling(el, dir){
@@ -2375,7 +2825,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     return out;
   }
   function attachmentIcon(url){
-    return /\.pdf(\?|$)/i.test(url) ? '📄' : (/\.(jpe?g|png|webp|gif|heic)(\?|$)/i.test(url) ? '🖼️' : '🔗');
+    return ic(/\.pdf(\?|$)/i.test(url) ? 'file' : (/\.(jpe?g|png|webp|gif|heic)(\?|$)/i.test(url) ? 'image' : 'link'));
   }
   function attachmentsHtml(bookingId){
     return S.attachments.filter(function(a){ return a.base_id === bookingId; }).map(function(a){
@@ -2387,9 +2837,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
     }).join('');
   }
   function renderBookings(){
+    if (LOADING){ $('bookingsList').innerHTML = skeleton(2); return; }
     var all = sortedBookings(), lodgeIdx = 0;
     if (!all.length){
-      $('bookingsList').innerHTML = '<div class="bookings-empty">Ainda sem reservas. Adiciona o alojamento primeiro — passa a aparecer no mapa e em cada dia do roteiro.</div>';
+      $('bookingsList').innerHTML = '<div class="bookings-empty">Ainda sem reservas. Usa o botão «+» e começa pelo alojamento — passa a aparecer no mapa e em cada dia do roteiro.</div>';
       return;
     }
     $('bookingsList').innerHTML = all.map(function(b){
@@ -2399,7 +2850,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         lodgeIdx++;
         label = 'Base ' + String(lodgeIdx).padStart(2, '0');
         if (b.first_night != null && b.last_night != null){
-          nights = '<div class="nights" style="color:' + color + '">' + nightsLabel(TRIP, b.first_night, b.last_night) + '</div>';
+          nights = '<div class="nights">' + nightsLabel(TRIP, b.first_night, b.last_night) + '</div>';
         }
       }
       return '<div class="base-card' + (b.kind === 'transport' ? ' car' : '') + '" data-id="' + esc(b.id) + '">'
@@ -2410,7 +2861,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         +   '<div class="attachment-list">' + attachmentsHtml(b.id) + '</div>'
         +   '<div class="booking-link-edit-row"><input type="url" class="booking-link-input" placeholder="Link da reserva (Booking, email…)" aria-label="Link da reserva">'
         +   '<button class="booking-link-save">Adicionar</button></div>'
-        +   '<label class="booking-file-btn" for="' + esc(fid) + '"><span class="booking-file-text">📎 Carregar imagem ou PDF</span>'
+        +   '<label class="booking-file-btn" for="' + esc(fid) + '">' + ic('clip') + '<span class="booking-file-text">Carregar imagem ou PDF</span>'
         +   '<input type="file" id="' + esc(fid) + '" class="booking-file-input" accept="image/*,application/pdf" hidden></label>'
         + '</div></div>';
     }).join('');
@@ -2452,12 +2903,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
         });
         var del = body.querySelector('#bDelete');
         if (del) del.addEventListener('click', function(){
-          if (!window.confirm('Apagar «' + b.title + '» e todos os seus links e ficheiros? Esta ação não pode ser desfeita.')) return;
-          S.bookings = S.bookings.filter(function(x){ return x.id !== b.id; });
+          var i = S.bookings.indexOf(b), files = S.attachments.filter(function(a){ return a.base_id === b.id; });
+          S.bookings.splice(i, 1);
           S.attachments = S.attachments.filter(function(a){ return a.base_id !== b.id; });
-          save('DELETE', TB.attachments + '?base_id=eq.' + encodeURIComponent(b.id));
-          save('DELETE', TB.bookings + '?id=eq.' + encodeURIComponent(b.id));
           closeSheet(); bookingsChanged();
+          offerUndo('«' + b.title + '» apagada.', function(){
+            S.bookings.splice(Math.min(i, S.bookings.length), 0, b); S.attachments = S.attachments.concat(files); bookingsChanged();
+          }, function(){
+            save('DELETE', TB.attachments + '?base_id=eq.' + encodeURIComponent(b.id));
+            save('DELETE', TB.bookings + '?id=eq.' + encodeURIComponent(b.id));
+          });
         });
         if (!editing) body.querySelector('#bTitle').focus();
       },
@@ -2491,7 +2946,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
       }
     });
   }
-  $('bookingAddBtn').addEventListener('click', function(){ openBookingSheet(null); });
 
   function addAttachment(bookingId, url, label){
     var a = { id: uid(), base_id: bookingId, url: url, label: label || '' };
@@ -2531,7 +2985,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       if (TRIP !== trip) return;
       addAttachment(id, url, file.name); toast('Ficheiro carregado.');
     }).catch(function(){
-      text.textContent = '📎 Carregar imagem ou PDF';
+      text.textContent = 'Carregar imagem ou PDF';
       toast('Não foi possível carregar o ficheiro. Verifica a ligação.');
     });
   });
@@ -2626,8 +3080,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* ============================================================
      CUSTOS
      ============================================================ */
-  var CATS = [['lodging', 'Alojamento', '🛏️'], ['transport', 'Transporte', '🚗'], ['food', 'Comida', '🍽️'],
-              ['activities', 'Atividades', '🎟️'], ['shopping', 'Compras', '🛍️'], ['other', 'Outros', '•']];
+  var CATS = [['lodging', 'Alojamento', ic('bed')], ['transport', 'Transporte', ic('car')], ['food', 'Comida', ic('fork')],
+              ['activities', 'Atividades', ic('ticket')], ['shopping', 'Compras', ic('bag')], ['other', 'Outros', ic('dots')]];
   function catOf(c){ for (var i = 0; i < CATS.length; i++) if (CATS[i][0] === c.category) return CATS[i]; return CATS[CATS.length - 1]; }
   function parseAmount(raw){ return parseFloat(String(raw).trim().replace(/\s/g, '').replace(',', '.')); }
   function myName(){ try { return localStorage.getItem('dolomiti_my_name') || ''; } catch (e) { return ''; } }
@@ -2640,6 +3094,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     function add(p){ if (p && out.indexOf(p) < 0) out.push(p); }
     (TRIP && Array.isArray(TRIP.people) ? TRIP.people : []).forEach(add);
     S.costs.forEach(function(c){ add(c.paid_by); (Array.isArray(c.split_with) ? c.split_with : []).forEach(add); });
+    S.settlements.forEach(function(x){ add(x.from_person); add(x.to_person); });
     return out;
   }
   function savePeople(list){
@@ -2655,17 +3110,47 @@ svg.leaflet-image-layer.leaflet-interactive path {
     return name;
   }
   function personUsed(p){
-    return S.costs.some(function(c){ return c.paid_by === p || (Array.isArray(c.split_with) && c.split_with.indexOf(p) >= 0); });
+    return S.costs.some(function(c){ return c.paid_by === p || (Array.isArray(c.split_with) && c.split_with.indexOf(p) >= 0); })
+      || S.settlements.some(function(x){ return x.from_person === p || x.to_person === p; });
   }
   function sharers(c, all){
     var list = Array.isArray(c.split_with) ? c.split_with.filter(Boolean) : [];
     return list.length ? list : all;
   }
-  function askMyName(msg){
-    var v = window.prompt(msg, myName());
-    if (v && v.trim()){ setMyName(v.trim()); if (TRIP){ setMyName(addPerson(v) || v.trim()); } }
-    renderPeople(); renderCostSummary();
-    return myName();
+  function openNameSheet(next){
+    var all = people();
+    openSheet({
+      title: 'Quem és tu?', saveLabel: 'Guardar',
+      html: '<div class="field"><label class="field-label" for="nName">O teu nome</label>'
+        + '<input class="field-input" id="nName" type="text" autocomplete="off" placeholder="Ex.: Tiago" value="' + esc(myName()) + '">'
+        + '<div class="field-hint">Fica guardado neste telemóvel e serve para saber quem pagou cada despesa.</div></div>'
+        + (all.length ? '<div class="field"><span class="field-label">Ou escolhe da lista</span><div class="chips" id="nChips">'
+            + all.map(function(p){ return '<button type="button" class="chip" data-p="' + esc(p) + '">' + esc(p) + '</button>'; }).join('') + '</div></div>' : ''),
+      onOpen: function(body){
+        var input = body.querySelector('#nName'), chipsBox = body.querySelector('#nChips');
+        if (chipsBox) chipsBox.addEventListener('click', function(e){ var c = closest(e, '.chip'); if (c) input.value = c.dataset.p; });
+        input.focus();
+      },
+      onSave: function(body){
+        var v = body.querySelector('#nName').value.trim();
+        if (!v){ sheetError('Escreve o teu nome.'); return false; }
+        setMyName(addPerson(v) || v);
+        costsChanged();
+        return next || true;
+      }
+    });
+  }
+  function openPersonSheet(){
+    openSheet({
+      title: 'Nova pessoa', saveLabel: 'Juntar',
+      html: '<div class="field"><label class="field-label" for="pName">Nome</label><input class="field-input" id="pName" type="text" autocomplete="off" placeholder="Ex.: Ana"></div>',
+      onOpen: function(body){ body.querySelector('#pName').focus(); },
+      onSave: function(body){
+        var v = body.querySelector('#pName').value.trim();
+        if (!v){ sheetError('Escreve o nome da pessoa.'); return false; }
+        addPerson(v); costsChanged();
+      }
+    });
   }
   function renderPeople(){
     var box = $('peopleList'); if (!box || !TRIP) return;
@@ -2677,13 +3162,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
         + (personUsed(p) ? '' : '<button class="person-remove" aria-label="Remover ' + esc(p) + '">×</button>') + '</span>';
     }).join('') + '<button class="person-chip add" id="personAddBtn">+ Pessoa</button>';
   }
-  $('whoamiChange').addEventListener('click', function(){ askMyName('Como te chamas?'); });
+  $('whoamiChange').addEventListener('click', function(){ openNameSheet(); });
   $('peopleList').addEventListener('click', function(e){
-    if (closest(e, '#personAddBtn')){
-      var v = window.prompt('Nome da pessoa:');
-      if (v && v.trim()){ addPerson(v); costsChanged(); }
-      return;
-    }
+    if (closest(e, '#personAddBtn')){ openPersonSheet(); return; }
     var rm = closest(e, '.person-remove');
     if (rm){
       var name = rm.parentNode.dataset.name;
@@ -2695,7 +3176,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     var all = people();
     var sum = S.costs.reduce(function(t, c){ return t + c.amount; }, 0), nC = S.costs.length;
     $('costListTotal').textContent = nC ? nC + (nC === 1 ? ' despesa' : ' despesas') + ' · ' + money(sum) : '';
-    $('costListEmpty').hidden = nC > 0; $('costList').hidden = nC === 0;
+    $('costListEmpty').hidden = nC > 0 || LOADING; $('costList').hidden = nC === 0;
     $('costList').innerHTML = S.costs.slice().reverse().map(function(c){
       var cat = catOf(c), sh = sharers(c, all);
       var split = sh.length === all.length ? (all.length > 1 ? 'dividido por todos' : '') : (sh.length === 1 ? 'só de ' + sh[0] : 'dividido por ' + sh.join(', '));
@@ -2703,7 +3184,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         + '<span class="cost-item-desc">' + esc(c.description) + '</span>'
         + '<span class="cost-item-who">' + cat[1] + ' · pago por ' + esc(c.paid_by) + (split ? ' · ' + esc(split) : '') + '</span></div>'
         + '<span class="cost-item-amount">' + money(c.amount) + '</span>'
-        + '<button class="cost-edit" aria-label="Editar">✏️</button></div>';
+        + '<span class="row-chevron" aria-hidden="true">›</span></div>';
     }).join('');
   }
   function balances(){
@@ -2714,13 +3195,20 @@ svg.leaflet-image-layer.leaflet-interactive path {
       paid[c.paid_by] = (paid[c.paid_by] || 0) + c.amount;
       sh.forEach(function(p){ owed[p] = (owed[p] || 0) + c.amount / sh.length; });
     });
-    return { people: all, paid: paid, owed: owed };
+    // Payments already made between people move the balance without changing what each one spent.
+    var adj = {};
+    all.forEach(function(p){ adj[p] = 0; });
+    S.settlements.forEach(function(x){
+      adj[x.from_person] = (adj[x.from_person] || 0) + x.amount;
+      adj[x.to_person] = (adj[x.to_person] || 0) - x.amount;
+    });
+    return { people: all, paid: paid, owed: owed, adj: adj };
   }
   // Fewest simple transfers: whoever owes most pays whoever is owed most, until settled.
   function settlements(b){
     var debt = [], cred = [], out = [];
     b.people.forEach(function(p){
-      var v = Math.round((b.paid[p] - b.owed[p]) * 100) / 100;
+      var v = Math.round((b.paid[p] - b.owed[p] + (b.adj[p] || 0)) * 100) / 100;
       if (v > 0.005) cred.push({ p: p, v: v }); else if (v < -0.005) debt.push({ p: p, v: -v });
     });
     debt.sort(function(a, z){ return z.v - a.v; }); cred.sort(function(a, z){ return z.v - a.v; });
@@ -2734,21 +3222,32 @@ svg.leaflet-image-layer.leaflet-interactive path {
     }
     return out;
   }
+  var PENDING = [];
   function renderCostSummary(){
     var box = $('costSummary'), cbox = $('costCategories');
-    if (!S.costs.length){
-      box.innerHTML = '<div class="cost-empty">Ainda sem despesas registadas.</div>'; cbox.innerHTML = ''; return;
+    if (!S.costs.length && !S.settlements.length){
+      box.innerHTML = '<div class="cost-empty">Ainda sem despesas registadas.</div>'; cbox.innerHTML = ''; $('settleHistory').innerHTML = ''; return;
     }
     var b = balances(), total = S.costs.reduce(function(s, c){ return s + c.amount; }, 0);
     var rows = b.people.map(function(p){
       return '<div class="cost-total-row"><span>' + esc(p) + '<small>parte: ' + money(b.owed[p] || 0) + '</small></span><span>pagou ' + money(b.paid[p] || 0) + '</span></div>';
     }).join('');
     var st = settlements(b), settle = '';
+    PENDING = st;
     if (b.people.length > 1){
-      settle = st.length ? st.map(function(x){
-        return '<div class="cost-settle">' + esc(x.from) + ' deve <strong>' + money(x.amount) + '</strong> a ' + esc(x.to) + '</div>';
-      }).join('') : '<div class="cost-settle even">✓ Contas equilibradas.</div>';
+      settle = '<div class="stops-group-label settle-label">Por regularizar</div>' + (st.length ? st.map(function(x, i){
+        return '<div class="cost-settle"><span>' + esc(x.from) + ' deve <strong>' + money(x.amount) + '</strong> a ' + esc(x.to) + '</span>'
+          + '<button class="settle-btn" data-i="' + i + '">Regularizar</button></div>';
+      }).join('') : '<div class="cost-settle even">' + ic('check') + 'Contas equilibradas.</div>');
     }
+    var hist = S.settlements.slice().reverse();
+    $('settleHistory').innerHTML = hist.length ? '<div class="stops-group-label">Pagamentos feitos</div><div class="cost-list settle-list">' + hist.map(function(x){
+      var d = parseDate(x.paid_on);
+      return '<div class="cost-item settle-item" data-id="' + esc(x.id) + '"><span class="cost-cat">' + ic('check') + '</span><div class="cost-item-main">'
+        + '<span class="cost-item-desc">' + esc(x.from_person) + ' pagou ' + money(x.amount) + ' a ' + esc(x.to_person) + '</span>'
+        + '<span class="cost-item-who">' + d.getDate() + ' ' + MO[d.getMonth()] + ' ' + d.getFullYear() + (x.recorded_by ? ' · registado por ' + esc(x.recorded_by) : '') + '</span></div>'
+        + '<button class="settle-undo">Retirar</button></div>';
+    }).join('') + '</div>' : '';
     box.innerHTML = '<div class="cost-total-row total"><span>Total gasto</span><span>' + money(total) + '</span></div>' + rows + settle;
 
     var byCat = {};
@@ -2765,7 +3264,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   function openCostSheet(c){
     var editing = !!c;
-    if (!myName() && !askMyName('Como te chamas, para dividirmos as despesas?')) return;
+    if (!myName()){ openNameSheet(function(){ openCostSheet(c); }); return; }
     if (people().indexOf(myName()) < 0) addPerson(myName());
     var all = people();
     var cat = editing ? catOf(c)[0] : 'other', payer = editing ? c.paid_by : myName();
@@ -2775,7 +3274,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
         + all.map(function(p){ return '<button type="button" class="chip' + (p === payer ? ' selected' : '') + '" data-p="' + esc(p) + '">' + esc(p) + '</button>'; }).join('') + '</div></div>'
         + '<div class="field"><span class="field-label">Dividir por</span><div class="chips" id="kSplit">'
         + all.map(function(p){ return '<button type="button" class="chip check' + (split.indexOf(p) >= 0 ? ' selected' : '') + '" data-p="' + esc(p) + '">' + esc(p) + '</button>'; }).join('')
-        + '<button type="button" class="chip add" id="kAddPerson">+ Pessoa</button></div><div class="field-hint" id="kShare"></div></div>';
+        + '<button type="button" class="chip add" id="kAddPerson">+ Pessoa</button></div>'
+        + '<div class="inline-add" id="kNewRow" hidden><input class="field-input" id="kNewName" type="text" autocomplete="off" placeholder="Nome da pessoa"><button type="button" class="chip selected" id="kNewAdd">Juntar</button></div>'
+        + '<div class="field-hint" id="kShare"></div></div>';
     }
     openSheet({
       title: editing ? 'Editar despesa' : 'Nova despesa', saveLabel: editing ? 'Guardar' : 'Adicionar',
@@ -2800,8 +3301,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
         body.querySelector('#kPeople').addEventListener('click', function(e){
           var btn = closest(e, '.chip'); if (!btn) return;
           if (btn.id === 'kAddPerson'){
-            var v = window.prompt('Nome da pessoa:');
-            v = v && addPerson(v);
+            body.querySelector('#kNewRow').hidden = false; body.querySelector('#kNewName').focus();
+            return;
+          }
+          if (btn.id === 'kNewAdd'){
+            var v = addPerson(body.querySelector('#kNewName').value);
             if (v){ all = people(); if (split.indexOf(v) < 0) split.push(v); body.querySelector('#kPeople').innerHTML = chips(); renderPeople(); share(); }
             return;
           }
@@ -2817,9 +3321,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
         });
         var del = body.querySelector('#kDelete');
         if (del) del.addEventListener('click', function(){
-          if (!window.confirm('Remover esta despesa? Esta ação não pode ser desfeita.')) return;
-          S.costs = S.costs.filter(function(x){ return x.id !== c.id; }); closeSheet(); costsChanged();
-          save('DELETE', TB.costs + '?id=eq.' + encodeURIComponent(c.id));
+          closeSheet();
+          removeWithUndo('costs', c, 'Despesa «' + c.description + '» apagada.', TB.costs + '?id=eq.' + encodeURIComponent(c.id), costsChanged);
         });
         if (!editing) body.querySelector('#kDesc').focus();
       },
@@ -2842,7 +3345,47 @@ svg.leaflet-image-layer.leaflet-interactive path {
       }
     });
   }
-  $('costAddBtn').addEventListener('click', function(){ openCostSheet(null); });
+  function openSettleSheet(x){
+    var today = isoDate(new Date());
+    openSheet({
+      title: 'Regularizar', saveLabel: 'Confirmar',
+      html: '<div class="confirm-card"><div class="confirm-title">' + esc(x.from) + ' paga a ' + esc(x.to) + '</div>'
+        + '<div class="confirm-meta">Em dívida: ' + money(x.amount) + '</div></div>'
+        + '<div class="field"><label class="field-label" for="sAmount">Valor pago (€)</label>'
+        +   '<input class="field-input" id="sAmount" type="text" inputmode="decimal" value="' + x.amount.toFixed(2).replace('.', ',') + '">'
+        +   '<div class="field-hint" id="sLeft"></div></div>'
+        + '<div class="field"><label class="field-label" for="sDate">Data do pagamento</label>'
+        +   '<input class="field-input" id="sDate" type="date" value="' + today + '" max="' + today + '"></div>',
+      onOpen: function(body){
+        function left(){
+          var v = parseAmount(body.querySelector('#sAmount').value), el = body.querySelector('#sLeft');
+          if (isNaN(v) || v <= 0) el.textContent = 'Altera o valor se o pagamento foi só de uma parte.';
+          else if (v > x.amount + 0.005) el.textContent = 'O valor é superior ao que está em dívida.';
+          else if (x.amount - v < 0.005) el.textContent = 'Pagamento total — a dívida fica saldada.';
+          else el.textContent = 'Pagamento parcial — ficam ' + money(x.amount - v) + ' por pagar.';
+        }
+        left(); body.querySelector('#sAmount').addEventListener('input', left);
+      },
+      onSave: function(body){
+        var v = Math.round(parseAmount(body.querySelector('#sAmount').value) * 100) / 100, date = body.querySelector('#sDate').value || today;
+        if (isNaN(v) || v <= 0){ sheetError('Escreve um valor válido, por exemplo 12,50.'); return false; }
+        if (v > x.amount + 0.005){ sheetError('O valor não pode ser superior ao que está em dívida (' + money(x.amount) + ').'); return false; }
+        var row = { id: uid(), from_person: x.from, to_person: x.to, amount: v, paid_on: date, recorded_by: myName() || null };
+        S.settlements.push(row);
+        save('POST', TB.settlements, [Object.assign({ trip_id: TRIP.id }, row)]);
+        costsChanged();
+      }
+    });
+  }
+  $('costSummary').addEventListener('click', function(e){
+    var btn = closest(e, '.settle-btn'); if (!btn) return;
+    var x = PENDING[Number(btn.dataset.i)]; if (x) openSettleSheet(x);
+  });
+  $('settleHistory').addEventListener('click', function(e){
+    if (!closest(e, '.settle-undo')) return;
+    var id = closest(e, '.settle-item').dataset.id, x = S.settlements.filter(function(r){ return r.id === id; })[0]; if (!x) return;
+    removeWithUndo('settlements', x, 'Pagamento de ' + money(x.amount) + ' retirado.', TB.settlements + '?id=eq.' + encodeURIComponent(id), costsChanged);
+  });
   function showCostPane(name){
     document.querySelectorAll('#costTabs button').forEach(function(b){ b.classList.toggle('selected', b.dataset.pane === name); });
     $('paneCostList').hidden = name !== 'list'; $('paneCostBalance').hidden = name !== 'balance';
@@ -2866,9 +3409,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
         + (s.description ? '<div class="idea-desc">' + esc(s.description) + '</div>' : '')
         + '<select class="stop-select idea-day-select" aria-label="Mover para um dia">' + opts + '</select></div>'
         + '<button class="stop-remove idea-remove" aria-label="Remover">×</button></div>';
-    }).join('') + '</div>' : '<div class="tips-empty">Sem ideias guardadas. Junta aqui sítios que ainda não têm dia e passa-os para o roteiro quando decidires.</div>';
+    }).join('') + '</div>' : '<div class="tips-empty">Sem ideias guardadas. Usa o botão «+» para juntar sítios que ainda não têm dia.</div>';
   }
-  $('ideaAddBtn').addEventListener('click', function(){ addStop(-1); });
   $('ideasList').addEventListener('change', function(e){
     if (!e.target.classList.contains('idea-day-select')) return;
     var s = findStop(e.target.closest('.idea-item').dataset.id), d = Number(e.target.value);
@@ -2879,16 +3421,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
   $('ideasList').addEventListener('click', function(e){
     if (!closest(e, '.idea-remove')) return;
     var s = findStop(closest(e, '.idea-item').dataset.id); if (!s) return;
-    if (!window.confirm('Remover a ideia «' + s.name + '»?')) return;
-    S.stops = S.stops.filter(function(x){ return x.id !== s.id; }); stopsChanged();
-    save('DELETE', TB.stops + '?id=eq.' + encodeURIComponent(s.id));
+    deleteStop(s);
   });
   function renderTips(){
     $('tipsList').innerHTML = S.tips.length ? S.tips.map(function(t){
       return '<div class="note-card" data-id="' + esc(t.id) + '">'
         + '<div class="tip-top"><div class="eyebrow">' + esc(t.tag) + '</div><button class="booking-edit tip-edit">Editar</button></div>'
         + '<h4>' + esc(t.title) + '</h4>' + (t.body ? '<p>' + esc(t.body) + '</p>' : '') + '</div>';
-    }).join('') : '<div class="tips-empty">Ainda sem notas. Guarda aqui o que convém saber antes de partir: reservas obrigatórias, horários, equipamento.</div>';
+    }).join('') : '<div class="tips-empty">Ainda sem notas. Usa o botão «+» para guardar o que convém saber antes de partir.</div>';
   }
   function openTipSheet(t){
     var editing = !!t;
@@ -2901,9 +3441,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
       onOpen: function(body){
         var del = body.querySelector('#tDelete');
         if (del) del.addEventListener('click', function(){
-          if (!window.confirm('Apagar esta nota?')) return;
-          S.tips = S.tips.filter(function(x){ return x.id !== t.id; }); cacheState(); renderTips(); closeSheet();
-          save('DELETE', TB.tips + '?id=eq.' + encodeURIComponent(t.id));
+          closeSheet();
+          removeWithUndo('tips', t, 'Nota «' + t.title + '» apagada.', TB.tips + '?id=eq.' + encodeURIComponent(t.id), function(){ cacheState(); renderTips(); });
         });
         if (!editing) body.querySelector('#tTitle').focus();
       },
@@ -2921,7 +3460,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
       }
     });
   }
-  $('tipAddBtn').addEventListener('click', function(){ openTipSheet(null); });
   $('tipsList').addEventListener('click', function(e){
     if (!closest(e, '.tip-edit')) return;
     var card = closest(e, '.note-card'), t = S.tips.filter(function(x){ return x.id === card.dataset.id; })[0];
