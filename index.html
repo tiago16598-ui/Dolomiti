@@ -1235,6 +1235,110 @@ svg.leaflet-image-layer.leaflet-interactive path {
     position:absolute; left:16px; right:16px; bottom:calc(84px + var(--safe-b)); z-index:1300;
     background:var(--ink); color:var(--bg); font-size:15px; border-radius:var(--radius-lg); padding:12px 15px; text-align:center;
   }
+
+  /* Place search */
+  .place-list{background:var(--paper); border-radius:var(--radius-lg); overflow:hidden;}
+  .place-result{
+    display:block; width:100%; text-align:left; border:none; background:none; cursor:pointer; color:var(--ink);
+    padding:11px 14px; min-height:var(--tap); border-bottom:0.5px solid var(--line);
+  }
+  .place-result:last-child{border-bottom:none;}
+  .place-result:active{background:var(--bg-deep);}
+  .place-name{display:block; font-size:17px; font-weight:500;}
+  .place-where{display:block; font-size:13px; color:var(--ink-soft); margin-top:2px; line-height:1.35;}
+  .place-result.manual .place-name{color:var(--teal); font-weight:400; font-size:16px;}
+  .place-status{font-size:15px; color:var(--ink-soft); margin:0 4px 12px;}
+
+  /* Delete confirmation */
+  .sheet-save.danger{color:var(--rose);}
+  .confirm-card{background:var(--paper); border-radius:var(--radius-lg); padding:16px; margin-bottom:16px; font-size:15px; color:var(--ink-soft);}
+  .confirm-title{font-size:20px; font-weight:700; letter-spacing:-0.024em; color:var(--ink);}
+  .confirm-meta{margin-top:2px;}
+  .confirm-card p{margin:14px 0 6px;}
+  .confirm-card ul{margin:0; padding-left:20px; color:var(--ink); line-height:1.5;}
+  .confirm-card .confirm-warn{color:var(--rose); font-weight:600; margin-bottom:0;}
+  .danger-btn.solid{background:var(--rose); color:#fff; font-weight:600; margin-top:0;}
+  .danger-btn.solid:active{opacity:0.8; background:var(--rose);}
+  .danger-btn.keep{color:var(--teal);}
+
+  /* Navigate */
+  .stop-links{display:flex; align-items:center; flex-wrap:wrap; gap:6px 16px; margin-top:10px;}
+  .stop-links .loc-google-link{margin-top:0;}
+  .nav-link{
+    display:inline-flex; align-items:center; gap:6px; min-height:36px; padding:0 14px; border-radius:100px;
+    background:var(--teal); color:#fff; font-size:15px; font-weight:600; text-decoration:none;
+  }
+  .nav-link:active{opacity:0.75;}
+  .nav-link svg{width:15px; height:15px;}
+  .nav-link.booking-nav{margin-top:12px;}
+
+  /* Order, time, driving legs */
+  .stop-wrap{position:relative;}
+  .stop-wrap.dragging{z-index:5;}
+  .stop-wrap.dragging .stop-card{box-shadow:0 10px 28px rgba(35,44,36,0.22); opacity:0.96;}
+  .stop-wrap.dragging .leg{visibility:hidden;}
+  .stop-drag{
+    flex:none; width:32px; height:36px; margin-left:-8px; border:none; background:none; color:var(--ink-faint);
+    cursor:grab; touch-action:none; -webkit-user-select:none; user-select:none; display:flex; align-items:center; justify-content:center;
+  }
+  .stop-drag svg{width:20px; height:20px; pointer-events:none;}
+  .stop-name-row{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .stop-name-row .stop-name{flex:1; min-width:0; margin-bottom:0;}
+  .stop-time{
+    flex:none; display:flex; align-items:center; gap:6px; background:var(--fill); border-radius:100px; padding:0 10px 0 12px; min-height:36px;
+    font-size:13px; color:var(--ink-soft);
+  }
+  .stop-time.set span{display:none;}
+  .stop-time-input{
+    border:none; background:none; font-size:15px; font-weight:600; color:var(--ink); font-family:inherit; min-height:34px; padding:0;
+    -webkit-appearance:none; appearance:none;
+  }
+  .stop-time:not(.set) .stop-time-input{color:var(--ink-faint); font-weight:400;}
+  .leg{display:flex; align-items:center; gap:10px; padding:10px 6px 0 22px; font-size:13px; color:var(--ink-soft);}
+  .leg:empty{display:none;}
+  .leg-line{width:2px; height:18px; border-radius:2px; background:var(--line);}
+  .leg-total{font-size:13px; color:var(--ink-soft); margin:12px 4px 0; font-weight:600;}
+  .leg-total:empty{display:none;}
+
+  /* Ideas */
+  #ideasList{margin-top:12px;}
+  .idea-list{background:var(--paper); border-radius:var(--radius-lg); overflow:hidden; margin-bottom:12px;}
+  .idea-item{display:flex; align-items:flex-start; gap:8px; padding:12px 10px 12px 16px; border-bottom:0.5px solid var(--line);}
+  .idea-item:last-child{border-bottom:none;}
+  .idea-main{flex:1; min-width:0;}
+  .idea-name{font-size:17px; font-weight:600; letter-spacing:-0.022em;}
+  .idea-desc{font-size:15px; color:var(--ink-soft); margin-top:2px;}
+  .idea-day-select{margin-top:10px; background-color:var(--fill); color:var(--teal); max-width:100%;}
+  .notes-label{margin-bottom:12px;}
+
+  /* Costs: people, categories */
+  .people-list{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 6px;}
+  .person-chip{
+    display:inline-flex; align-items:center; gap:4px; min-height:36px; padding:0 14px; border-radius:100px; border:none;
+    background:var(--paper); color:var(--ink); font-size:15px; font-weight:500;
+  }
+  .person-chip.me{background:var(--teal-soft); color:var(--teal-deep); font-weight:600;}
+  .person-chip.add{color:var(--teal); cursor:pointer;}
+  .person-remove{border:none; background:none; color:var(--ink-faint); font-size:19px; line-height:1; cursor:pointer; padding:0 0 0 4px; min-height:36px;}
+  .cost-total-row small{display:block; font-size:13px; color:var(--ink-soft); font-weight:400; margin-top:1px;}
+  .cat-list{background:var(--paper); border-radius:var(--radius-lg); padding:6px 16px; margin:10px 0 20px;}
+  .cat-row{padding:10px 0; border-bottom:0.5px solid var(--line);}
+  .cat-row:last-child{border-bottom:none;}
+  .cat-head{display:flex; justify-content:space-between; gap:10px; font-size:15px; color:var(--ink);}
+  .cat-head span:last-child{color:var(--ink-soft); flex:none;}
+  .cat-bar{height:6px; border-radius:6px; background:var(--fill); margin-top:7px; overflow:hidden;}
+  .cat-bar span{display:block; height:100%; border-radius:6px; background:var(--teal);}
+  .cost-add-btn{margin-bottom:16px;}
+  .cost-item{cursor:pointer;}
+  .cost-cat{flex:none; width:32px; height:32px; border-radius:50%; background:var(--fill); display:flex; align-items:center; justify-content:center; font-size:16px;}
+  .chips{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{
+    min-height:38px; padding:0 14px; border-radius:100px; border:none; background:var(--paper); color:var(--ink);
+    font-size:15px; font-weight:500; cursor:pointer;
+  }
+  .chip.selected{background:var(--teal); color:#fff; font-weight:600;}
+  .chip.check.selected::before{content:'✓ ';}
+  .chip.add{color:var(--teal); background:none; box-shadow:inset 0 0 0 1.5px var(--line);}
 </style>
 </head>
 <body>
@@ -1291,22 +1395,25 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </section>
 
       <section class="screen" id="screen-custos">
-        <p class="section-lede">Custos partilhados da viagem — cada um regista o que pagou.</p>
+        <p class="section-lede">Custos partilhados da viagem — quem pagou, por quem se divide e em quê.</p>
+        <div class="stops-group-label">Pessoas</div>
+        <div class="people-list" id="peopleList"></div>
         <div class="whoami-row">
-          A registar custos como <strong id="whoamiName">—</strong>
+          Neste telemóvel és <strong id="whoamiName">—</strong>
           <button id="whoamiChange">mudar</button>
         </div>
         <div class="cost-summary" id="costSummary"></div>
-        <div class="cost-add-row">
-          <input type="text" class="cost-desc-input" id="costDescInput" placeholder="Descrição (ex: jantar, gasolina)">
-          <input type="text" class="cost-amount-input" id="costAmountInput" placeholder="€ (ex: 12,50)" inputmode="decimal">
-        </div>
-        <button class="cost-add-btn" id="costAddBtn">Adicionar custo</button>
+        <div id="costCategories"></div>
+        <button class="cost-add-btn" id="costAddBtn">+ Adicionar custo</button>
         <div class="cost-list" id="costList"></div>
       </section>
 
       <section class="screen" id="screen-notas">
-        <p class="section-lede">Antes de partir — o que convém saber.</p>
+        <p class="section-lede">Ideias ainda sem dia e o que convém saber antes de partir.</p>
+        <div class="stops-group-label">Ideias sem dia</div>
+        <div id="ideasList"></div>
+        <button class="extra-booking-add-btn" id="ideaAddBtn">+ Adicionar ideia</button>
+        <div class="stops-group-label second notes-label">Notas gerais</div>
         <div id="tipsList"></div>
         <button class="extra-booking-add-btn" id="tipAddBtn">+ Adicionar nota</button>
       </section>
@@ -1489,6 +1596,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     $('sheetTitle').textContent = opts.title;
     $('sheetSave').textContent = opts.saveLabel || 'Guardar';
     $('sheetSave').disabled = false;
+    $('sheetSave').classList.toggle('danger', !!opts.danger);
     $('sheetBody').innerHTML = opts.html;
     sheetOnSave = opts.onSave;
     $('sheet').hidden = false;
@@ -1695,14 +1803,39 @@ svg.leaflet-image-layer.leaflet-interactive path {
     cacheState();
   }
   function deleteTrip(trip){
-    if (!window.confirm('Apagar a viagem «' + trip.name + '»? O roteiro, as reservas, os custos e as notas desta viagem são apagados para toda a gente. Esta ação não pode ser desfeita.')) return;
-    api('DELETE', TB.trips + '?id=eq.' + encodeURIComponent(trip.id)).then(function(){
-      TRIPS = TRIPS.filter(function(t){ return t.id !== trip.id; });
-      cacheSet('viagens_lista', TRIPS);
-      try { localStorage.removeItem('viagens_trip_' + trip.id); } catch (e) {}
-      closeSheet(); renderHome();
-      location.hash = '';
-    }).catch(function(){ sheetError('Não foi possível apagar a viagem. Verifica a ligação à internet.'); });
+    var n = tripDays(trip), items = [n + (n === 1 ? ' dia' : ' dias') + ' de roteiro'];
+    function count(v, one, many){ if (v) items.push(v + ' ' + (v === 1 ? one : many)); }
+    if (TRIP && TRIP.id === trip.id){
+      count(S.stops.length, 'localização', 'localizações');
+      count(S.bookings.length, 'reserva', 'reservas');
+      count(S.attachments.length, 'link ou ficheiro', 'links e ficheiros');
+      count(S.costs.length, 'custo registado', 'custos registados');
+      count(S.tips.length, 'nota', 'notas');
+    }
+    openSheet({
+      title: 'Apagar viagem?', saveLabel: 'Apagar', danger: true,
+      html: '<div class="confirm-card"><div class="confirm-title">' + esc(trip.name) + '</div>'
+        + '<div class="confirm-meta">' + (trip.destination ? esc(trip.destination) + ' · ' : '') + rangeLabel(trip) + '</div>'
+        + '<p>Vai ser apagado para toda a gente que usa a app:</p>'
+        + '<ul>' + items.map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>'
+        + '<p class="confirm-warn">Esta ação não pode ser desfeita.</p></div>'
+        + '<button type="button" class="danger-btn solid" id="cDelete">Apagar definitivamente</button>'
+        + '<button type="button" class="danger-btn keep" id="cKeep">Manter viagem</button>',
+      onOpen: function(body){
+        body.querySelector('#cDelete').addEventListener('click', function(){ $('sheetSave').click(); });
+        body.querySelector('#cKeep').addEventListener('click', closeSheet);
+      },
+      onSave: function(){
+        return api('DELETE', TB.trips + '?id=eq.' + encodeURIComponent(trip.id)).then(function(){
+          TRIPS = TRIPS.filter(function(t){ return t.id !== trip.id; });
+          cacheSet('viagens_lista', TRIPS);
+          try { localStorage.removeItem('viagens_trip_' + trip.id); } catch (e) {}
+          renderHome();
+          location.hash = '';
+          toast('Viagem «' + trip.name + '» apagada.');
+        });
+      }
+    });
   }
 
   /* ============================================================
@@ -1764,11 +1897,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
     Promise.all([
       api('GET', TB.days + q + '&select=day,title'),
       api('GET', TB.notes + q + '&select=day,text'),
-      api('GET', TB.stops + q + '&select=id,day,name,period,description,warning,is_custom,lat,lng&order=created_at.asc'),
+      api('GET', TB.stops + q + '&select=id,day,name,period,description,warning,is_custom,lat,lng,visit_time,sort_order&order=created_at.asc'),
       api('GET', TB.checklist + q + '&select=id,day,title,done&order=created_at.asc'),
       api('GET', TB.bookings + q + '&select=id,kind,title,details,first_night,last_night,lat,lng,created_at&order=created_at.asc'),
       api('GET', TB.attachments + q + '&select=id,base_id,url,label&order=created_at.asc'),
-      api('GET', TB.costs + q + '&select=id,description,amount,paid_by&order=created_at.asc'),
+      api('GET', TB.costs + q + '&select=id,description,amount,paid_by,category,split_with&order=created_at.asc'),
       api('GET', TB.tips + q + '&select=id,tag,title,body&order=created_at.asc')
     ]).then(function(r){
       if (!TRIP || TRIP.id !== trip.id) return;
@@ -1790,7 +1923,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     });
   }
   function renderAll(){
-    renderTripChrome(); renderRoteiro(); renderBookings(); renderCostList(); renderCostSummary(); renderTips();
+    renderTripChrome(); renderRoteiro(); renderBookings(); renderPeople(); renderCostList(); renderCostSummary(); renderTips(); renderIdeas();
     if (map) refreshMap();
   }
 
@@ -1823,6 +1956,24 @@ svg.leaflet-image-layer.leaflet-interactive path {
   var PERIOD = { am: 'Manhã', pm: 'Tarde', travel: 'Viagem' };
   var PERIOD_ORDER = { travel: 1, am: 2, pm: 3 };
   function byPeriod(a, b){ return (PERIOD_ORDER[a.period] || 9) - (PERIOD_ORDER[b.period] || 9); }
+  function periodOf(s){ return PERIOD[s.period] ? s.period : 'pm'; }
+  // Viagem → Manhã → Tarde. Inside each group: manual order, with timed stops kept chronological.
+  function sortStops(items){
+    var out = [];
+    ['travel', 'am', 'pm'].forEach(function(p){
+      var g = items.filter(function(s){ return periodOf(s) === p; });
+      g = g.map(function(s, i){ return { s: s, i: i }; }).sort(function(a, b){
+        var x = a.s.sort_order == null ? 1e9 : a.s.sort_order, y = b.s.sort_order == null ? 1e9 : b.s.sort_order;
+        return x - y || a.i - b.i;
+      }).map(function(x){ return x.s; });
+      var slots = [], timed = [];
+      g.forEach(function(s, i){ if (s.visit_time){ slots.push(i); timed.push(s); } });
+      timed.sort(function(a, b){ return a.visit_time < b.visit_time ? -1 : (a.visit_time > b.visit_time ? 1 : 0); });
+      slots.forEach(function(slot, k){ g[slot] = timed[k]; });
+      out = out.concat(g);
+    });
+    return out;
+  }
 
   function renderRoteiro(){
     var n = tripDays(TRIP), chips = '';
@@ -1891,55 +2042,174 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
 
   /* ---------- stops ---------- */
+  // Opens the phone's maps app with directions from the current position.
+  var NAV_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 3 3 10.5l7.5 3 3 7.5Z" fill="currentColor"/></svg>';
+  function navUrl(x){
+    var dest = x.lat != null && x.lng != null
+      ? x.lat + ',' + x.lng
+      : (x.name || x.title) + (TRIP.destination ? ', ' + TRIP.destination : '');
+    return 'https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=' + encodeURIComponent(dest);
+  }
   function stopCard(s){
     var n = tripDays(TRIP), dayOpts = '', perOpts = '';
     for (var i = 0; i < n; i++) dayOpts += '<option value="' + i + '"' + (i === s.day ? ' selected' : '') + '>' + shortLabel(TRIP, i) + '</option>';
     ['am', 'pm', 'travel'].forEach(function(p){ perOpts += '<option value="' + p + '"' + (p === s.period ? ' selected' : '') + '>' + PERIOD[p] + '</option>'; });
-    var per = PERIOD[s.period] ? s.period : 'pm';
+    var per = periodOf(s);
+    dayOpts += '<option value="-1">Sem dia</option>';
     var q = s.name + (TRIP.destination ? ' ' + TRIP.destination : '');
     return '<div class="block stop-card ' + per + (s.is_custom ? ' custom' : '') + '" data-id="' + esc(s.id) + '">'
       + '<div class="stop-top">'
       +   '<select class="stop-select stop-period-select ' + per + '" aria-label="Período">' + perOpts + '</select>'
-      +   (s.is_custom ? '<span class="stop-custom-badge">Teu</span>' : '')
+      +   (s.is_custom ? '<span class="stop-custom-badge">Secundária</span>' : '')
       +   '<span class="stop-top-spacer"></span>'
       +   '<select class="stop-select stop-day-select" aria-label="Dia">' + dayOpts + '</select>'
       +   '<button class="stop-remove" aria-label="Remover">×</button>'
       + '</div>'
-      + '<div class="stop-name">' + esc(s.name) + '</div>'
+      + '<div class="stop-name-row"><button class="stop-drag" aria-label="Arrastar para reordenar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9h14M5 15h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button><div class="stop-name">' + esc(s.name) + '</div>'
+      +   '<label class="stop-time' + (s.visit_time ? ' set' : '') + '"><span>Hora</span><input type="time" class="stop-time-input" value="' + esc(s.visit_time || '') + '"></label></div>'
       + '<textarea class="stop-desc-input" placeholder="Descrição…">' + esc(s.description) + '</textarea>'
       + '<input type="text" class="stop-warning-input" placeholder="Aviso (opcional)" value="' + esc(s.warning) + '">'
-      + '<a class="loc-google-link" href="https://www.google.com/search?q=' + encodeURIComponent(q) + '" target="_blank" rel="noopener">🔍 Pesquisar no Google</a>'
+      + '<div class="stop-links">'
+      +   '<a class="nav-link" href="' + navUrl(s) + '" target="_blank" rel="noopener">' + NAV_ICON + 'Navegar</a>'
+      +   '<a class="loc-google-link" href="https://www.google.com/search?q=' + encodeURIComponent(q) + '" target="_blank" rel="noopener">🔍 Pesquisar no Google</a>'
+      + '</div>'
       + (s.is_custom ? '<button class="stop-promote">↑ Passar para o plano do dia</button>' : '')
       + '</div>';
+  }
+  function wrapStop(s, legHtml){
+    return '<div class="stop-wrap" data-id="' + esc(s.id) + '" data-group="' + (s.is_custom ? 'c' : 'p') + ':' + periodOf(s) + '">' + (legHtml || '') + stopCard(s) + '</div>';
+  }
+  // Driving route of a day: lodging → planned stops in order → lodging.
+  function dayRoute(d){
+    var stops = sortStops(S.stops.filter(function(s){ return s.day === d && !s.is_custom; })).filter(hasCoords);
+    var from = d > 0 ? lodgingForNight(d - 1) : null, to = lodgingForNight(d);
+    var pts = [];
+    if (from && hasCoords(from.booking)) pts.push({ lat: from.booking.lat, lng: from.booking.lng, label: shortName(from.booking.title), lodging: true });
+    stops.forEach(function(s){ pts.push({ lat: s.lat, lng: s.lng, label: s.name, id: s.id }); });
+    if (stops.length && to && hasCoords(to.booking)) pts.push({ lat: to.booking.lat, lng: to.booking.lng, label: shortName(to.booking.title), lodging: true });
+    return pts;
   }
   function renderStops(){
     var box = $('stopsList'); if (!box) return;
     var items = S.stops.filter(function(s){ return s.day === currentDay; });
-    var planned = items.filter(function(s){ return !s.is_custom; }).sort(byPeriod);
-    var added = items.filter(function(s){ return s.is_custom; }).sort(byPeriod);
+    var planned = sortStops(items.filter(function(s){ return !s.is_custom; }));
+    var added = sortStops(items.filter(function(s){ return s.is_custom; }));
+    var pts = dayRoute(currentDay), legOf = {}, tail = '';
+    pts.forEach(function(p, i){
+      if (i === 0) return;
+      var html = '<div class="leg" data-leg="' + (i - 1) + '"' + (pts[i - 1].lodging ? ' data-from="' + esc(pts[i - 1].label) + '"' : '') + (p.lodging ? ' data-to="' + esc(p.label) + '"' : '') + '></div>';
+      if (p.id) legOf[p.id] = html; else tail = html;
+    });
     box.innerHTML = '<div class="stops-group-label">Plano do dia</div>'
-      + (planned.length ? planned.map(stopCard).join('') : '<div class="stops-group-empty">Sem paragens planeadas para este dia.</div>')
-      + '<div class="stops-group-label second">Adicionadas por vocês</div>'
-      + (added.length ? added.map(stopCard).join('') : '<div class="stops-group-empty">Nada adicionado ainda. Usa o botão abaixo.</div>');
+      + (planned.length ? planned.map(function(s){ return wrapStop(s, legOf[s.id]); }).join('') + tail + '<div class="leg-total" id="legTotal"></div>'
+          : '<div class="stops-group-empty">Sem paragens planeadas para este dia.</div>')
+      + '<div class="stops-group-label second">Paragens secundárias</div>'
+      + (added.length ? added.map(function(s){ return wrapStop(s); }).join('') : '<div class="stops-group-empty">Sem paragens secundárias neste dia.</div>');
+    fillLegs(pts);
+  }
+
+  /* ---------- driving times between consecutive stops (OSRM) ---------- */
+  var LEGS = cacheGet('viagens_legs') || {};
+  function routeKey(pts){ return pts.map(function(p){ return p.lng.toFixed(5) + ',' + p.lat.toFixed(5); }).join(';'); }
+  function fmtDur(sec){
+    var m = Math.max(1, Math.round(sec / 60));
+    return m < 60 ? m + ' min' : Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + String(m % 60).padStart(2, '0') : '');
+  }
+  function fmtDist(m){ var km = m / 1000; return (km < 10 ? (Math.round(km * 10) / 10).toString().replace('.', ',') : Math.round(km)) + ' km'; }
+  function paintLegs(legs){
+    var total = { d: 0, m: 0 };
+    document.querySelectorAll('#stopsList .leg').forEach(function(el){
+      var leg = legs[Number(el.dataset.leg)]; if (!leg) return;
+      total.d += leg[0]; total.m += leg[1];
+      el.innerHTML = '<span class="leg-line"></span><span class="leg-text">🚗 ' + fmtDur(leg[0]) + ' · ' + fmtDist(leg[1])
+        + (el.dataset.from ? ' desde ' + esc(el.dataset.from) : '') + (el.dataset.to ? ' até ' + esc(el.dataset.to) : '') + '</span>';
+    });
+    var t = $('legTotal');
+    if (t && legs.length > 1) t.textContent = 'Condução no dia: ' + fmtDur(total.d) + ' · ' + fmtDist(total.m);
+  }
+  function fillLegs(pts){
+    if (pts.length < 2) return;
+    var key = routeKey(pts), trip = TRIP, day = currentDay;
+    if (LEGS[key]){ paintLegs(LEGS[key]); return; }
+    fetch('https://router.project-osrm.org/route/v1/driving/' + key + '?overview=false')
+      .then(function(r){ if (!r.ok) throw new Error('route'); return r.json(); })
+      .then(function(d){
+        if (!d.routes || !d.routes[0]) return;
+        var legs = d.routes[0].legs.map(function(l){ return [l.duration, l.distance]; });
+        var keys = Object.keys(LEGS);
+        if (keys.length > 150) LEGS = {};
+        LEGS[key] = legs; cacheSet('viagens_legs', LEGS);
+        if (TRIP === trip && currentDay === day && routeKey(dayRoute(day)) === key) paintLegs(legs);
+      }).catch(function(){});
   }
   function findStop(id){ return S.stops.filter(function(s){ return s.id === id; })[0]; }
   function patchStop(id, fields){ return save('PATCH', TB.stops + '?id=eq.' + encodeURIComponent(id), fields); }
-  function stopsChanged(){ cacheState(); renderStops(); if (map) refreshMap(); }
-  function addStop(){
-    var name = window.prompt('Nome do local:');
-    if (!name || !name.trim()) return;
-    name = name.trim();
-    var trip = TRIP, hasPlan = S.stops.some(function(s){ return !s.is_custom; });
+  function stopsChanged(){ cacheState(); renderStops(); renderIdeas(); if (map) refreshMap(); }
+  function searchPlaces(query, near){
+    var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&q=' + encodeURIComponent(query);
+    if (near && near.lat != null && near.lng != null){
+      url += '&bounded=0&viewbox=' + [near.lng - 2.5, near.lat + 1.6, near.lng + 2.5, near.lat - 1.6].join(',');
+    }
+    return fetch(url, { headers: { 'Accept-Language': 'pt' } })
+      .then(function(r){ if (!r.ok) throw new Error('search'); return r.json(); })
+      .then(function(d){
+        return (d || []).map(function(x){
+          var parts = String(x.display_name || '').split(',').map(function(p){ return p.trim(); });
+          return { name: x.name || parts[0] || query, where: parts.slice(1).join(', '), lat: parseFloat(x.lat), lng: parseFloat(x.lon) };
+        });
+      });
+  }
+  function createStop(name, lat, lng, day){
+    var hasPlan = S.stops.some(function(x){ return !x.is_custom; });
     // In a brand-new trip the first stops are the plan itself; later additions are "yours".
-    var s = { id: uid(), day: currentDay, name: name, period: 'pm', description: '', warning: '', is_custom: hasPlan, lat: null, lng: null };
+    var s = { id: uid(), day: day, name: name, period: 'pm', description: '', warning: '', is_custom: hasPlan, lat: lat, lng: lng, visit_time: null, sort_order: null };
     S.stops.push(s); stopsChanged();
-    geocode(name + (trip.destination ? ', ' + trip.destination : ''), trip).then(function(c){
-      if (c){ s.lat = c.lat; s.lng = c.lng; if (TRIP === trip){ cacheState(); if (map) refreshMap(); } }
-      save('POST', TB.stops, [{ id: s.id, trip_id: trip.id, day: s.day, name: name, period: s.period, description: '', warning: '', is_custom: s.is_custom, lat: s.lat, lng: s.lng }]);
+    save('POST', TB.stops, [{ id: s.id, trip_id: TRIP.id, day: s.day, name: name, period: s.period, description: '', warning: '', is_custom: s.is_custom, lat: lat, lng: lng }]);
+  }
+  function addStop(day){
+    var trip = TRIP, results = [], seq = 0;
+    openSheet({
+      title: day < 0 ? 'Adicionar ideia' : 'Adicionar localização', saveLabel: 'Procurar',
+      html: '<div class="field"><label class="field-label" for="pQuery">Procurar local</label>'
+        + '<input class="field-input" id="pQuery" type="search" enterkeyhint="search" autocomplete="off" placeholder="Nome do sítio ou morada">'
+        + '<div class="field-hint">Escreve o nome, carrega em «Procurar» e escolhe o resultado certo.</div></div>'
+        + '<div id="pResults"></div>',
+      onOpen: function(body){
+        var input = body.querySelector('#pQuery'), box = body.querySelector('#pResults');
+        input.focus();
+        input.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); $('sheetSave').click(); } });
+        box.addEventListener('click', function(e){
+          var row = closest(e, '.place-result'); if (!row || TRIP !== trip) return;
+          if (row.dataset.i === 'manual') createStop(input.value.trim(), null, null, day);
+          else { var r = results[Number(row.dataset.i)]; createStop(r.name, r.lat, r.lng, day); }
+          closeSheet();
+        });
+      },
+      onSave: function(body){
+        var q = body.querySelector('#pQuery').value.trim(), box = body.querySelector('#pResults'), my = ++seq;
+        if (!q){ sheetError('Escreve o nome do local.'); return false; }
+        box.innerHTML = '<div class="place-status">A procurar…</div>';
+        function manualRow(){ return '<button type="button" class="place-result manual" data-i="manual"><span class="place-name">Adicionar «' + esc(q) + '» sem ponto no mapa</span></button>'; }
+        return searchPlaces(q, trip).then(function(list){
+          if (my !== seq) return false;
+          results = list;
+          box.innerHTML = (list.length
+            ? '<div class="field-label">Resultados</div><div class="place-list">' + list.map(function(r, i){
+                return '<button type="button" class="place-result" data-i="' + i + '"><span class="place-name">' + esc(r.name) + '</span>'
+                  + (r.where ? '<span class="place-where">' + esc(r.where) + '</span>' : '') + '</button>';
+              }).join('') + manualRow() + '</div>'
+            : '<div class="place-status">Nenhum resultado. Experimenta outro nome ou junta a localidade.</div><div class="place-list">' + manualRow() + '</div>');
+          return false;
+        }).catch(function(){
+          if (my !== seq) return false;
+          box.innerHTML = '<div class="place-status">Não foi possível procurar. Verifica a ligação à internet.</div><div class="place-list">' + manualRow() + '</div>';
+          return false;
+        });
+      }
     });
   }
   $('dayPanel').addEventListener('click', function(e){
-    if (closest(e, '#stopAddBtn')){ addStop(); return; }
+    if (closest(e, '#stopAddBtn')){ addStop(currentDay); return; }
     var card = closest(e, '.stop-card');
     if (card){
       var s = findStop(card.dataset.id); if (!s) return;
@@ -1970,7 +2240,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
     if (e.target.classList.contains('stop-period-select')){
       flushPending(); s.period = e.target.value; stopsChanged(); patchStop(s.id, { period: s.period });
     } else if (e.target.classList.contains('stop-day-select')){
-      flushPending(); s.day = Number(e.target.value); stopsChanged(); patchStop(s.id, { day: s.day });
+      flushPending(); s.day = Number(e.target.value); s.sort_order = null; stopsChanged(); patchStop(s.id, { day: s.day, sort_order: null });
+      if (s.day < 0) toast('«' + s.name + '» passou para as ideias, no separador Notas.');
     }
   });
   $('dayPanel').addEventListener('input', function(e){
@@ -1989,6 +2260,63 @@ svg.leaflet-image-layer.leaflet-interactive path {
     }
   });
   $('dayPanel').addEventListener('focusout', flushPending);
+  // Time is committed when the picker closes, so the list does not re-sort under the user's finger.
+  $('dayPanel').addEventListener('focusout', function(e){
+    if (!e.target.classList || !e.target.classList.contains('stop-time-input')) return;
+    var card = e.target.closest('.stop-card'), s = card && findStop(card.dataset.id); if (!s) return;
+    var v = e.target.value || null;
+    if (v === (s.visit_time || null)) return;
+    s.visit_time = v; stopsChanged(); patchStop(s.id, { visit_time: v });
+  });
+
+  /* ---------- drag to reorder (inside the same period group) ---------- */
+  var drag = null;
+  function dragSibling(el, dir){
+    var x = dir < 0 ? el.previousElementSibling : el.nextElementSibling;
+    return x && x.classList.contains('stop-wrap') && x.dataset.group === el.dataset.group ? x : null;
+  }
+  function dragSwap(before, node){
+    var w = drag.wrap;
+    w.style.transform = '';
+    var t0 = w.getBoundingClientRect().top;
+    w.parentNode.insertBefore(before, node);
+    drag.startY += w.getBoundingClientRect().top - t0;
+    drag.moved = true;
+  }
+  $('dayPanel').addEventListener('pointerdown', function(e){
+    var h = closest(e, '.stop-drag'); if (!h) return;
+    e.preventDefault(); flushPending();
+    var wrap = h.closest('.stop-wrap'); if (!wrap) return;
+    try { h.setPointerCapture(e.pointerId); } catch (err) {}
+    drag = { wrap: wrap, pid: e.pointerId, startY: e.clientY, moved: false };
+    wrap.classList.add('dragging');
+  });
+  $('dayPanel').addEventListener('pointermove', function(e){
+    if (!drag || e.pointerId !== drag.pid) return;
+    e.preventDefault();
+    var w = drag.wrap, scroller = $('screen-roteiro'), box = scroller.getBoundingClientRect();
+    var step = e.clientY < box.top + 70 ? -10 : (e.clientY > box.bottom - 70 ? 10 : 0);
+    if (step){ var before = scroller.scrollTop; scroller.scrollTop += step; drag.startY -= scroller.scrollTop - before; }
+    var dy = e.clientY - drag.startY, p = dragSibling(w, -1), n = dragSibling(w, 1);
+    if (p && dy < -p.offsetHeight / 2) dragSwap(w, p);
+    else if (n && dy > n.offsetHeight / 2) dragSwap(n, w);
+    w.style.transform = 'translateY(' + (e.clientY - drag.startY) + 'px)';
+  });
+  function endDrag(e){
+    if (!drag || e.pointerId !== drag.pid) return;
+    var w = drag.wrap, moved = drag.moved; drag = null;
+    w.classList.remove('dragging'); w.style.transform = '';
+    if (!moved) return;
+    var group = w.dataset.group, n = 0;
+    Array.prototype.forEach.call(w.parentNode.children, function(el){
+      if (!el.classList.contains('stop-wrap') || el.dataset.group !== group) return;
+      var s = findStop(el.dataset.id); n++;
+      if (s && s.sort_order !== n){ s.sort_order = n; patchStop(s.id, { sort_order: n }); }
+    });
+    stopsChanged();
+  }
+  $('dayPanel').addEventListener('pointerup', endDrag);
+  $('dayPanel').addEventListener('pointercancel', endDrag);
   $('dayPanel').addEventListener('keydown', function(e){
     if (e.key === 'Enter' && e.target.id === 'resvInput'){ e.preventDefault(); addChecklistFromInput(); }
     if (e.key === 'Enter' && e.target.id === 'dayTitle'){ e.preventDefault(); e.target.blur(); }
@@ -2061,6 +2389,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       return '<div class="base-card' + (b.kind === 'transport' ? ' car' : '') + '" data-id="' + esc(b.id) + '">'
         + '<div class="booking-top"><div class="base-no">' + label + '</div><button class="booking-edit">Editar</button></div>'
         + '<h3>' + esc(b.title) + '</h3>' + nights + detailsHtml(b.details)
+        + (b.kind === 'lodging' ? '<a class="nav-link booking-nav" href="' + navUrl(b) + '" target="_blank" rel="noopener">' + NAV_ICON + 'Navegar até aqui</a>' : '')
         + '<div class="booking-link">'
         +   '<div class="attachment-list">' + attachmentsHtml(b.id) + '</div>'
         +   '<div class="booking-link-edit-row"><input type="url" class="booking-link-input" placeholder="Link da reserva (Booking, email…)" aria-label="Link da reserva">'
@@ -2208,7 +2537,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     return ref ? LODGE_COLORS[ref.index % LODGE_COLORS.length] : LODGE_COLORS[0];
   }
   function mapPoints(){
-    var pts = S.stops.filter(hasCoords).map(function(s){ return [s.lat, s.lng]; });
+    var pts = S.stops.filter(function(s){ return s.day >= 0 && hasCoords(s); }).map(function(s){ return [s.lat, s.lng]; });
     lodgings().filter(hasCoords).forEach(function(b){ pts.push([b.lat, b.lng]); });
     return pts;
   }
@@ -2221,7 +2550,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     var n = tripDays(TRIP), usedColors = {}, hasTravel = false, hasCustom = false;
 
     for (var d = 0; d < n; d++){
-      var stops = S.stops.filter(function(s){ return s.day === d && !s.is_custom && hasCoords(s); }).sort(byPeriod);
+      var stops = sortStops(S.stops.filter(function(s){ return s.day === d && !s.is_custom; })).filter(hasCoords);
       if (!stops.length) continue;
       var from = d > 0 ? lodgingForNight(d - 1) : null, to = lodgingForNight(d);
       var allTravel = stops.every(function(s){ return s.period === 'travel'; });
@@ -2238,10 +2567,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
           .bindPopup('<strong>' + esc(s.name) + '</strong><br>' + shortLabel(TRIP, s.day) + ' · ' + (PERIOD[s.period] || ''));
       });
     }
-    S.stops.filter(function(s){ return s.is_custom && hasCoords(s); }).forEach(function(s){
+    S.stops.filter(function(s){ return s.is_custom && s.day >= 0 && hasCoords(s); }).forEach(function(s){
       hasCustom = true;
       add(L.marker([s.lat, s.lng], { icon: dot(AMBER) }))
-        .bindPopup('<strong>' + esc(s.name) + '</strong><br>' + shortLabel(TRIP, s.day) + ' · adicionada');
+        .bindPopup('<strong>' + esc(s.name) + '</strong><br>' + shortLabel(TRIP, s.day) + ' · secundária');
     });
     var lodge = lodgings();
     lodge.filter(hasCoords).forEach(function(b){
@@ -2256,7 +2585,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       if (usedColors[c]) legend += '<span><span class="dot" style="background:' + c + '"></span>Dias a partir de ' + esc(shortName(b.title)) + '</span>';
     });
     if (!lodge.length && usedColors[LODGE_COLORS[0]]) legend += '<span><span class="dot rose"></span>Plano do dia</span>';
-    if (hasCustom) legend += '<span><span class="dot amber"></span>Adicionadas por vocês</span>';
+    if (hasCustom) legend += '<span><span class="dot amber"></span>Paragens secundárias</span>';
     if (!legend) legend = '<span>Ainda sem locais no mapa. Adiciona o alojamento ou paragens ao roteiro.</span>';
     $('mapLegend').innerHTML = legend;
   }
@@ -2281,86 +2610,255 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* ============================================================
      CUSTOS
      ============================================================ */
+  var CATS = [['lodging', 'Alojamento', '🛏️'], ['transport', 'Transporte', '🚗'], ['food', 'Comida', '🍽️'],
+              ['activities', 'Atividades', '🎟️'], ['shopping', 'Compras', '🛍️'], ['other', 'Outros', '•']];
+  function catOf(c){ for (var i = 0; i < CATS.length; i++) if (CATS[i][0] === c.category) return CATS[i]; return CATS[CATS.length - 1]; }
   function parseAmount(raw){ return parseFloat(String(raw).trim().replace(/\s/g, '').replace(',', '.')); }
   function myName(){ try { return localStorage.getItem('dolomiti_my_name') || ''; } catch (e) { return ''; } }
   function setMyName(v){ try { localStorage.setItem('dolomiti_my_name', v); } catch (e) {} }
-  function showMyName(){
-    $('whoamiName').textContent = myName() || '—';
-    $('whoamiChange').textContent = myName() ? 'mudar' : 'Adicionar';
+  function money(v){ return '€' + v.toFixed(2).replace('.', ','); }
+
+  // Everyone in the trip: the saved list plus anyone who already appears in a cost.
+  function people(){
+    var out = [];
+    function add(p){ if (p && out.indexOf(p) < 0) out.push(p); }
+    (TRIP && Array.isArray(TRIP.people) ? TRIP.people : []).forEach(add);
+    S.costs.forEach(function(c){ add(c.paid_by); (Array.isArray(c.split_with) ? c.split_with : []).forEach(add); });
+    return out;
+  }
+  function savePeople(list){
+    TRIP.people = list; cacheSet('viagens_lista', TRIPS);
+    save('PATCH', TB.trips + '?id=eq.' + encodeURIComponent(TRIP.id), { people: list });
+  }
+  function addPerson(name){
+    name = String(name || '').trim(); if (!name || !TRIP) return '';
+    var all = people(), same = all.filter(function(p){ return p.toLowerCase() === name.toLowerCase(); })[0];
+    if (same) name = same;
+    var list = Array.isArray(TRIP.people) ? TRIP.people.slice() : [];
+    if (list.indexOf(name) < 0){ list.push(name); savePeople(list); }
+    return name;
+  }
+  function personUsed(p){
+    return S.costs.some(function(c){ return c.paid_by === p || (Array.isArray(c.split_with) && c.split_with.indexOf(p) >= 0); });
+  }
+  function sharers(c, all){
+    var list = Array.isArray(c.split_with) ? c.split_with.filter(Boolean) : [];
+    return list.length ? list : all;
   }
   function askMyName(msg){
     var v = window.prompt(msg, myName());
-    if (v && v.trim()) setMyName(v.trim());
-    showMyName();
+    if (v && v.trim()){ setMyName(v.trim()); if (TRIP){ setMyName(addPerson(v) || v.trim()); } }
+    renderPeople(); renderCostSummary();
     return myName();
   }
+  function renderPeople(){
+    var box = $('peopleList'); if (!box || !TRIP) return;
+    var me = myName(), all = people();
+    $('whoamiName').textContent = me || '—';
+    $('whoamiChange').textContent = me ? 'mudar' : 'Adicionar';
+    box.innerHTML = all.map(function(p){
+      return '<span class="person-chip' + (p === me ? ' me' : '') + '" data-name="' + esc(p) + '">' + esc(p) + (p === me ? ' (tu)' : '')
+        + (personUsed(p) ? '' : '<button class="person-remove" aria-label="Remover ' + esc(p) + '">×</button>') + '</span>';
+    }).join('') + '<button class="person-chip add" id="personAddBtn">+ Pessoa</button>';
+  }
   $('whoamiChange').addEventListener('click', function(){ askMyName('Como te chamas?'); });
-  showMyName();
-  function money(v){ return '€' + v.toFixed(2); }
+  $('peopleList').addEventListener('click', function(e){
+    if (closest(e, '#personAddBtn')){
+      var v = window.prompt('Nome da pessoa:');
+      if (v && v.trim()){ addPerson(v); costsChanged(); }
+      return;
+    }
+    var rm = closest(e, '.person-remove');
+    if (rm){
+      var name = rm.parentNode.dataset.name;
+      savePeople((TRIP.people || []).filter(function(p){ return p !== name; })); costsChanged();
+    }
+  });
+
   function renderCostList(){
-    $('costList').innerHTML = S.costs.map(function(c){
-      return '<div class="cost-item" data-id="' + esc(c.id) + '"><div class="cost-item-main">'
-        + '<span class="cost-item-desc">' + esc(c.description) + '</span><span class="cost-item-who">' + esc(c.paid_by) + '</span></div>'
+    var all = people();
+    $('costList').innerHTML = S.costs.slice().reverse().map(function(c){
+      var cat = catOf(c), sh = sharers(c, all);
+      var split = sh.length === all.length ? (all.length > 1 ? 'dividido por todos' : '') : (sh.length === 1 ? 'só de ' + sh[0] : 'dividido por ' + sh.join(', '));
+      return '<div class="cost-item" data-id="' + esc(c.id) + '"><span class="cost-cat" title="' + cat[1] + '">' + cat[2] + '</span><div class="cost-item-main">'
+        + '<span class="cost-item-desc">' + esc(c.description) + '</span>'
+        + '<span class="cost-item-who">' + cat[1] + ' · pago por ' + esc(c.paid_by) + (split ? ' · ' + esc(split) : '') + '</span></div>'
         + '<span class="cost-item-amount">' + money(c.amount) + '</span>'
-        + '<button class="cost-edit" aria-label="Editar">✏️</button><button class="cost-remove" aria-label="Remover">×</button></div>';
+        + '<button class="cost-edit" aria-label="Editar">✏️</button></div>';
     }).join('');
   }
+  function balances(){
+    var all = people(), paid = {}, owed = {};
+    all.forEach(function(p){ paid[p] = 0; owed[p] = 0; });
+    S.costs.forEach(function(c){
+      var sh = sharers(c, all);
+      paid[c.paid_by] = (paid[c.paid_by] || 0) + c.amount;
+      sh.forEach(function(p){ owed[p] = (owed[p] || 0) + c.amount / sh.length; });
+    });
+    return { people: all, paid: paid, owed: owed };
+  }
+  // Fewest simple transfers: whoever owes most pays whoever is owed most, until settled.
+  function settlements(b){
+    var debt = [], cred = [], out = [];
+    b.people.forEach(function(p){
+      var v = Math.round((b.paid[p] - b.owed[p]) * 100) / 100;
+      if (v > 0.005) cred.push({ p: p, v: v }); else if (v < -0.005) debt.push({ p: p, v: -v });
+    });
+    debt.sort(function(a, z){ return z.v - a.v; }); cred.sort(function(a, z){ return z.v - a.v; });
+    var i = 0, j = 0;
+    while (i < debt.length && j < cred.length){
+      var x = Math.min(debt[i].v, cred[j].v);
+      if (x > 0.005) out.push({ from: debt[i].p, to: cred[j].p, amount: x });
+      debt[i].v -= x; cred[j].v -= x;
+      if (debt[i].v < 0.005) i++;
+      if (cred[j].v < 0.005) j++;
+    }
+    return out;
+  }
   function renderCostSummary(){
-    var totals = {}, box = $('costSummary');
-    S.costs.forEach(function(c){ totals[c.paid_by] = (totals[c.paid_by] || 0) + c.amount; });
-    var people = Object.keys(totals);
-    if (!people.length){ box.innerHTML = '<div class="cost-empty">Ainda sem custos registados.</div>'; return; }
-    var total = people.reduce(function(s, p){ return s + totals[p]; }, 0);
-    var rows = people.map(function(p){ return '<div class="cost-total-row"><span>' + esc(p) + '</span><span>' + money(totals[p]) + '</span></div>'; }).join('');
-    var settle = '';
-    if (people.length === 2){
-      var diff = totals[people[0]] - totals[people[1]];
-      if (Math.abs(diff) < 0.01) settle = '<div class="cost-settle even">✓ Contas equilibradas.</div>';
-      else settle = '<div class="cost-settle">' + esc(diff < 0 ? people[0] : people[1]) + ' deve <strong>' + money(Math.abs(diff) / 2) + '</strong> a ' + esc(diff < 0 ? people[1] : people[0]) + '</div>';
-    } else if (people.length > 2){
-      var fair = total / people.length;
-      settle = people.map(function(p){
-        var bal = totals[p] - fair;
-        if (bal > 0.01) return '<div class="cost-settle even">' + esc(p) + ' deve receber ' + money(bal) + '</div>';
-        if (bal < -0.01) return '<div class="cost-settle">' + esc(p) + ' deve pagar ' + money(-bal) + '</div>';
-        return '';
-      }).join('');
+    var box = $('costSummary'), cbox = $('costCategories');
+    if (!S.costs.length){
+      box.innerHTML = '<div class="cost-empty">Ainda sem custos registados.</div>'; cbox.innerHTML = ''; return;
+    }
+    var b = balances(), total = S.costs.reduce(function(s, c){ return s + c.amount; }, 0);
+    var rows = b.people.map(function(p){
+      return '<div class="cost-total-row"><span>' + esc(p) + '<small>parte: ' + money(b.owed[p] || 0) + '</small></span><span>pagou ' + money(b.paid[p] || 0) + '</span></div>';
+    }).join('');
+    var st = settlements(b), settle = '';
+    if (b.people.length > 1){
+      settle = st.length ? st.map(function(x){
+        return '<div class="cost-settle">' + esc(x.from) + ' deve <strong>' + money(x.amount) + '</strong> a ' + esc(x.to) + '</div>';
+      }).join('') : '<div class="cost-settle even">✓ Contas equilibradas.</div>';
     }
     box.innerHTML = '<div class="cost-total-row total"><span>Total gasto</span><span>' + money(total) + '</span></div>' + rows + settle;
+
+    var byCat = {};
+    S.costs.forEach(function(c){ var k = catOf(c)[0]; byCat[k] = (byCat[k] || 0) + c.amount; });
+    var used = CATS.filter(function(c){ return byCat[c[0]]; }).sort(function(a, z){ return byCat[z[0]] - byCat[a[0]]; });
+    var max = used.length ? byCat[used[0][0]] : 1;
+    cbox.innerHTML = '<div class="stops-group-label">Por categoria</div><div class="cat-list">' + used.map(function(c){
+      var v = byCat[c[0]];
+      return '<div class="cat-row"><div class="cat-head"><span>' + c[2] + ' ' + c[1] + '</span><span>' + money(v) + ' · ' + Math.round(v / total * 100) + '%</span></div>'
+        + '<div class="cat-bar"><span style="width:' + Math.max(2, v / max * 100).toFixed(1) + '%"></span></div></div>';
+    }).join('') + '</div>';
   }
-  function costsChanged(){ cacheState(); renderCostList(); renderCostSummary(); }
-  $('costAddBtn').addEventListener('click', function(){
-    var desc = $('costDescInput').value.trim(), amount = parseAmount($('costAmountInput').value);
-    if (!desc || isNaN(amount) || amount <= 0){ toast('Escreve uma descrição e um valor.'); return; }
-    var name = myName() || askMyName('Como te chamas, para dividirmos os custos?');
-    if (!name) return;
-    var c = { id: uid(), description: desc, amount: amount, paid_by: name };
-    S.costs.push(c); costsChanged();
-    $('costDescInput').value = ''; $('costAmountInput').value = '';
-    save('POST', TB.costs, [{ id: c.id, trip_id: TRIP.id, description: desc, amount: amount, paid_by: name }]);
-  });
+  function costsChanged(){ cacheState(); renderPeople(); renderCostList(); renderCostSummary(); }
+
+  function openCostSheet(c){
+    var editing = !!c;
+    if (!myName() && !askMyName('Como te chamas, para dividirmos os custos?')) return;
+    if (people().indexOf(myName()) < 0) addPerson(myName());
+    var all = people();
+    var cat = editing ? catOf(c)[0] : 'other', payer = editing ? c.paid_by : myName();
+    var split = (editing ? sharers(c, all) : all).slice();
+    function chips(){
+      return '<div class="field"><span class="field-label">Pago por</span><div class="chips" id="kPayer">'
+        + all.map(function(p){ return '<button type="button" class="chip' + (p === payer ? ' selected' : '') + '" data-p="' + esc(p) + '">' + esc(p) + '</button>'; }).join('') + '</div></div>'
+        + '<div class="field"><span class="field-label">Dividir por</span><div class="chips" id="kSplit">'
+        + all.map(function(p){ return '<button type="button" class="chip check' + (split.indexOf(p) >= 0 ? ' selected' : '') + '" data-p="' + esc(p) + '">' + esc(p) + '</button>'; }).join('')
+        + '<button type="button" class="chip add" id="kAddPerson">+ Pessoa</button></div><div class="field-hint" id="kShare"></div></div>';
+    }
+    openSheet({
+      title: editing ? 'Editar custo' : 'Novo custo', saveLabel: editing ? 'Guardar' : 'Adicionar',
+      html: '<div class="field"><label class="field-label" for="kDesc">Descrição</label><input class="field-input" id="kDesc" type="text" placeholder="Ex.: jantar, gasolina" value="' + esc(editing ? c.description : '') + '"></div>'
+        + '<div class="field"><label class="field-label" for="kAmount">Valor (€)</label><input class="field-input" id="kAmount" type="text" inputmode="decimal" placeholder="Ex.: 12,50" value="' + (editing ? c.amount.toFixed(2).replace('.', ',') : '') + '"></div>'
+        + '<div class="field"><span class="field-label">Categoria</span><div class="chips" id="kCat">'
+        + CATS.map(function(x){ return '<button type="button" class="chip' + (x[0] === cat ? ' selected' : '') + '" data-c="' + x[0] + '">' + x[2] + ' ' + x[1] + '</button>'; }).join('') + '</div></div>'
+        + '<div id="kPeople">' + chips() + '</div>'
+        + (editing ? '<button type="button" class="danger-btn" id="kDelete">Apagar custo</button>' : ''),
+      onOpen: function(body){
+        function share(){
+          var v = parseAmount(body.querySelector('#kAmount').value), el = body.querySelector('#kShare');
+          el.textContent = !split.length ? 'Escolhe pelo menos uma pessoa.' : (isNaN(v) || v <= 0 ? '' : (split.length === 1 ? 'Fica tudo por conta de ' + split[0] + '.' : money(v / split.length) + ' a cada um.'));
+        }
+        share();
+        body.querySelector('#kAmount').addEventListener('input', share);
+        body.querySelector('#kCat').addEventListener('click', function(e){
+          var btn = closest(e, '.chip'); if (!btn) return;
+          cat = btn.dataset.c;
+          body.querySelectorAll('#kCat .chip').forEach(function(x){ x.classList.toggle('selected', x === btn); });
+        });
+        body.querySelector('#kPeople').addEventListener('click', function(e){
+          var btn = closest(e, '.chip'); if (!btn) return;
+          if (btn.id === 'kAddPerson'){
+            var v = window.prompt('Nome da pessoa:');
+            v = v && addPerson(v);
+            if (v){ all = people(); if (split.indexOf(v) < 0) split.push(v); body.querySelector('#kPeople').innerHTML = chips(); renderPeople(); share(); }
+            return;
+          }
+          var p = btn.dataset.p;
+          if (btn.parentNode.id === 'kPayer'){
+            payer = p;
+            body.querySelectorAll('#kPayer .chip').forEach(function(x){ x.classList.toggle('selected', x === btn); });
+          } else {
+            var i = split.indexOf(p);
+            if (i >= 0) split.splice(i, 1); else split.push(p);
+            btn.classList.toggle('selected', i < 0); share();
+          }
+        });
+        var del = body.querySelector('#kDelete');
+        if (del) del.addEventListener('click', function(){
+          if (!window.confirm('Remover este custo? Esta ação não pode ser desfeita.')) return;
+          S.costs = S.costs.filter(function(x){ return x.id !== c.id; }); closeSheet(); costsChanged();
+          save('DELETE', TB.costs + '?id=eq.' + encodeURIComponent(c.id));
+        });
+        if (!editing) body.querySelector('#kDesc').focus();
+      },
+      onSave: function(body){
+        var desc = body.querySelector('#kDesc').value.trim(), amount = parseAmount(body.querySelector('#kAmount').value);
+        if (!desc){ sheetError('Escreve uma descrição.'); return false; }
+        if (isNaN(amount) || amount <= 0){ sheetError('Escreve um valor válido, por exemplo 12,50.'); return false; }
+        if (!split.length){ sheetError('Escolhe pelo menos uma pessoa para dividir o custo.'); return false; }
+        var f = { description: desc, amount: Math.round(amount * 100) / 100, paid_by: payer, category: cat,
+                  split_with: all.filter(function(p){ return split.indexOf(p) >= 0; }) };
+        if (editing){
+          for (var k in f) c[k] = f[k];
+          save('PATCH', TB.costs + '?id=eq.' + encodeURIComponent(c.id), f);
+        } else {
+          var nc = Object.assign({ id: uid() }, f);
+          S.costs.push(nc);
+          save('POST', TB.costs, [Object.assign({ trip_id: TRIP.id }, nc)]);
+        }
+        costsChanged();
+      }
+    });
+  }
+  $('costAddBtn').addEventListener('click', function(){ openCostSheet(null); });
   $('costList').addEventListener('click', function(e){
     var item = closest(e, '.cost-item'); if (!item) return;
-    var c = S.costs.filter(function(x){ return x.id === item.dataset.id; })[0]; if (!c) return;
-    if (closest(e, '.cost-edit')){
-      var desc = window.prompt('Descrição:', c.description);
-      if (desc === null || !desc.trim()) return;
-      var raw = window.prompt('Valor (€):', c.amount.toFixed(2).replace('.', ','));
-      if (raw === null) return;
-      var amount = parseAmount(raw);
-      if (isNaN(amount) || amount <= 0) return;
-      c.description = desc.trim(); c.amount = amount; costsChanged();
-      save('PATCH', TB.costs + '?id=eq.' + encodeURIComponent(c.id), { description: c.description, amount: amount });
-    } else if (closest(e, '.cost-remove')){
-      if (!window.confirm('Remover este custo? Esta ação não pode ser desfeita.')) return;
-      S.costs = S.costs.filter(function(x){ return x.id !== c.id; }); costsChanged();
-      save('DELETE', TB.costs + '?id=eq.' + encodeURIComponent(c.id));
-    }
+    var c = S.costs.filter(function(x){ return x.id === item.dataset.id; })[0];
+    if (c) openCostSheet(c);
   });
 
   /* ============================================================
      NOTAS (practical tips)
      ============================================================ */
+  function renderIdeas(){
+    var box = $('ideasList'); if (!box || !TRIP) return;
+    var ideas = S.stops.filter(function(s){ return s.day < 0; }), n = tripDays(TRIP), opts = '<option value="-1">Mover para um dia…</option>';
+    for (var i = 0; i < n; i++) opts += '<option value="' + i + '">' + shortLabel(TRIP, i) + '</option>';
+    box.innerHTML = ideas.length ? '<div class="idea-list">' + ideas.map(function(s){
+      return '<div class="idea-item" data-id="' + esc(s.id) + '"><div class="idea-main"><div class="idea-name">' + esc(s.name) + '</div>'
+        + (s.description ? '<div class="idea-desc">' + esc(s.description) + '</div>' : '')
+        + '<select class="stop-select idea-day-select" aria-label="Mover para um dia">' + opts + '</select></div>'
+        + '<button class="stop-remove idea-remove" aria-label="Remover">×</button></div>';
+    }).join('') + '</div>' : '<div class="tips-empty">Sem ideias guardadas. Junta aqui sítios que ainda não têm dia e passa-os para o roteiro quando decidires.</div>';
+  }
+  $('ideaAddBtn').addEventListener('click', function(){ addStop(-1); });
+  $('ideasList').addEventListener('change', function(e){
+    if (!e.target.classList.contains('idea-day-select')) return;
+    var s = findStop(e.target.closest('.idea-item').dataset.id), d = Number(e.target.value);
+    if (!s || d < 0) return;
+    s.day = d; s.sort_order = null; stopsChanged(); patchStop(s.id, { day: d, sort_order: null });
+    toast('«' + s.name + '» passou para ' + shortLabel(TRIP, d) + '.');
+  });
+  $('ideasList').addEventListener('click', function(e){
+    if (!closest(e, '.idea-remove')) return;
+    var s = findStop(closest(e, '.idea-item').dataset.id); if (!s) return;
+    if (!window.confirm('Remover a ideia «' + s.name + '»?')) return;
+    S.stops = S.stops.filter(function(x){ return x.id !== s.id; }); stopsChanged();
+    save('DELETE', TB.stops + '?id=eq.' + encodeURIComponent(s.id));
+  });
   function renderTips(){
     $('tipsList').innerHTML = S.tips.length ? S.tips.map(function(t){
       return '<div class="note-card" data-id="' + esc(t.id) + '">'
