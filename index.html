@@ -1339,6 +1339,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .chip.selected{background:var(--teal); color:#fff; font-weight:600;}
   .chip.check.selected::before{content:'✓ ';}
   .chip.add{color:var(--teal); background:none; box-shadow:inset 0 0 0 1.5px var(--line);}
+
+  /* Despesas: sub-tabs */
+  .cost-tabs{margin-bottom:16px;}
+  .cost-list-total{font-size:13px; text-transform:uppercase; letter-spacing:0.01em; color:var(--ink-soft); margin:0 4px 8px;}
+  .cost-list-total:empty{display:none;}
 </style>
 </head>
 <body>
@@ -1395,17 +1400,28 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </section>
 
       <section class="screen" id="screen-custos">
-        <p class="section-lede">Custos partilhados da viagem — quem pagou, por quem se divide e em quê.</p>
-        <div class="stops-group-label">Pessoas</div>
-        <div class="people-list" id="peopleList"></div>
-        <div class="whoami-row">
-          Neste telemóvel és <strong id="whoamiName">—</strong>
-          <button id="whoamiChange">mudar</button>
+        <div class="segmented cost-tabs" id="costTabs" role="tablist">
+          <button type="button" class="selected" data-pane="list" role="tab">Pagamentos</button>
+          <button type="button" data-pane="balance" role="tab">Balanços</button>
         </div>
-        <div class="cost-summary" id="costSummary"></div>
-        <div id="costCategories"></div>
-        <button class="cost-add-btn" id="costAddBtn">+ Adicionar custo</button>
-        <div class="cost-list" id="costList"></div>
+
+        <div id="paneCostList">
+          <button class="cost-add-btn" id="costAddBtn">+ Adicionar despesa</button>
+          <div class="cost-list-total" id="costListTotal"></div>
+          <div class="cost-empty" id="costListEmpty">Ainda sem despesas. Regista a primeira com o botão acima.</div>
+          <div class="cost-list" id="costList"></div>
+        </div>
+
+        <div id="paneCostBalance" hidden>
+          <div class="stops-group-label">Pessoas</div>
+          <div class="people-list" id="peopleList"></div>
+          <div class="whoami-row">
+            Neste telemóvel és <strong id="whoamiName">—</strong>
+            <button id="whoamiChange">mudar</button>
+          </div>
+          <div class="cost-summary" id="costSummary"></div>
+          <div id="costCategories"></div>
+        </div>
       </section>
 
       <section class="screen" id="screen-notas">
@@ -1435,7 +1451,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </button>
       <button class="tab" data-target="screen-custos">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5c0-1 1-1.8 2.5-1.8s2.5.7 2.5 1.7c0 2.3-5 1.1-5 3.4 0 1 1 1.7 2.5 1.7s2.5-.8 2.5-1.8"/></svg>
-        <span>Custos</span>
+        <span>Despesas</span>
       </button>
       <button class="tab" data-target="screen-notas">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14v16l-3-2-2 2-2-2-2 2-2-2-3 2Z"/><path d="M8 9h8M8 13h5"/></svg>
@@ -1809,7 +1825,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       count(S.stops.length, 'localização', 'localizações');
       count(S.bookings.length, 'reserva', 'reservas');
       count(S.attachments.length, 'link ou ficheiro', 'links e ficheiros');
-      count(S.costs.length, 'custo registado', 'custos registados');
+      count(S.costs.length, 'despesa registada', 'despesas registadas');
       count(S.tips.length, 'nota', 'notas');
     }
     openSheet({
@@ -1863,7 +1879,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
      ============================================================ */
   var SUBTITLES = {
     'screen-roteiro': 'Roteiro', 'screen-reservas': 'Reservas', 'screen-mapa': 'Mapa',
-    'screen-custos': 'Custos', 'screen-notas': 'Notas'
+    'screen-custos': 'Despesas', 'screen-notas': 'Notas'
   };
   function activeScreen(){ var el = document.querySelector('.screen.active'); return el ? el.id : 'screen-roteiro'; }
   function renderTripChrome(){
@@ -1886,7 +1902,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   });
 
   function openTrip(trip){
-    TRIP = trip; S = emptyState(); currentDay = 0; destroyMap();
+    TRIP = trip; S = emptyState(); currentDay = 0; destroyMap(); showCostPane('list');
     // Open on today's date when the trip is under way.
     var todayIdx = diffDays(isoDate(new Date()), trip.start_date);
     if (todayIdx > 0 && todayIdx < tripDays(trip)) currentDay = todayIdx;
@@ -2677,6 +2693,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   function renderCostList(){
     var all = people();
+    var sum = S.costs.reduce(function(t, c){ return t + c.amount; }, 0), nC = S.costs.length;
+    $('costListTotal').textContent = nC ? nC + (nC === 1 ? ' despesa' : ' despesas') + ' · ' + money(sum) : '';
+    $('costListEmpty').hidden = nC > 0; $('costList').hidden = nC === 0;
     $('costList').innerHTML = S.costs.slice().reverse().map(function(c){
       var cat = catOf(c), sh = sharers(c, all);
       var split = sh.length === all.length ? (all.length > 1 ? 'dividido por todos' : '') : (sh.length === 1 ? 'só de ' + sh[0] : 'dividido por ' + sh.join(', '));
@@ -2718,7 +2737,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   function renderCostSummary(){
     var box = $('costSummary'), cbox = $('costCategories');
     if (!S.costs.length){
-      box.innerHTML = '<div class="cost-empty">Ainda sem custos registados.</div>'; cbox.innerHTML = ''; return;
+      box.innerHTML = '<div class="cost-empty">Ainda sem despesas registadas.</div>'; cbox.innerHTML = ''; return;
     }
     var b = balances(), total = S.costs.reduce(function(s, c){ return s + c.amount; }, 0);
     var rows = b.people.map(function(p){
@@ -2746,7 +2765,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   function openCostSheet(c){
     var editing = !!c;
-    if (!myName() && !askMyName('Como te chamas, para dividirmos os custos?')) return;
+    if (!myName() && !askMyName('Como te chamas, para dividirmos as despesas?')) return;
     if (people().indexOf(myName()) < 0) addPerson(myName());
     var all = people();
     var cat = editing ? catOf(c)[0] : 'other', payer = editing ? c.paid_by : myName();
@@ -2759,13 +2778,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
         + '<button type="button" class="chip add" id="kAddPerson">+ Pessoa</button></div><div class="field-hint" id="kShare"></div></div>';
     }
     openSheet({
-      title: editing ? 'Editar custo' : 'Novo custo', saveLabel: editing ? 'Guardar' : 'Adicionar',
+      title: editing ? 'Editar despesa' : 'Nova despesa', saveLabel: editing ? 'Guardar' : 'Adicionar',
       html: '<div class="field"><label class="field-label" for="kDesc">Descrição</label><input class="field-input" id="kDesc" type="text" placeholder="Ex.: jantar, gasolina" value="' + esc(editing ? c.description : '') + '"></div>'
         + '<div class="field"><label class="field-label" for="kAmount">Valor (€)</label><input class="field-input" id="kAmount" type="text" inputmode="decimal" placeholder="Ex.: 12,50" value="' + (editing ? c.amount.toFixed(2).replace('.', ',') : '') + '"></div>'
         + '<div class="field"><span class="field-label">Categoria</span><div class="chips" id="kCat">'
         + CATS.map(function(x){ return '<button type="button" class="chip' + (x[0] === cat ? ' selected' : '') + '" data-c="' + x[0] + '">' + x[2] + ' ' + x[1] + '</button>'; }).join('') + '</div></div>'
         + '<div id="kPeople">' + chips() + '</div>'
-        + (editing ? '<button type="button" class="danger-btn" id="kDelete">Apagar custo</button>' : ''),
+        + (editing ? '<button type="button" class="danger-btn" id="kDelete">Apagar despesa</button>' : ''),
       onOpen: function(body){
         function share(){
           var v = parseAmount(body.querySelector('#kAmount').value), el = body.querySelector('#kShare');
@@ -2798,7 +2817,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         });
         var del = body.querySelector('#kDelete');
         if (del) del.addEventListener('click', function(){
-          if (!window.confirm('Remover este custo? Esta ação não pode ser desfeita.')) return;
+          if (!window.confirm('Remover esta despesa? Esta ação não pode ser desfeita.')) return;
           S.costs = S.costs.filter(function(x){ return x.id !== c.id; }); closeSheet(); costsChanged();
           save('DELETE', TB.costs + '?id=eq.' + encodeURIComponent(c.id));
         });
@@ -2808,7 +2827,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         var desc = body.querySelector('#kDesc').value.trim(), amount = parseAmount(body.querySelector('#kAmount').value);
         if (!desc){ sheetError('Escreve uma descrição.'); return false; }
         if (isNaN(amount) || amount <= 0){ sheetError('Escreve um valor válido, por exemplo 12,50.'); return false; }
-        if (!split.length){ sheetError('Escolhe pelo menos uma pessoa para dividir o custo.'); return false; }
+        if (!split.length){ sheetError('Escolhe pelo menos uma pessoa para dividir a despesa.'); return false; }
         var f = { description: desc, amount: Math.round(amount * 100) / 100, paid_by: payer, category: cat,
                   split_with: all.filter(function(p){ return split.indexOf(p) >= 0; }) };
         if (editing){
@@ -2824,6 +2843,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
     });
   }
   $('costAddBtn').addEventListener('click', function(){ openCostSheet(null); });
+  function showCostPane(name){
+    document.querySelectorAll('#costTabs button').forEach(function(b){ b.classList.toggle('selected', b.dataset.pane === name); });
+    $('paneCostList').hidden = name !== 'list'; $('paneCostBalance').hidden = name !== 'balance';
+  }
+  $('costTabs').addEventListener('click', function(e){ var b = closest(e, 'button'); if (b) showCostPane(b.dataset.pane); });
   $('costList').addEventListener('click', function(e){
     var item = closest(e, '.cost-item'); if (!item) return;
     var c = S.costs.filter(function(x){ return x.id === item.dataset.id; })[0];
