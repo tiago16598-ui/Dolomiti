@@ -1851,6 +1851,115 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .field-input, .choice-btn, .confirm-card, .place-list, .danger-btn{background:var(--paper);}
   .chip{background:var(--paper);}
   .segmented{background:var(--bg-deep);}
+
+  /* ============ BREATHING ROOM ============ */
+  .screen{padding:24px 20px calc(120px + var(--safe-b));}
+  .home-scroll{padding:20px 20px calc(120px + var(--safe-b));}
+  .card{margin-bottom:24px; border-radius:24px;}
+  .card-head{padding:22px 20px 12px;}
+  .card-head.main, .day-sec.main .card-head{padding:24px 20px 14px;}
+  .card-head h3{font-size:17px;}
+  .card-head.main h3, .day-sec.main .card-head h3{font-size:22px;}
+  .row{padding:16px 18px 16px 20px; min-height:80px; gap:14px;}
+  .row-lead{width:48px; height:48px;}
+  .row-text{gap:3px;}
+  .row-sub{font-size:15px;}
+  .row-empty{padding:4px 20px 24px; font-size:16px; line-height:1.5;}
+  .card > .row-empty:first-child{padding-top:24px;}
+
+  /* home */
+  .trip-list{gap:20px; margin-bottom:24px;}
+  .home-label{margin:8px 4px 0;}
+  .trip-card.hero-card{height:208px; padding:18px 20px 20px; border-radius:26px;}
+  .trip-card.past{padding:16px 18px 16px 20px;}
+  .trip-thumb{width:48px; height:48px;}
+  #viewHome .appbar{padding-top:calc(18px + var(--safe-t)); padding-bottom:10px;}
+
+  /* roteiro */
+  .day-selector{padding:0 0 24px; margin-bottom:0; gap:10px;}
+  .day-chip{min-height:44px; padding:8px 18px 12px;}
+  .day-title-row{margin:0 4px 6px;}
+  .day-date{margin:0 4px 28px; line-height:1.5;}
+  .day-sec, .day-sec.main, .day-sec.secondary, .day-extra .day-sec{margin:0 0 24px; border-radius:24px;}
+  .day-sec.main .card-head{padding:24px 20px 14px;}
+  .stop-card.row, .day-sec.main .stop-card.row, .day-sec.secondary .stop-card.row{padding:0 18px 0 0; gap:10px;}
+  .stop-main{padding:18px 0 18px 20px; min-height:84px; gap:14px;}
+  .stop-warn{margin-top:4px;}
+  .nav-link.round, .day-sec.secondary .nav-link.round{width:46px; height:46px;}
+  .leg, .timeline > .leg{padding:12px 20px;}
+  .leg-total, .day-sec.main .leg-total{padding:18px 20px 20px;}
+  .resv-item{padding:14px 14px 14px 20px; min-height:76px; gap:14px;}
+  .add-row{min-height:68px; padding-top:10px; padding-bottom:10px;}
+  .notes-input{padding:4px 20px 24px; min-height:72px; line-height:1.5;}
+  .today-card{margin-bottom:24px; border-radius:24px;}
+
+  /* reservas */
+  .base-card{padding-bottom:6px; margin-bottom:24px;}
+  .base-card .card-head{padding:24px 20px 2px;}
+  .base-card .card-head h3{font-size:22px;}
+  .base-meta{padding:0 20px 16px; font-size:15px;}
+  .base-card .nights, .base-card .base-no, .base-card.car .base-no{font-size:15px;}
+  .base-card p{padding:0 20px 18px; font-size:16px; line-height:1.5;}
+  .reach li, .reach li:first-child{padding:16px 20px;}
+  .nav-link.booking-nav{margin:14px 20px 22px; min-height:44px; padding:0 18px;}
+  .attachment-item.row{min-height:68px; padding:12px 12px 12px 20px;}
+  .attachment-link .attachment-icon{width:40px; height:40px;}
+  .booking-link-edit-row{padding:10px 18px 10px 20px;}
+  .booking-file-btn{padding:0 20px; min-height:64px;}
+
+  /* mapa */
+  #map{border-radius:24px; margin-bottom:24px; height:56vh;}
+  .legend{padding:0 20px 10px;}
+  .legend span{padding:16px 0;}
+
+  /* despesas */
+  .cost-tabs{margin-bottom:24px; padding:4px;}
+  .cost-tabs button{min-height:44px;}
+  .total-value{font-size:22px;}
+  .cost-item-who{font-size:15px; line-height:1.4; margin-top:2px;}
+  .cat-list{padding:0 20px 14px;}
+  .cat-row{padding:16px 0;}
+  .cat-bar{margin-top:10px;}
+  .people-list{padding:4px 20px 20px; gap:10px;}
+  .person-chip{min-height:40px; padding:0 16px;}
+  .whoami-row.row{padding:16px 18px 16px 20px; min-height:76px;}
+  .settle-btn{min-height:44px; padding:0 18px;}
+
+  /* notas */
+  .idea-day-select{margin-top:12px; min-height:40px; padding:0 16px;}
+  .note-card.row{padding-bottom:20px;}
+  .row-body{margin-top:6px; font-size:15px; line-height:1.5;}
+
+  /* trip header + chrome */
+  .hero{height:calc(168px + var(--safe-t));}
+  .hero-text{left:24px; right:24px; bottom:22px;}
+  .hero .subtitle{margin-top:5px;}
+  .hero.collapsed{height:calc(60px + var(--safe-t));}
+  .hero.collapsed .hero-text{bottom:10px;}
+  .tabbar{padding:10px 4px calc(10px + var(--safe-b));}
+  .fab{right:20px; bottom:calc(28px + var(--safe-b));}
+  .fab.in-trip{bottom:calc(92px + var(--safe-b));}
+  .toast{bottom:calc(164px + var(--safe-b));}
+
+  /* sheets */
+  .sheet-bar{padding:12px 18px;}
+  .sheet-body{padding:26px 20px calc(36px + var(--safe-b));}
+  .field{margin-bottom:24px;}
+  .field-label{margin:0 4px 10px;}
+  .field-input{min-height:52px; padding:14px 16px; border-radius:14px;}
+  textarea.field-input{min-height:112px; line-height:1.5;}
+  .field-hint{margin-top:10px; line-height:1.45;}
+  .field-row{gap:14px;}
+  .chips{gap:10px;}
+  .chip{min-height:44px; padding:0 16px;}
+  .segmented button{min-height:44px;}
+  .swatches{gap:16px;}
+  .cover-photo-btn{margin-top:18px; min-height:52px; border-radius:14px;}
+  .danger-btn{min-height:52px; margin-top:14px;}
+  .confirm-card{padding:22px 20px; margin-bottom:24px; border-radius:24px;}
+  .place-result{padding:16px 18px;}
+  .choice-btn{padding:20px; margin-bottom:14px; border-radius:20px;}
+  .sheet-body .stop-links{margin:0 0 26px;}
 </style>
 </head>
 <body>
