@@ -2282,6 +2282,7 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
 .install-actions{display:flex; align-items:center; gap:14px; margin-top:12px;}
 .install-actions .primary-btn{width:auto; flex:1; min-height:46px;}
 .install-actions .text-btn{flex:none; padding:0 6px;}
+#authInstall{margin:28px 0 0;}
 </style>
 </head>
 <body>
@@ -2339,6 +2340,7 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
         <button type="submit" class="primary-btn" id="authSubmit">Entrar</button>
       </form>
       <button type="button" class="text-btn" id="authForgot">Esqueci-me da palavra-passe</button>
+      <div class="install-card" id="authInstall" hidden></div>
     </div>
   </div>
 
@@ -4714,6 +4716,7 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
   function showAuth(){
     $('viewHome').hidden = true; $('viewTrip').hidden = true; $('viewAuth').hidden = false;
     updateFab(); document.title = 'Hit The Road';
+    renderInstall();
     var box = $('authInvite');
     if (!pendingInvite){ box.hidden = true; return; }
     rpc('invite_info', { p_token: pendingInvite }, true).then(function(i){
@@ -4994,8 +4997,10 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
   // Android offers an install prompt; on the iPhone the person has to do it from Safari's share menu.
   function canInstall(){ return !isStandalone() && (!!installEvent || isIOS()); }
   function renderInstall(){
-    var box = $('installCard');
-    var show = !!SESSION && canInstall() && lsGet('viagens_install_hide') !== '1';
+    // Before signing in the offer sits on the sign-in screen; afterwards, on the list of trips.
+    var box = SESSION ? $('installCard') : $('authInstall'), other = SESSION ? $('authInstall') : $('installCard');
+    var show = canInstall() && lsGet('viagens_install_hide') !== '1';
+    other.hidden = true; other.innerHTML = '';
     box.hidden = !show;
     if (!show){ box.innerHTML = ''; return; }
     box.innerHTML = '<div class="install-text"><strong>Instala a app no telemóvel</strong>'
@@ -5011,10 +5016,12 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
   }
   window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); installEvent = e; renderInstall(); });
   window.addEventListener('appinstalled', function(){ installEvent = null; renderInstall(); toast('App instalada. Procura o ícone Hit The Road no telemóvel.'); });
-  $('installCard').addEventListener('click', function(e){
+  function installClick(e){
     if (closest(e, '#installGo')) doInstall();
     else if (closest(e, '#installHide')){ lsSet('viagens_install_hide', '1'); renderInstall(); }
-  });
+  }
+  $('installCard').addEventListener('click', installClick);
+  $('authInstall').addEventListener('click', installClick);
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')){
     window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
   }
