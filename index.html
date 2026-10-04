@@ -7,7 +7,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#EEF0E7">
+<meta name="theme-color" content="#F4F5F2">
+<script>try{if(localStorage.getItem('viagens_theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23232C24'/%3E%3Cpolygon points='50,22 80,74 20,74' fill='%23B8523E'/%3E%3C/svg%3E">
 <style>
 /* Leaflet 1.9.4 — bundled inline so the map never depends on an external CDN load succeeding */
@@ -2036,6 +2037,98 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .day-sec.main .stop-main{padding-top:30px; padding-bottom:28px;}
   .tl-period + .stop-wrap > .leg{margin-top:16px;}
   .timeline > .leg:last-child{margin-bottom:44px;}
+  /* checklist circle matches the stop marker (34px), with a 46px touch area */
+  .resv-check{width:34px; height:34px; margin:0 4px; position:relative; border-width:1.5px;}
+  .resv-check::after{content:''; position:absolute; inset:-7px;}
+  .resv-check svg{width:16px; height:16px;}
+  .resv-item{min-height:68px;}
+
+  .field-error .error-discard{display:block; margin-top:8px; min-height:36px; color:var(--rose-deep); text-decoration:underline; text-underline-offset:3px; font-size:15px;}
+
+  /* ---------- pagamentos: what each expense means for me ---------- */
+  .cost-mine{display:flex; flex-wrap:wrap; gap:6px 18px; padding:0 20px 16px; font-size:15px; color:var(--ink-soft);}
+  .cost-mine strong{font-weight:700; font-variant-numeric:tabular-nums;}
+  .mine-plus strong{color:var(--teal);} .mine-minus strong{color:var(--rose-deep);}
+  .cost-filters{padding:0 20px 18px; gap:8px; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .cost-filters::-webkit-scrollbar{display:none;}
+  .cost-filters .chip{flex:none; min-height:40px; padding:0 14px; background:var(--fill); font-size:14px; white-space:nowrap;}
+  .cost-filters .chip.selected{background:var(--ink); color:#fff;}
+  .cost-filters .chip:disabled{opacity:0.45; cursor:default;}
+  .chip-n{opacity:0.7; font-weight:500; margin-left:2px; font-variant-numeric:tabular-nums;}
+  .cost-filters + .row-empty + .cost-list .cost-item.row:first-child{border-top:1px solid var(--line);}
+  .cost-effect{flex:none; display:flex; flex-direction:column; align-items:flex-end; gap:1px; min-width:76px;}
+  .cost-effect .cost-item-amount{font-size:17px; font-weight:700;}
+  .cost-effect small{font-size:12px; color:var(--ink-soft);}
+  .cost-effect.paid .cost-item-amount{color:var(--teal);}
+  .cost-effect.paid.solo .cost-item-amount{color:var(--ink-soft);}
+  .cost-effect.owe .cost-item-amount{color:var(--rose-deep);}
+  .cost-effect.out .cost-item-amount{color:var(--ink-faint);}
+  .cost-item.is-out .cost-item-main, .cost-item.is-out .cost-cat{opacity:0.5;}
+  .cost-cat.row-lead.strong{background:var(--ink); color:#fff;}
+
+  /* ---------- settings entry, currency glyph ---------- */
+  .icon-btn{margin-left:auto; flex:none; width:var(--tap); height:var(--tap); border:none; background:none; color:var(--ink); cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:12px;}
+  .icon-btn svg{width:24px; height:24px;}
+  .icon-btn:active{background:var(--fill);}
+  .tab .tab-glyph{display:block; height:25px; line-height:25px; font-size:23px; font-weight:500; letter-spacing:-0.02em;}
+  .tab .tab-glyph.long{font-size:14px; font-weight:700;}
+  .cur-row{display:flex; align-items:center; gap:14px;}
+  .cur-sym{flex:none; width:44px; text-align:center; font-size:17px; font-weight:700;}
+  .cur-name{flex:1; min-width:0; font-size:17px; font-weight:500; display:flex; flex-direction:column;}
+  .cur-name small{font-size:13px; color:var(--ink-soft); font-weight:400;}
+  .cur-check{flex:none; color:var(--teal); visibility:hidden; display:flex;}
+  .cur-row.selected .cur-check{visibility:visible;}
+  .cur-check .ic{width:22px; height:22px;}
+
+  /* tokens for things that sit on the ink and teal fills */
+  :root{--on-ink:#FFFFFF; --on-teal:#FFFFFF; --rule:#E8EAE6; --pill-text:#4F5A53;}
+  .day-chip.active, .row-lead.strong, .cost-cat.row-lead.strong, .cost-filters .chip.selected, .trip-status.now{color:var(--on-ink);}
+  .leg, .timeline > .leg{background:var(--rule);}
+  .day-sec.main .timeline .stop-wrap + .stop-wrap{border-top-color:var(--rule);}
+  .leg-text{color:var(--pill-text);}
+
+  /* ============ DARK ============ */
+  html[data-theme="dark"]{
+    color-scheme:dark;
+    --bg:#121512; --bg-deep:#0B0D0B; --paper:#1C201D; --fill:#2A2F2B; --strip:#222622;
+    --ink:#ECEFEA; --ink-soft:#A5AFA8; --ink-faint:#717C75; --line:rgba(236,239,234,0.11);
+    --teal:#63BDB5; --teal-deep:#8DD3CC; --teal-soft:#1D3331;
+    --rose:#E38D79; --rose-deep:#F2A694; --rose-soft:#3B2520;
+    --amber:#E2B95B; --amber-deep:#EDCB7B; --amber-soft:#3A3120;
+    --on-ink:#151916; --on-teal:#0E1B1A; --rule:#2C312D; --pill-text:#B4BDB6;
+  }
+  html[data-theme="dark"] body{background:#050605;}
+  html[data-theme="dark"] .tabbar{background:rgba(22,26,23,0.92);}
+  html[data-theme="dark"] .fab,
+  html[data-theme="dark"] .nav-link:not(.round),
+  html[data-theme="dark"] .today-card .nav-link,
+  html[data-theme="dark"] .settle-btn,
+  html[data-theme="dark"] .chip.selected,
+  html[data-theme="dark"] .primary-btn,
+  html[data-theme="dark"] .danger-btn.solid,
+  html[data-theme="dark"] .resv-item.done .resv-check{color:var(--on-teal);}
+  html[data-theme="dark"] .resv-item.done .resv-check svg{stroke:var(--on-teal);}
+  html[data-theme="dark"] .cost-filters .chip.selected{color:var(--on-ink);}
+  html[data-theme="dark"] .fab{box-shadow:0 8px 22px rgba(0,0,0,0.5);}
+  html[data-theme="dark"] .appbar .mark{color:var(--on-ink);}
+  html[data-theme="dark"] .toast{color:var(--on-ink);}
+  html[data-theme="dark"] .toast-undo{color:var(--on-ink);}
+  html[data-theme="dark"] .trip-status{background:rgba(18,21,18,0.78); color:#fff;}
+  html[data-theme="dark"] .trip-status.now{background:#ECEFEA; color:#151916;}
+  html[data-theme="dark"] #map{background:#1C201D;}
+  html[data-theme="dark"] .sheet-backdrop{background:rgba(0,0,0,0.6);}
+  html[data-theme="dark"] .stop-wrap.dragging{box-shadow:0 12px 30px rgba(0,0,0,0.6);}
+  html[data-theme="dark"] .segmented button.selected{background:#3A403B; box-shadow:none;}
+  html[data-theme="dark"] .day-ind{background:var(--ink);}
+  html[data-theme="dark"] .leaflet-container{background:#1C201D;}
+  html[data-theme="dark"] .device{box-shadow:0 20px 60px rgba(0,0,0,0.6);}
+  html[data-theme="dark"] .swatch.selected{box-shadow:0 0 0 2.5px var(--ink);}
+  /* trip covers keep their own colours in both themes */
+  .cover-rose{background-color:#B8523E;} .cover-teal{background-color:#2E6E6A;} .cover-amber{background-color:#C99A2E;}
+  .cover-ink{background-color:#232C24;} .cover-moss{background-color:#6B7F4F;}
+  html[data-theme="dark"] .cover-ink{background-color:#3A443C;}
+  .row-button{cursor:pointer; font-family:inherit; border-top:none;}
+  .row-button:active{background:var(--fill);}
 </style>
 </head>
 <body>
@@ -2049,6 +2142,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         <div class="title">Viagens</div>
         <div class="subtitle" id="homeSubtitle">A carregar…</div>
       </div>
+      <button class="icon-btn" id="settingsBtn" aria-label="Definições"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.5-2-3.4-2.3.9a7.6 7.6 0 0 0-2.6-1.5L14 2.5h-4l-.5 2.5a7.6 7.6 0 0 0-2.6 1.5l-2.3-.9-2 3.4 2 1.5a7.6 7.6 0 0 0 0 3l-2 1.5 2 3.4 2.3-.9a7.6 7.6 0 0 0 2.6 1.5l.5 2.5h4l.5-2.5a7.6 7.6 0 0 0 2.6-1.5l2.3.9 2-3.4Z"/></svg></button>
     </header>
     <div class="home-scroll">
       <div class="trip-list" id="tripList"><div class="skel tall"></div><div class="skel tall"></div></div>
@@ -2095,6 +2189,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
         <div id="paneCostList">
           <section class="card">
             <div class="card-head main"><h3>Pagamentos</h3><span class="sec-count" id="costListTotal"></span></div>
+            <div class="cost-mine" id="costMine" hidden></div>
+            <div class="chips cost-filters" id="costFilters" hidden></div>
             <div class="row-empty" id="costListEmpty">Ainda sem despesas. Regista a primeira com o botão «+».</div>
             <div class="cost-list" id="costList"></div>
           </section>
@@ -2111,6 +2207,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
               <span class="row-text"><span class="row-sub">Neste telemóvel és</span><strong class="row-title" id="whoamiName">—</strong></span>
               <button class="text-btn" id="whoamiChange">mudar</button>
             </div>
+          </section>
+          <section class="card">
+            <button class="row row-button" id="currencyRow">
+              <span class="row-text"><span class="row-sub">Moeda da viagem</span><span class="row-title" id="currencyName">Euro (€)</span></span>
+              <span class="row-chevron" aria-hidden="true">›</span>
+            </button>
           </section>
         </div>
       </section>
@@ -2142,7 +2244,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         <span>Mapa</span>
       </button>
       <button class="tab" data-target="screen-custos">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5c0-1 1-1.8 2.5-1.8s2.5.7 2.5 1.7c0 2.3-5 1.1-5 3.4 0 1 1 1.7 2.5 1.7s2.5-.8 2.5-1.8"/></svg>
+        <span class="tab-glyph" id="tabCurrency" aria-hidden="true">€</span>
         <span>Despesas</span>
       </button>
       <button class="tab" data-target="screen-notas">
@@ -2221,6 +2323,74 @@ svg.leaflet-image-layer.leaflet-interactive path {
   function ic(name){
     return '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICON_PATHS[name] || '') + '</svg>';
   }
+  /* ---------- settings kept on this phone: appearance and currency ---------- */
+  var CURRENCIES = [['EUR', '€', 'Euro'], ['USD', '$', 'Dólar americano'], ['GBP', '£', 'Libra esterlina'], ['CHF', 'CHF', 'Franco suíço'],
+                    ['BRL', 'R$', 'Real'], ['JPY', '¥', 'Iene'], ['CAD', 'CA$', 'Dólar canadiano'], ['AUD', 'A$', 'Dólar australiano'],
+                    ['SEK', 'kr', 'Coroa sueca'], ['PLN', 'zł', 'Zlóti'], ['CZK', 'Kč', 'Coroa checa'], ['MAD', 'DH', 'Dirham marroquino']];
+  function lsGet(k){ try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v){ try { localStorage.setItem(k, v); } catch (e) {} }
+  function getTheme(){ return lsGet('viagens_theme') === 'dark' ? 'dark' : 'light'; }
+  // The currency belongs to the trip, so everyone who opens it sees the same symbol.
+  function getCurrency(){ var c = TRIP && TRIP.currency; return CURRENCIES.some(function(x){ return x[0] === c; }) ? c : 'EUR'; }
+  function curSymbol(){ var c = getCurrency(); return CURRENCIES.filter(function(x){ return x[0] === c; })[0][1]; }
+  function applyTheme(){
+    var dark = getTheme() === 'dark';
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    var meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.setAttribute('content', dark ? '#121512' : '#F4F5F2');
+  }
+  function applyCurrency(){
+    var g = $('tabCurrency'), sym = curSymbol();
+    g.textContent = sym; g.classList.toggle('long', sym.length > 1);
+  }
+  applyTheme();
+  function openSettingsSheet(){
+    var theme = getTheme();
+    openSheet({
+      title: 'Definições', autosave: true, onSave: function(){},
+      html: '<div class="field"><span class="field-label">Aparência</span><div class="segmented" id="setTheme">'
+        +   '<button type="button" data-v="light" class="' + (theme === 'light' ? 'selected' : '') + '">Claro</button>'
+        +   '<button type="button" data-v="dark" class="' + (theme === 'dark' ? 'selected' : '') + '">Escuro</button></div>'
+        + '<div class="field-hint">Fica guardado neste telemóvel.</div></div>',
+      onOpen: function(body){
+        body.querySelector('#setTheme').addEventListener('click', function(e){
+          var b = closest(e, 'button'); if (!b) return;
+          lsSet('viagens_theme', b.dataset.v); applyTheme();
+          body.querySelectorAll('#setTheme button').forEach(function(x){ x.classList.toggle('selected', x === b); });
+          if (map){ destroyMap(); }
+        });
+      }
+    });
+  }
+  function renderCurrency(){
+    if (!TRIP) return;
+    var c = getCurrency(), row = CURRENCIES.filter(function(x){ return x[0] === c; })[0];
+    $('currencyName').textContent = row[2] + ' (' + row[1] + ')';
+    applyCurrency();
+  }
+  function openCurrencySheet(){
+    var trip = TRIP, cur = getCurrency();
+    openSheet({
+      title: 'Moeda da viagem', autosave: true, onSave: function(){},
+      html: '<div class="place-list" id="setCur">'
+        +   CURRENCIES.map(function(c){
+              return '<button type="button" class="place-result cur-row' + (c[0] === cur ? ' selected' : '') + '" data-c="' + c[0] + '">'
+                + '<span class="cur-sym">' + esc(c[1]) + '</span><span class="cur-name">' + c[2] + '<small>' + c[0] + '</small></span><span class="cur-check">' + ic('check') + '</span></button>';
+            }).join('')
+        + '</div><div class="field-hint">Vale para todas as despesas desta viagem e para toda a gente que a abre. Muda só o símbolo: os valores não são convertidos.</div>',
+      onOpen: function(body){
+        body.querySelector('#setCur').addEventListener('click', function(e){
+          var b = closest(e, '.cur-row'); if (!b || TRIP !== trip || b.dataset.c === getCurrency()) return;
+          trip.currency = b.dataset.c; cacheSet('viagens_lista', TRIPS);
+          save('PATCH', TB.trips + '?id=eq.' + encodeURIComponent(trip.id), { currency: trip.currency });
+          body.querySelectorAll('.cur-row').forEach(function(x){ x.classList.toggle('selected', x === b); });
+          costsChanged();
+        });
+      }
+    });
+  }
+  $('currencyRow').addEventListener('click', openCurrencySheet);
+  $('settingsBtn').addEventListener('click', openSettingsSheet);
+
   var toastTimer = null;
   function toast(msg){
     commitUndo();
@@ -2356,37 +2526,87 @@ svg.leaflet-image-layer.leaflet-interactive path {
   var sheetOnSave = null;
   function openSheet(opts){
     $('sheetTitle').textContent = opts.title;
-    $('sheetSave').textContent = opts.saveLabel || 'Guardar';
+    sheetAuto = !!opts.autosave; sheetDirty = false;
+    $('sheetSave').textContent = sheetAuto ? 'Concluído' : (opts.saveLabel || 'Guardar');
+    $('sheetCancel').hidden = sheetAuto;
     $('sheetSave').disabled = false;
     $('sheetSave').classList.toggle('danger', !!opts.danger);
     $('sheetSave').hidden = !!opts.hideSave;
     $('sheetBody').innerHTML = opts.html;
     sheetOnSave = opts.onSave;
     $('sheet').hidden = false;
+    // An open sheet is one step in the phone's history, so the system "back" closes it instead of leaving the page.
+    if (backTimer){ clearTimeout(backTimer); backTimer = null; }
+    else if (!sheetInHistory){
+      try { history.pushState({ sheet: true }, ''); sheetInHistory = true; sheetUrl = location.href; } catch (e) {}
+    }
     if (opts.onOpen) opts.onOpen($('sheetBody'));
   }
-  function closeSheet(){ $('sheet').hidden = true; $('sheetBody').innerHTML = ''; sheetOnSave = null; }
+  var sheetAuto = false, sheetDirty = false;
+  var sheetInHistory = false, sheetUrl = '', backTimer = null, skipPop = false;
+  function closeSheet(fromBack){
+    $('sheet').hidden = true; $('sheetBody').innerHTML = ''; sheetOnSave = null;
+    if (!sheetInHistory) return;
+    if (fromBack === true){ sheetInHistory = false; return; }
+    // Wait a tick: a flow that closes one sheet and opens the next keeps the same history step.
+    if (backTimer) return;
+    backTimer = setTimeout(function(){
+      backTimer = null; sheetInHistory = false;
+      if (location.href !== sheetUrl) return;      // the page already moved on (trip created or deleted)
+      skipPop = true; history.back();
+    }, 0);
+  }
+  window.addEventListener('popstate', function(){
+    if (skipPop){ skipPop = false; return; }
+    if (!sheetInHistory) return;
+    if (backTimer){ clearTimeout(backTimer); backTimer = null; }
+    requestClose(true);
+  });
   function sheetError(msg){
     var body = $('sheetBody'), el = body.querySelector('.field-error');
     if (!el){ el = document.createElement('div'); el.className = 'field-error'; body.insertBefore(el, body.firstChild); }
-    el.textContent = msg; body.scrollTop = 0;
+    el.textContent = msg;
+    if (sheetAuto){
+      var out = document.createElement('button');
+      out.type = 'button'; out.className = 'text-btn error-discard'; out.textContent = 'Fechar sem guardar';
+      out.addEventListener('click', function(){ closeSheet(); });
+      el.appendChild(out);
+    }
+    body.scrollTop = 0;
   }
-  $('sheetBody').addEventListener('input', function(){ var el = $('sheetBody').querySelector('.field-error'); if (el) el.remove(); });
-  $('sheetCancel').addEventListener('click', closeSheet);
-  $('sheet').addEventListener('click', function(e){ if (e.target === $('sheet')) closeSheet(); });
-  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !$('sheet').hidden) closeSheet(); });
-  $('sheetSave').addEventListener('click', function(){
-    if (!sheetOnSave) return;
+  $('sheetBody').addEventListener('input', function(){ sheetDirty = true; var el = $('sheetBody').querySelector('.field-error'); if (el) el.remove(); });
+  $('sheetBody').addEventListener('change', function(){ sheetDirty = true; });
+  $('sheetBody').addEventListener('click', function(e){ if (closest(e, 'button') && !closest(e, '.error-discard')) sheetDirty = true; });
+  // Runs the sheet's save. fromBack: the phone's "back" already removed our history step.
+  function runSave(fromBack){
     var btn = $('sheetSave');
+    function stay(){
+      btn.disabled = false;
+      if (fromBack){ try { history.pushState({ sheet: true }, ''); sheetUrl = location.href; } catch (e) {} }
+    }
     btn.disabled = true;
     Promise.resolve().then(function(){ return sheetOnSave($('sheetBody')); }).then(function(ok){
+      if (ok === false){ stay(); return; }
       btn.disabled = false;
-      if (ok !== false) closeSheet();
+      closeSheet(fromBack);
       if (typeof ok === 'function') ok();
     }).catch(function(){
-      btn.disabled = false;
+      stay();
       sheetError('Não foi possível guardar. Verifica a ligação à internet e tenta outra vez.');
     });
+  }
+  // Leaving an edit sheet saves whatever changed; leaving a "new …" sheet discards it.
+  function requestClose(fromBack){
+    if (sheetAuto && sheetDirty && sheetOnSave) runSave(fromBack === true);
+    else closeSheet(fromBack === true);
+  }
+  $('sheetCancel').addEventListener('click', function(){ closeSheet(); });
+  $('sheet').addEventListener('click', function(e){ if (e.target === $('sheet')) requestClose(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !$('sheet').hidden) requestClose(); });
+  $('sheetSave').addEventListener('click', function(){
+    if (!sheetOnSave) return;
+    if (sheetAuto && !sheetDirty){ closeSheet(); return; }
+    runSave(false);
   });
 
   /* ============================================================
@@ -2494,7 +2714,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
     openSheet({
       title: editing ? 'Editar viagem' : 'Nova viagem',
-      saveLabel: editing ? 'Guardar' : 'Criar',
+      saveLabel: 'Criar', autosave: editing,
       html: html,
       onOpen: function(body){
         var start = body.querySelector('#fStart'), end = body.querySelector('#fEnd');
@@ -2535,7 +2755,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         if (n > MAX_DAYS){ sheetError('A viagem pode ter no máximo ' + MAX_DAYS + ' dias.'); return false; }
         if (editing && n < tripDays(trip) && shortOk !== start + end){
           shortOk = start + end;
-          sheetError('A viagem fica mais curta: o que estiver nos dias que desaparecem passa para o último dia. Carrega em «Guardar» outra vez para confirmar.');
+          sheetError('A viagem fica mais curta: o que estiver nos dias que desaparecem passa para o último dia. Carrega em «Concluído» outra vez para confirmar.');
           return false;
         }
 
@@ -2615,7 +2835,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         + '<button type="button" class="danger-btn keep" id="cKeep">Manter viagem</button>',
       onOpen: function(body){
         body.querySelector('#cDelete').addEventListener('click', function(){ $('sheetSave').click(); });
-        body.querySelector('#cKeep').addEventListener('click', closeSheet);
+        body.querySelector('#cKeep').addEventListener('click', function(){ closeSheet(); });
       },
       onSave: function(){
         return api('DELETE', TB.trips + '?id=eq.' + encodeURIComponent(trip.id)).then(function(){
@@ -2720,7 +2940,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   });
 
   function openTrip(trip){
-    commitUndo(); TRIP = trip; S = emptyState(); currentDay = 0; destroyMap(); showCostPane('list');
+    commitUndo(); TRIP = trip; S = emptyState(); currentDay = 0; destroyMap(); showCostPane('list'); costFilter = 'all';
     // Open on today's date when the trip is under way.
     var todayIdx = diffDays(isoDate(new Date()), trip.start_date);
     if (todayIdx >= 0 && todayIdx < tripDays(trip)) currentDay = todayIdx;
@@ -2760,7 +2980,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     });
   }
   function renderAll(){
-    renderTripChrome(); renderRoteiro(); renderBookings(); renderPeople(); renderCostList(); renderCostSummary(); renderTips(); renderIdeas();
+    renderTripChrome(); renderRoteiro(); renderBookings(); renderCurrency(); renderPeople(); renderCostList(); renderCostSummary(); renderTips(); renderIdeas();
     if (map) refreshMap();
   }
 
@@ -3145,7 +3365,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       }).join('') + '</div>';
     }
     openSheet({
-      title: s.name, saveLabel: 'Guardar',
+      title: s.name, autosave: true,
       html: '<div class="stop-links"><a class="nav-link" href="' + navUrl(s) + '" target="_blank" rel="noopener">' + NAV_ICON + 'Navegar</a>'
         +   '<a class="loc-google-link" href="https://www.google.com/search?q=' + encodeURIComponent(q) + '" target="_blank" rel="noopener">' + ic('search') + 'Pesquisar no Google</a></div>'
         + '<div class="field"><span class="field-label">Período</span>' + seg('ePer', [['am', 'Manhã'], ['pm', 'Tarde'], ['travel', 'Viagem']], per) + '</div>'
@@ -3403,7 +3623,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       +   '<div class="field-hint">Uma linha escrita como «Local — 30 min» aparece em lista, com o tempo à direita.</div></div>'
       + (editing ? '<button type="button" class="danger-btn" id="bDelete">Apagar reserva</button>' : '');
     openSheet({
-      title: editing ? 'Editar reserva' : 'Nova reserva', saveLabel: editing ? 'Guardar' : 'Adicionar', html: html,
+      title: editing ? 'Editar reserva' : 'Nova reserva', saveLabel: 'Adicionar', autosave: editing, html: html,
       onOpen: function(body){
         function sync(){ body.querySelector('#bNights').hidden = kind !== 'lodging'; }
         sync();
@@ -3576,7 +3796,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     try {
       var center = TRIP.lat != null && TRIP.lng != null ? [TRIP.lat, TRIP.lng] : [46.0, 8.0];
       map = L.map('map', { scrollWheelZoom: false }).setView(center, TRIP.lat != null ? 9 : 4);
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/' + (getTheme() === 'dark' ? 'dark_all' : 'light_all') + '/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; OpenStreetMap &copy; CARTO', maxZoom: 17
       }).addTo(map);
       refreshMap();
@@ -3598,7 +3818,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   function parseAmount(raw){ return parseFloat(String(raw).trim().replace(/\s/g, '').replace(',', '.')); }
   function myName(){ try { return localStorage.getItem('dolomiti_my_name') || ''; } catch (e) { return ''; } }
   function setMyName(v){ try { localStorage.setItem('dolomiti_my_name', v); } catch (e) {} }
-  function money(v){ return '€' + v.toFixed(2).replace('.', ','); }
+  function money(v){ var c = curSymbol(); return c + (c.length > 1 ? ' ' : '') + v.toFixed(2).replace('.', ','); }
 
   // Everyone in the trip: the saved list plus anyone who already appears in a cost.
   function people(){
@@ -3684,21 +3904,57 @@ svg.leaflet-image-layer.leaflet-interactive path {
     }
   });
 
+  // What one expense means for the person using this phone.
+  var costFilter = 'all';
+  function costView(c, all, me){
+    var sh = sharers(c, all), share = c.amount / sh.length, paid = c.paid_by === me, inIt = sh.indexOf(me) >= 0;
+    if (paid){
+      var lent = c.amount - (inIt ? share : 0);
+      return lent > 0.005 ? { k: 'paid', value: '+' + money(lent), label: 'emprestaste', lent: lent, owe: 0 }
+                          : { k: 'paid', solo: true, value: money(0), label: 'só teu', lent: 0, owe: 0 };
+    }
+    if (inIt) return { k: 'owe', value: '−' + money(share), label: 'a tua parte', lent: 0, owe: share };
+    return { k: 'out', value: '—', label: 'não entras', lent: 0, owe: 0 };
+  }
   function renderCostList(){
-    var all = people();
+    var all = people(), me = myName(), personal = !!me && all.indexOf(me) >= 0;
     var sum = S.costs.reduce(function(t, c){ return t + c.amount; }, 0), nC = S.costs.length;
     $('costListTotal').textContent = nC ? nC + (nC === 1 ? ' despesa' : ' despesas') + ' · ' + money(sum) : '';
     $('costListEmpty').hidden = nC > 0 || LOADING; $('costList').hidden = nC === 0;
-    $('costList').innerHTML = S.costs.slice().reverse().map(function(c){
-      var cat = catOf(c), sh = sharers(c, all);
-      var split = sh.length === all.length ? (all.length > 1 ? 'dividido por todos' : '') : (sh.length === 1 ? 'só de ' + sh[0] : 'dividido por ' + sh.join(', '));
-      return '<div class="cost-item row" data-id="' + esc(c.id) + '"><span class="cost-cat row-lead" title="' + cat[1] + '">' + cat[2] + '</span><div class="cost-item-main">'
+    var views = S.costs.map(function(c){ return personal ? costView(c, all, me) : null; });
+    var count = { all: nC, paid: 0, owe: 0, out: 0 }, lent = 0, owe = 0;
+    views.forEach(function(v){ if (v){ count[v.k]++; lent += v.lent; owe += v.owe; } });
+    $('costMine').hidden = !(personal && nC);
+    $('costMine').innerHTML = personal && nC
+      ? '<span class="mine-plus">Emprestaste <strong>' + money(lent) + '</strong></span><span class="mine-minus">Deves <strong>' + money(owe) + '</strong></span>' : '';
+    if (!personal || !count[costFilter]) costFilter = 'all';
+    $('costFilters').hidden = !(personal && nC);
+    $('costFilters').innerHTML = personal && nC ? [['all', 'Todas'], ['paid', 'Paguei eu'], ['owe', 'Devo'], ['out', 'Não entro']].map(function(f){
+      return '<button type="button" class="chip' + (f[0] === costFilter ? ' selected' : '') + '" data-f="' + f[0] + '"' + (count[f[0]] ? '' : ' disabled') + '>' + f[1] + ' <span class="chip-n">' + count[f[0]] + '</span></button>';
+    }).join('') : '';
+    $('costList').innerHTML = S.costs.map(function(c, i){ return { c: c, v: views[i] }; }).reverse().filter(function(x){
+      return costFilter === 'all' || (x.v && x.v.k === costFilter);
+    }).map(function(x){
+      var c = x.c, v = x.v, cat = catOf(c), sh = sharers(c, all);
+      var who, right;
+      if (v){
+        who = money(c.amount) + ' · ' + (c.paid_by === me ? 'pagaste tu' : 'pago por ' + esc(c.paid_by));
+        right = '<span class="cost-effect ' + v.k + (v.solo ? ' solo' : '') + '"><span class="cost-item-amount">' + v.value + '</span><small>' + v.label + '</small></span>';
+      } else {
+        var split = sh.length === all.length ? (all.length > 1 ? 'dividido por todos' : '') : (sh.length === 1 ? 'só de ' + sh[0] : 'dividido por ' + sh.join(', '));
+        who = cat[1] + ' · pago por ' + esc(c.paid_by) + (split ? ' · ' + esc(split) : '');
+        right = '<span class="cost-item-amount">' + money(c.amount) + '</span>';
+      }
+      return '<div class="cost-item row' + (v ? ' is-' + v.k : '') + '" data-id="' + esc(c.id) + '"><span class="cost-cat row-lead' + (v && v.k === 'paid' ? ' strong' : '') + '" title="' + cat[1] + '">' + cat[2] + '</span><div class="cost-item-main">'
         + '<span class="cost-item-desc">' + esc(c.description) + '</span>'
-        + '<span class="cost-item-who">' + cat[1] + ' · pago por ' + esc(c.paid_by) + (split ? ' · ' + esc(split) : '') + '</span></div>'
-        + '<span class="cost-item-amount">' + money(c.amount) + '</span>'
-        + '<span class="row-chevron" aria-hidden="true">›</span></div>';
+        + '<span class="cost-item-who">' + who + '</span></div>'
+        + right + '<span class="row-chevron" aria-hidden="true">›</span></div>';
     }).join('');
   }
+  $('costFilters').addEventListener('click', function(e){
+    var b = closest(e, '.chip'); if (!b || b.disabled) return;
+    costFilter = b.dataset.f; renderCostList();
+  });
   function balances(){
     var all = people(), paid = {}, owed = {};
     all.forEach(function(p){ paid[p] = 0; owed[p] = 0; });
@@ -3774,7 +4030,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         + '<div class="cat-bar"><span style="width:' + Math.max(2, v / max * 100).toFixed(1) + '%"></span></div></div>';
     }).join('') + '</div></section>';
   }
-  function costsChanged(){ cacheState(); renderPeople(); renderCostList(); renderCostSummary(); }
+  function costsChanged(){ cacheState(); renderCurrency(); renderPeople(); renderCostList(); renderCostSummary(); }
 
   function openCostSheet(c){
     var editing = !!c;
@@ -3793,9 +4049,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
         + '<div class="field-hint" id="kShare"></div></div>';
     }
     openSheet({
-      title: editing ? 'Editar despesa' : 'Nova despesa', saveLabel: editing ? 'Guardar' : 'Adicionar',
+      title: editing ? 'Editar despesa' : 'Nova despesa', saveLabel: 'Adicionar', autosave: editing,
       html: '<div class="field"><label class="field-label" for="kDesc">Descrição</label><input class="field-input" id="kDesc" type="text" placeholder="Ex.: jantar, gasolina" value="' + esc(editing ? c.description : '') + '"></div>'
-        + '<div class="field"><label class="field-label" for="kAmount">Valor (€)</label><input class="field-input" id="kAmount" type="text" inputmode="decimal" placeholder="Ex.: 12,50" value="' + (editing ? c.amount.toFixed(2).replace('.', ',') : '') + '"></div>'
+        + '<div class="field"><label class="field-label" for="kAmount">Valor (' + esc(curSymbol()) + ')</label><input class="field-input" id="kAmount" type="text" inputmode="decimal" placeholder="Ex.: 12,50" value="' + (editing ? c.amount.toFixed(2).replace('.', ',') : '') + '"></div>'
         + '<div class="field"><span class="field-label">Categoria</span><div class="chips" id="kCat">'
         + CATS.map(function(x){ return '<button type="button" class="chip' + (x[0] === cat ? ' selected' : '') + '" data-c="' + x[0] + '">' + x[2] + ' ' + x[1] + '</button>'; }).join('') + '</div></div>'
         + '<div id="kPeople">' + chips() + '</div>'
@@ -3865,7 +4121,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       title: 'Regularizar', saveLabel: 'Confirmar',
       html: '<div class="confirm-card"><div class="confirm-title">' + esc(x.from) + ' paga a ' + esc(x.to) + '</div>'
         + '<div class="confirm-meta">Em dívida: ' + money(x.amount) + '</div></div>'
-        + '<div class="field"><label class="field-label" for="sAmount">Valor pago (€)</label>'
+        + '<div class="field"><label class="field-label" for="sAmount">Valor pago (' + esc(curSymbol()) + ')</label>'
         +   '<input class="field-input" id="sAmount" type="text" inputmode="decimal" value="' + x.amount.toFixed(2).replace('.', ',') + '">'
         +   '<div class="field-hint" id="sLeft"></div></div>'
         + '<div class="field"><label class="field-label" for="sDate">Data do pagamento</label>'
@@ -3951,7 +4207,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   function openTipSheet(t){
     var editing = !!t;
     openSheet({
-      title: editing ? 'Editar nota' : 'Nova nota', saveLabel: editing ? 'Guardar' : 'Adicionar',
+      title: editing ? 'Editar nota' : 'Nova nota', saveLabel: 'Adicionar', autosave: editing,
       html: '<div class="field"><label class="field-label" for="tTitle">Título</label><input class="field-input" id="tTitle" type="text" placeholder="Ex.: Bilhetes do museu" value="' + esc(editing ? t.title : '') + '"></div>'
         + '<div class="field"><label class="field-label" for="tTag">Etiqueta</label><input class="field-input" id="tTag" type="text" placeholder="Ex.: Reserva obrigatória" value="' + esc(editing ? t.tag : '') + '"></div>'
         + '<div class="field"><label class="field-label" for="tBody">Texto</label><textarea class="field-input" id="tBody" placeholder="O que convém saber…">' + esc(editing ? t.body : '') + '</textarea></div>'
