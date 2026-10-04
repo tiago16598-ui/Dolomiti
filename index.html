@@ -2011,6 +2011,31 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .day-chip{position:relative; z-index:1; padding:8px 18px; min-height:44px; background:none; transition:color .24s ease, box-shadow .24s ease; scroll-snap-align:none;}
   .day-chip.active{background:none; color:#fff; box-shadow:inset 0 0 0 1px transparent;}
   .day-chip::after, .day-chip.has-stops::after{display:none;}
+
+  /* ---------- driving time: a small pill centred on the divider ---------- */
+  .day-sec.main .timeline .stop-wrap + .stop-wrap{border-top:1px solid #E8EAE6;}
+  .leg, .timeline > .leg{
+    display:block; position:relative; height:1px; padding:0; margin:-1px 0 0; background:#E8EAE6; font-size:13px; border-top:none;
+  }
+  .tl-period + .stop-wrap > .leg{margin-top:12px;}
+  .leg:empty{display:block;}
+  .leg-text{
+    position:absolute; left:50%; top:0; transform:translate(-50%,-50%); z-index:1; white-space:nowrap; max-width:calc(100% - 32px);
+    overflow:hidden; text-overflow:ellipsis;
+    display:flex; align-items:center; gap:6px; background:var(--fill); color:#4F5A53; border-radius:100px; padding:5px 12px;
+    box-shadow:0 0 0 4px var(--paper); font-variant-numeric:tabular-nums;
+  }
+  .leg-text .ic{width:15px; height:15px; flex:none;}
+  .day-sec.main .stop-main{padding-top:24px; padding-bottom:22px;}
+  .timeline > .leg:last-child{margin-bottom:34px;}
+  .day-sec.main .tl-period{border-top:none; padding-top:26px;}
+  .day-sec.main .timeline > .tl-period:first-child{padding-top:6px;}
+  .day-sec.main .card-head .sec-count{text-align:right;}
+  .day-sec.main .card-head{flex-direction:column; align-items:flex-start; gap:4px;}
+  .day-sec.main .card-head .sec-count{text-align:left; font-size:15px;}
+  .day-sec.main .stop-main{padding-top:30px; padding-bottom:28px;}
+  .tl-period + .stop-wrap > .leg{margin-top:16px;}
+  .timeline > .leg:last-child{margin-bottom:44px;}
 </style>
 </head>
 <body>
@@ -2997,8 +3022,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
       if (p.id) legOf[p.id] = html; else tail = html;
     });
     function count(n){ return n + (n === 1 ? ' paragem' : ' paragens'); }
-    box.innerHTML = '<section class="card day-sec main"><div class="card-head"><h3>Plano do dia</h3>' + (planned.length ? '<span class="sec-count">' + count(planned.length) + '</span>' : '') + '</div>'
-      + (planned.length ? '<div class="timeline">' + withPeriodHeads(planned, legOf, true) + tail + '</div><div class="leg-total" id="legTotal"></div>'
+    box.innerHTML = '<section class="card day-sec main"><div class="card-head"><h3>Plano do dia</h3>' + (planned.length ? '<span class="sec-count" id="planCount" data-n="' + count(planned.length) + '">' + count(planned.length) + '</span>' : '') + '</div>'
+      + (planned.length ? '<div class="timeline">' + withPeriodHeads(planned, legOf, true) + tail + '</div>'
           : '<div class="row-empty">Sem paragens planeadas para este dia. Usa o botão «+» para juntar a primeira.</div>')
       + '</section>'
       + (added.length ? '<section class="card day-sec secondary"><div class="card-head"><h3>Paragens secundárias</h3><span class="sec-count">' + count(added.length) + '</span></div>'
@@ -3015,15 +3040,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   function fmtDist(m){ var km = m / 1000; return (km < 10 ? (Math.round(km * 10) / 10).toString().replace('.', ',') : Math.round(km)) + ' km'; }
   function paintLegs(legs){
-    var total = { d: 0, m: 0 };
+    var total = 0;
     document.querySelectorAll('#stopsList .leg').forEach(function(el){
       var leg = legs[Number(el.dataset.leg)]; if (!leg) return;
-      total.d += leg[0]; total.m += leg[1];
-      el.innerHTML = '<span class="leg-text">' + fmtDur(leg[0]) + ' de carro · ' + fmtDist(leg[1])
+      total += leg[0];
+      el.innerHTML = '<span class="leg-text">' + ic('car') + fmtDur(leg[0])
         + (el.dataset.from ? ' desde ' + esc(el.dataset.from) : '') + (el.dataset.to ? ' até ' + esc(el.dataset.to) : '') + '</span>';
     });
-    var t = $('legTotal');
-    if (t && legs.length > 1) t.textContent = 'Condução no dia: ' + fmtDur(total.d) + ' · ' + fmtDist(total.m);
+    var t = $('planCount');
+    if (t && total > 0) t.textContent = t.dataset.n + ', ' + fmtDur(total) + ' a conduzir';
   }
   function fillLegs(pts){
     if (pts.length < 2) return;
