@@ -2148,6 +2148,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
   html[data-theme="dark"] .leaflet-bar a{background:#2A2F2B; color:#ECEFEA; border-bottom-color:#3A403B;}
   html[data-theme="dark"] .leaflet-control-attribution{background:rgba(28,32,29,0.8); color:#A5AFA8;}
   html[data-theme="dark"] .leaflet-control-attribution a{color:#8DD3CC;}
+
+  /* OpenStreetMap tiles, toned to the app: quieter in light, inverted in dark */
+  .leaflet-tile-pane{filter:saturate(0.55) contrast(0.96) brightness(1.03);}
+  html[data-theme="dark"] .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) saturate(0.45) brightness(0.92) contrast(0.92);}
+  .leaflet-control-attribution{font-size:11px;}
+  /* Pagamentos / Balanços switch stays pinned while the list scrolls */
+  .cost-tabs-bar{position:sticky; top:-48px; z-index:6; background:var(--bg); margin:-24px -20px 14px; padding:36px 20px 10px;}
+  .cost-tabs-bar .cost-tabs{margin-bottom:0;}
 </style>
 </head>
 <body>
@@ -2200,9 +2208,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
       </section>
 
       <section class="screen" id="screen-custos">
+        <div class="cost-tabs-bar">
         <div class="segmented cost-tabs" id="costTabs" role="tablist">
           <button type="button" class="selected" data-pane="list" role="tab">Pagamentos</button>
           <button type="button" data-pane="balance" role="tab">Balanços</button>
+        </div>
         </div>
 
         <div id="paneCostList">
@@ -2375,7 +2385,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
           var b = closest(e, 'button'); if (!b) return;
           lsSet('viagens_theme', b.dataset.v); applyTheme();
           body.querySelectorAll('#setTheme button').forEach(function(x){ x.classList.toggle('selected', x === b); });
-          if (map){ destroyMap(); }
         });
       }
     });
@@ -3821,8 +3830,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
     try {
       var center = TRIP.lat != null && TRIP.lng != null ? [TRIP.lat, TRIP.lng] : [46.0, 8.0];
       map = L.map('map', { scrollWheelZoom: false }).setView(center, TRIP.lat != null ? 9 : 4);
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/' + (getTheme() === 'dark' ? 'dark_all' : 'light_all') + '/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap &copy; CARTO', maxZoom: 17
+      // OpenStreetMap's own tiles: no API key. (CARTO's basemaps started requiring one in August 2026.)
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>', maxZoom: 19
       }).addTo(map);
       refreshMap();
       var pts = mapPoints();
@@ -4184,6 +4194,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   function showCostPane(name){
     document.querySelectorAll('#costTabs button').forEach(function(b){ b.classList.toggle('selected', b.dataset.pane === name); });
     $('paneCostList').hidden = name !== 'list'; $('paneCostBalance').hidden = name !== 'balance';
+    $('screen-custos').scrollTop = 0;
   }
   $('costTabs').addEventListener('click', function(e){ var b = closest(e, 'button'); if (b) showCostPane(b.dataset.pane); });
   $('costList').addEventListener('click', function(e){
