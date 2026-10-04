@@ -1977,6 +1977,40 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .day-sec.secondary .timeline > .tl-period:first-child{padding-top:2px;}
   .row-lead{font-size:15px;}
   .row-lead.strong{font-size:13px;}
+
+  /* ---------- navigate arrow without a circle; visible grip to reorder ---------- */
+  .nav-link.round, .day-sec.secondary .nav-link.round{
+    width:44px; height:44px; min-height:44px; background:none; color:var(--teal); box-shadow:none; border-radius:12px;
+  }
+  .nav-link.round svg{width:22px; height:22px;}
+  .nav-link.round:active{background:var(--fill); opacity:1;}
+  .stop-card.row, .day-sec.main .stop-card.row, .day-sec.secondary .stop-card.row{padding-right:8px; gap:0;}
+  .stop-card.row .stop-drag{
+    flex:none; width:36px; height:56px; margin:0; border:none; background:none; color:var(--ink-faint); cursor:grab;
+    display:flex; align-items:center; justify-content:center; touch-action:none; -webkit-user-select:none; user-select:none;
+  }
+  .stop-card.row .stop-drag svg{width:20px; height:20px; pointer-events:none;}
+  .stop-card.row .stop-drag:active{color:var(--ink); cursor:grabbing;}
+  .stop-wrap.dragging .stop-drag{color:var(--ink);}
+  /* smaller lead on stops */
+  .stop-main .row-lead, .today-card .row-lead{width:34px; height:34px; font-size:14px;}
+  .stop-main .row-lead.strong, .today-card .row-lead.strong{width:42px; height:26px; border-radius:100px; font-size:12px;}
+  .stop-main .row-lead:not(.strong){margin:0 4px;}
+  .today-card .row-lead:not(.strong){margin:0 4px;}
+  .stop-main .row-lead .ic, .today-card .row-lead .ic{width:17px; height:17px;}
+  .stop-main{min-height:72px; padding-top:16px; padding-bottom:16px;}
+
+  /* ---------- day bar: sliding pill, smooth scroll, no dots ---------- */
+  .day-selector{position:relative; scroll-snap-type:none; scroll-behavior:smooth; gap:8px; padding:0 2px 24px; margin:0 -2px;
+    -webkit-mask-image:linear-gradient(90deg, #000 calc(100% - 28px), transparent); mask-image:linear-gradient(90deg, #000 calc(100% - 28px), transparent);}
+  .day-ind{
+    position:absolute; left:0; top:0; z-index:0; border-radius:100px; background:var(--ink); pointer-events:none;
+    transition:transform .32s cubic-bezier(.3,.8,.25,1), width .32s cubic-bezier(.3,.8,.25,1);
+  }
+  .day-ind.still{transition:none;}
+  .day-chip{position:relative; z-index:1; padding:8px 18px; min-height:44px; background:none; transition:color .24s ease, box-shadow .24s ease; scroll-snap-align:none;}
+  .day-chip.active{background:none; color:#fff; box-shadow:inset 0 0 0 1px transparent;}
+  .day-chip::after, .day-chip.has-stops::after{display:none;}
 </style>
 </head>
 <body>
@@ -2644,6 +2678,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       if (!map) initMap();
       setTimeout(function(){ if (map) map.invalidateSize(); }, 60);
     }
+    if (target === 'screen-roteiro' && TRIP) placeDayIndicator(document.querySelector('.day-chip.active'), false);
     if (target === 'screen-roteiro'){ var ta = document.querySelector('#dayPanel .notes-input'); if (ta) autoGrow(ta); }
   }
   // The cover shrinks into a compact bar as soon as the content is scrolled.
@@ -2753,12 +2788,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
 
   function renderRoteiro(){
-    var n = tripDays(TRIP), chips = '', has = {};
-    S.stops.forEach(function(s){ if (s.day >= 0) has[s.day] = true; });
+    var n = tripDays(TRIP), chips = '<span class="day-ind" id="dayInd" aria-hidden="true"></span>';
     for (var i = 0; i < n; i++){
-      chips += '<button class="day-chip' + (i === currentDay ? ' active' : '') + (has[i] ? ' has-stops' : '') + '" data-day="' + i + '">' + chipLabel(TRIP, i) + '</button>';
+      chips += '<button class="day-chip' + (i === currentDay ? ' active' : '') + '" data-day="' + i + '">' + chipLabel(TRIP, i) + '</button>';
     }
     $('daySelector').innerHTML = chips;
+    chipsFresh = true;
     renderDay();
     renderToday();
   }
@@ -2782,7 +2817,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     var ta = $('dayNotes'); ta.value = S.notes[d] || ''; autoGrow(ta);
     document.querySelectorAll('.day-chip').forEach(function(c){ c.classList.toggle('active', Number(c.dataset.day) === d); });
     var chip = document.querySelector('.day-chip.active');
-    if (chip && chip.scrollIntoView) chip.scrollIntoView({ inline: 'center', block: 'nearest' });
+    placeDayIndicator(chip, !chipsFresh); chipsFresh = false;
     renderStops(); renderChecklist();
   }
   function todayIndex(){
@@ -2811,11 +2846,18 @@ svg.leaflet-image-layer.leaflet-interactive path {
       + (currentDay !== idx ? '<button class="text-btn" id="todayGo">Ver dia</button>' : '') + '</div>' + bodyHtml;
   }
   $('todayCard').addEventListener('click', function(e){ if (closest(e, '#todayGo')) showDay(todayIndex()); });
-  function markChips(){
-    var has = {};
-    S.stops.forEach(function(s){ if (s.day >= 0) has[s.day] = true; });
-    document.querySelectorAll('.day-chip').forEach(function(c){ c.classList.toggle('has-stops', !!has[Number(c.dataset.day)]); });
+  // The dark pill slides to the chosen day and the bar glides to keep it centred.
+  var chipsFresh = true;
+  function placeDayIndicator(chip, animate){
+    var sel = $('daySelector'), ind = $('dayInd'); if (!chip || !ind) return;
+    ind.classList.toggle('still', !animate);
+    ind.style.width = chip.offsetWidth + 'px';
+    ind.style.height = chip.offsetHeight + 'px';
+    ind.style.transform = 'translate(' + chip.offsetLeft + 'px,' + chip.offsetTop + 'px)';
+    var left = Math.max(0, chip.offsetLeft - (sel.clientWidth - chip.offsetWidth) / 2);
+    if (animate && sel.scrollTo) sel.scrollTo({ left: left, behavior: 'smooth' }); else sel.scrollLeft = left;
   }
+  window.addEventListener('resize', function(){ if (TRIP) placeDayIndicator(document.querySelector('.day-chip.active'), false); });
   function showDay(i){
     flushPending();
     var prev = currentDay;
@@ -2904,7 +2946,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   var WARN_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 2.5 20h19Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 10v4.5M12 17.2v.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
   var PERIOD_ICON = { am: 'sun', pm: 'sunset', travel: 'car' };
-  function stopCard(s, num){
+  var GRIP_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></g></svg>';
+  function stopCard(s, num, grip){
     var per = periodOf(s);
     return '<div class="stop-card row ' + per + (s.is_custom ? ' custom' : '') + '" data-id="' + esc(s.id) + '">'
       + '<button class="stop-main" aria-label="Editar ' + esc(s.name) + '">'
@@ -2915,18 +2958,20 @@ svg.leaflet-image-layer.leaflet-interactive path {
       +   '</span>'
       + '</button>'
       + '<a class="nav-link round" href="' + navUrl(s) + '" target="_blank" rel="noopener" aria-label="Navegar até ' + esc(s.name) + '">' + NAV_ICON + '</a>'
+      + (grip ? '<button class="stop-drag" aria-label="Arrastar para mudar a ordem">' + GRIP_ICON + '</button>' : '')
       + '</div>';
   }
-  function wrapStop(s, legHtml, num){
-    return '<div class="stop-wrap ' + periodOf(s) + '" data-id="' + esc(s.id) + '" data-group="' + (s.is_custom ? 'c' : 'p') + ':' + periodOf(s) + '">' + (legHtml || '') + stopCard(s, num) + '</div>';
+  function wrapStop(s, legHtml, num, grip){
+    return '<div class="stop-wrap ' + periodOf(s) + '" data-id="' + esc(s.id) + '" data-group="' + (s.is_custom ? 'c' : 'p') + ':' + periodOf(s) + '">' + (legHtml || '') + stopCard(s, num, grip) + '</div>';
   }
   // One sub-section per period, so a stop never has to carry its own "Manhã / Tarde" tag.
   function withPeriodHeads(list, legOf, numbered){
-    var last = null;
+    var last = null, size = {};
+    list.forEach(function(s){ var p = periodOf(s); size[p] = (size[p] || 0) + 1; });
     return list.map(function(s, i){
       var p = periodOf(s), head = p !== last ? '<div class="tl-period ' + p + '">' + ic(PERIOD_ICON[p]) + '<span>' + PERIOD[p] + '</span></div>' : '';
       last = p;
-      return head + wrapStop(s, legOf && legOf[s.id], numbered ? i + 1 : 0);
+      return head + wrapStop(s, legOf && legOf[s.id], numbered ? i + 1 : 0, size[p] > 1);
     }).join('');
   }
   // Driving route of a day: lodging → planned stops in order → lodging.
@@ -2997,7 +3042,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
   function findStop(id){ return S.stops.filter(function(s){ return s.id === id; })[0]; }
   function patchStop(id, fields){ return save('PATCH', TB.stops + '?id=eq.' + encodeURIComponent(id), fields); }
-  function stopsChanged(){ cacheState(); markChips(); renderStops(); renderIdeas(); renderToday(); if (map) refreshMap(); }
+  function stopsChanged(){ cacheState(); renderStops(); renderIdeas(); renderToday(); if (map) refreshMap(); }
   function searchPlaces(query, near){
     var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&q=' + encodeURIComponent(query);
     if (near && near.lat != null && near.lng != null){
@@ -3166,7 +3211,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
     drag.startY += w.getBoundingClientRect().top - t0;
     drag.moved = true;
   }
-  // Hold a stop for a moment to pick it up, then drag it up or down.
+  // The grip on the right picks a stop up at once; holding the row for a moment does the same.
+  $('dayPanel').addEventListener('pointerdown', function(e){
+    var h = closest(e, '.stop-drag'); if (!h || drag) return;
+    var wrap = h.closest('.stop-wrap'); if (!wrap) return;
+    e.preventDefault(); flushPending(); swipe = null;
+    try { h.setPointerCapture(e.pointerId); } catch (err) {}
+    drag = { wrap: wrap, pid: e.pointerId, startY: e.clientY, moved: false };
+    wrap.classList.add('dragging');
+  });
   var press = null;
   function cancelPress(){ if (press){ clearTimeout(press.timer); press = null; } }
   $('dayPanel').addEventListener('pointerdown', function(e){
