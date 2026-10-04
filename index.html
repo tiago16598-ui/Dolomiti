@@ -2156,6 +2156,23 @@ svg.leaflet-image-layer.leaflet-interactive path {
   /* Pagamentos / Balanços switch stays pinned while the list scrolls */
   .cost-tabs-bar{position:sticky; top:-48px; z-index:6; background:var(--bg); margin:-24px -20px 14px; padding:36px 20px 10px;}
   .cost-tabs-bar .cost-tabs{margin-bottom:0;}
+
+  .legend-house{flex:none; width:18px; height:18px; border-radius:50%; margin-right:7px; display:flex !important; align-items:center; justify-content:center; padding:0 !important; border-top:none !important;}
+  .legend-house svg{width:11px; height:11px;}
+
+  /* checklist: tap a line to edit it; the "+" lights up once something is typed */
+  .resv-title{flex:1; min-width:0; text-align:left; border:none; background:none; padding:6px 0; min-height:var(--tap); cursor:pointer; color:var(--ink); font-family:inherit; letter-spacing:inherit; word-break:break-word;}
+  .resv-item.done .resv-title{color:var(--ink-faint); text-decoration:line-through;}
+  .add-row{gap:12px;}
+  .resv-plus{
+    flex:none; width:40px; height:40px; border-radius:50%; border:none; cursor:pointer; padding:0;
+    background:var(--teal-soft); color:var(--teal); display:flex; align-items:center; justify-content:center;
+    transition:background .18s ease, color .18s ease, transform .12s ease;
+  }
+  .resv-plus svg{width:20px; height:20px;}
+  .resv-plus.ready{background:var(--teal); color:var(--on-teal);}
+  .resv-plus:active{transform:scale(0.92);}
+  .resv-add-input::placeholder{color:var(--ink-faint);}
 </style>
 </head>
 <body>
@@ -3083,8 +3100,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
       + '<div class="stops-list" id="stopsList"></div>'
       + '<section class="card day-sec"><div class="card-head"><h3>Reservas a fazer</h3><span class="sec-count" id="resvCount"></span></div>'
       +   '<div class="resv-list" id="resvList"></div>'
-      +   '<div class="row add-row"><input type="text" class="resv-add-input" id="resvInput" placeholder="Nova reserva" aria-label="Nova reserva">'
-      +   '<button class="text-btn" id="resvAddBtn">Adicionar</button></div></section>'
+      +   '<div class="row add-row"><input type="text" class="resv-add-input" id="resvInput" placeholder="Escreve aqui uma nova reserva" aria-label="Nova reserva a fazer" enterkeyhint="done">'
+      +   '<button class="resv-plus" id="resvAddBtn" aria-label="Adicionar reserva"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button></div></section>'
       + '<section class="card day-sec"><div class="card-head"><h3>Notas pessoais</h3></div>'
       +   '<textarea class="notes-input" id="dayNotes" placeholder="Lembretes e ideias para este dia"></textarea></section>';
     var ta = $('dayNotes'); ta.value = S.notes[d] || ''; autoGrow(ta);
@@ -3442,13 +3459,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
       if (s && closest(e, '.stop-main')) openStopSheet(s);
       return;
     }
-    if (closest(e, '#resvAddBtn')){ addChecklistFromInput(); return; }
+    if (closest(e, '#resvAddBtn')){ if ($('resvInput').value.trim()) addChecklistFromInput(); else $('resvInput').focus(); return; }
     var item = closest(e, '.resv-item');
     if (item){
       var r = S.checklist.filter(function(x){ return x.id === item.dataset.id; })[0]; if (!r) return;
       if (closest(e, '.resv-check')){
         r.done = !r.done; cacheState(); renderChecklist();
         save('PATCH', TB.checklist + '?id=eq.' + encodeURIComponent(r.id), { done: r.done });
+      } else if (closest(e, '.resv-title')){
+        openChecklistSheet(r);
       } else if (closest(e, '.resv-remove')){
         removeWithUndo('checklist', r, '«' + r.title + '» removida.', TB.checklist + '?id=eq.' + encodeURIComponent(r.id), function(){ cacheState(); renderChecklist(); });
       }
@@ -3456,6 +3475,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   });
   $('dayPanel').addEventListener('input', function(e){
     var el = e.target, day = currentDay;
+    if (el.id === 'resvInput'){ syncAddButton(); return; }
     if (el.id === 'dayNotes'){
       autoGrow(el); S.notes[day] = el.value; cacheState();
       debounce('note', function(){ saveNote(day, S.notes[day] || ''); });
@@ -3556,15 +3576,46 @@ svg.leaflet-image-layer.leaflet-interactive path {
       return '<div class="resv-item' + (r.done ? ' done' : '') + '" data-id="' + esc(r.id) + '">'
         + '<button class="resv-check" aria-label="' + (r.done ? 'Marcar como por fazer' : 'Marcar como feita') + '">'
         +   '<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 6"/></svg></button>'
-        + '<span class="resv-title">' + esc(r.title) + '</span>'
+        + '<button class="resv-title" aria-label="Editar ' + esc(r.title) + '">' + esc(r.title) + '</button>'
         + '<button class="resv-remove" aria-label="Remover">×</button></div>';
     }).join('') : '<div class="row-empty">Nada por reservar neste dia.</div>';
   }
+  function openChecklistSheet(r){
+    var done = r.done;
+    openSheet({
+      title: 'Reserva a fazer', autosave: true,
+      html: '<div class="field"><label class="field-label" for="rTitle">O que há para reservar</label>'
+        + '<input class="field-input" id="rTitle" type="text" value="' + esc(r.title) + '"></div>'
+        + '<div class="field"><span class="field-label">Estado</span><div class="segmented" id="rDone">'
+        +   '<button type="button" data-v="0" class="' + (done ? '' : 'selected') + '">Por fazer</button>'
+        +   '<button type="button" data-v="1" class="' + (done ? 'selected' : '') + '">Feita</button></div></div>'
+        + '<button type="button" class="danger-btn" id="rDelete">Apagar</button>',
+      onOpen: function(body){
+        body.querySelector('#rDone').addEventListener('click', function(e){
+          var b = closest(e, 'button'); if (!b) return;
+          done = b.dataset.v === '1';
+          body.querySelectorAll('#rDone button').forEach(function(x){ x.classList.toggle('selected', x === b); });
+        });
+        body.querySelector('#rDelete').addEventListener('click', function(){
+          closeSheet();
+          removeWithUndo('checklist', r, '«' + r.title + '» removida.', TB.checklist + '?id=eq.' + encodeURIComponent(r.id), function(){ cacheState(); renderChecklist(); });
+        });
+      },
+      onSave: function(body){
+        var title = body.querySelector('#rTitle').value.trim();
+        if (!title){ sheetError('Escreve o que há para reservar.'); return false; }
+        if (title === r.title && done === r.done) return;
+        r.title = title; r.done = done; cacheState(); renderChecklist();
+        save('PATCH', TB.checklist + '?id=eq.' + encodeURIComponent(r.id), { title: title, done: done });
+      }
+    });
+  }
+  function syncAddButton(){ var b = $('resvAddBtn'), i = $('resvInput'); if (b && i) b.classList.toggle('ready', !!i.value.trim()); }
   function addChecklistFromInput(){
     var input = $('resvInput'), title = input.value.trim();
     if (!title) return;
     var r = { id: uid(), day: currentDay, title: title, done: false };
-    S.checklist.push(r); cacheState(); renderChecklist(); input.value = '';
+    S.checklist.push(r); cacheState(); renderChecklist(); input.value = ''; syncAddButton();
     save('POST', TB.checklist, [{ id: r.id, trip_id: TRIP.id, day: r.day, title: title, done: false }]);
   }
 
@@ -3757,6 +3808,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
     return L.divIcon({ className: '', iconSize: [14, 14], iconAnchor: [7, 7],
       html: '<div style="width:14px;height:14px;border-radius:50%;background:' + color + ';border:2px solid #F8F8F3;box-shadow:0 1px 3px rgba(0,0,0,.35);"></div>' });
   }
+  // Lodging: a house in the colour of the days that start from it.
+  var HOUSE_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.2 12 4.5l8 6.7V20h-5.2v-5.2H9.2V20H4Z" fill="#fff"/></svg>';
+  function house(color){
+    return L.divIcon({ className: '', iconSize: [28, 28], iconAnchor: [14, 14],
+      html: '<div style="width:28px;height:28px;border-radius:50%;background:' + color + ';border:2.5px solid #F8F8F3;box-sizing:border-box;box-shadow:0 1px 4px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M4 11.2 12 4.5l8 6.7V20h-5.2v-5.2H9.2V20H4Z" fill="#fff"/></svg></div>' });
+  }
   function destroyMap(){
     if (map){ map.remove(); map = null; mapLayers = []; }
     $('map').innerHTML = '';
@@ -3809,17 +3866,18 @@ svg.leaflet-image-layer.leaflet-interactive path {
         .bindPopup('<strong>' + esc(s.name) + '</strong><br>' + shortLabel(TRIP, s.day) + ' · secundária');
     });
     var lodge = lodgings();
-    lodge.filter(hasCoords).forEach(function(b){
-      add(L.marker([b.lat, b.lng], { icon: dot(INK), zIndexOffset: 500 }))
+    lodge.forEach(function(b, i){
+      if (!hasCoords(b)) return;
+      add(L.marker([b.lat, b.lng], { icon: house(LODGE_COLORS[i % LODGE_COLORS.length]), zIndexOffset: 500 }))
         .bindPopup('<strong>' + esc(b.title) + '</strong><br>' + (b.first_night != null ? nightsLabel(TRIP, b.first_night, b.last_night) : 'Alojamento'));
     });
 
     var legend = '';
-    if (lodge.some(hasCoords) || hasTravel) legend += '<span><span class="dot ink"></span>Alojamento e viagem</span>';
     lodge.forEach(function(b, i){
       var c = LODGE_COLORS[i % LODGE_COLORS.length];
-      if (usedColors[c]) legend += '<span><span class="dot" style="background:' + c + '"></span>Dias a partir de ' + esc(shortName(b.title)) + '</span>';
+      if (hasCoords(b) || usedColors[c]) legend += '<span><span class="legend-house" style="background:' + c + '">' + HOUSE_SVG + '</span>' + esc(shortName(b.title)) + ' e os dias a partir daí</span>';
     });
+    if (hasTravel) legend += '<span><span class="dot ink"></span>Viagem</span>';
     if (!lodge.length && usedColors[LODGE_COLORS[0]]) legend += '<span><span class="dot rose"></span>Plano do dia</span>';
     if (hasCustom) legend += '<span><span class="dot amber"></span>Paragens secundárias</span>';
     if (!legend) legend = '<span>Ainda sem locais no mapa. Adiciona o alojamento ou paragens ao roteiro.</span>';
