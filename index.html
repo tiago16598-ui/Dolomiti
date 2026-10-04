@@ -2225,6 +2225,10 @@ html.splash-reveal .device{transition:opacity .9s cubic-bezier(.4,0,.2,1)}
 @keyframes spName{from{opacity:0;letter-spacing:15px}to{opacity:1;letter-spacing:-.9px}}
 @keyframes spUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion: reduce){#splash,#splash>svg,#splash .sp-bg,html.splash-reveal .device{transition-duration:.2s !important}#splash.out>svg,#splash.out .sp-bg{transform:none}#splash *{animation-duration:1ms !important;animation-delay:0ms !important}}
+
+/* Botão de adicionar na cor do logótipo */
+.fab, html[data-theme="dark"] .fab{background:#B8523E; color:#fff; box-shadow:0 8px 22px rgba(184,82,62,0.38);}
+html[data-theme="dark"] .fab{box-shadow:0 8px 22px rgba(0,0,0,0.5);}
 </style>
 </head>
 <body>
