@@ -2129,6 +2129,25 @@ svg.leaflet-image-layer.leaflet-interactive path {
   html[data-theme="dark"] .cover-ink{background-color:#3A443C;}
   .row-button{cursor:pointer; font-family:inherit; border-top:none;}
   .row-button:active{background:var(--fill);}
+  .cost-item.is-out .cost-cat{opacity:1;}
+
+  /* filters: all four visible at once */
+  .cost-filters{padding:0 16px 18px; gap:6px; flex-wrap:wrap; overflow:visible;}
+  .cost-filters .chip{flex:1 1 auto; min-height:38px; padding:0 9px; font-size:13px; text-align:center; letter-spacing:-0.01em;}
+  .chip-n{margin-left:1px;}
+
+  /* ---------- map: fills the screen, nothing to scroll, legend as a compact strip ---------- */
+  #screen-mapa.active{display:flex; flex-direction:column; overflow:hidden; padding:16px 16px 14px;}
+  #map{flex:1 1 auto; height:auto; min-height:0; margin-bottom:12px; border-radius:22px;}
+  #screen-mapa .legend{
+    flex:none; display:flex; flex-direction:row; flex-wrap:wrap; gap:6px 16px; margin:0; padding:2px 6px 0;
+    background:none; border-radius:0; font-size:13px; color:var(--ink-soft);
+  }
+  #screen-mapa .legend > span{display:flex; align-items:center; padding:0; border-top:none;}
+  #screen-mapa .legend .dot{width:9px; height:9px; margin-right:7px;}
+  html[data-theme="dark"] .leaflet-bar a{background:#2A2F2B; color:#ECEFEA; border-bottom-color:#3A403B;}
+  html[data-theme="dark"] .leaflet-control-attribution{background:rgba(28,32,29,0.8); color:#A5AFA8;}
+  html[data-theme="dark"] .leaflet-control-attribution a{color:#8DD3CC;}
 </style>
 </head>
 <body>
@@ -2177,7 +2196,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       <section class="screen" id="screen-mapa">
         <div id="map" role="img" aria-label="Mapa do roteiro"></div>
-        <section class="card"><div class="card-head"><h3>Legenda</h3></div><div class="legend" id="mapLegend"></div></section>
+        <div class="legend" id="mapLegend" aria-label="Legenda"></div>
       </section>
 
       <section class="screen" id="screen-custos">
@@ -3738,10 +3757,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
     var from = d > 0 ? lodgingForNight(d - 1) : null, ref = from || lodgingForNight(d);
     return ref ? LODGE_COLORS[ref.index % LODGE_COLORS.length] : LODGE_COLORS[0];
   }
+  // What the map frames when it opens: the places of the trip itself. A far-away departure or
+  // return point (period "Viagem") stays on the map but does not zoom everything else out.
   function mapPoints(){
-    var pts = S.stops.filter(function(s){ return s.day >= 0 && hasCoords(s); }).map(function(s){ return [s.lat, s.lng]; });
-    lodgings().filter(hasCoords).forEach(function(b){ pts.push([b.lat, b.lng]); });
-    return pts;
+    var near = [], far = [];
+    S.stops.forEach(function(s){
+      if (s.day < 0 || !hasCoords(s)) return;
+      (periodOf(s) === 'travel' && !s.is_custom ? far : near).push([s.lat, s.lng]);
+    });
+    lodgings().filter(hasCoords).forEach(function(b){ near.push([b.lat, b.lng]); });
+    return near.length >= 2 ? near : near.concat(far);
   }
   function refreshMap(){
     if (!map) return;
@@ -3929,7 +3954,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       ? '<span class="mine-plus">Emprestaste <strong>' + money(lent) + '</strong></span><span class="mine-minus">Deves <strong>' + money(owe) + '</strong></span>' : '';
     if (!personal || !count[costFilter]) costFilter = 'all';
     $('costFilters').hidden = !(personal && nC);
-    $('costFilters').innerHTML = personal && nC ? [['all', 'Todas'], ['paid', 'Paguei eu'], ['owe', 'Devo'], ['out', 'Não entro']].map(function(f){
+    $('costFilters').innerHTML = personal && nC ? [['all', 'Todas'], ['paid', 'Paguei'], ['owe', 'Devo'], ['out', 'Não entro']].map(function(f){
       return '<button type="button" class="chip' + (f[0] === costFilter ? ' selected' : '') + '" data-f="' + f[0] + '"' + (count[f[0]] ? '' : ' disabled') + '>' + f[1] + ' <span class="chip-n">' + count[f[0]] + '</span></button>';
     }).join('') : '';
     $('costList').innerHTML = S.costs.map(function(c, i){ return { c: c, v: views[i] }; }).reverse().filter(function(x){
@@ -3945,7 +3970,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         who = cat[1] + ' · pago por ' + esc(c.paid_by) + (split ? ' · ' + esc(split) : '');
         right = '<span class="cost-item-amount">' + money(c.amount) + '</span>';
       }
-      return '<div class="cost-item row' + (v ? ' is-' + v.k : '') + '" data-id="' + esc(c.id) + '"><span class="cost-cat row-lead' + (v && v.k === 'paid' ? ' strong' : '') + '" title="' + cat[1] + '">' + cat[2] + '</span><div class="cost-item-main">'
+      return '<div class="cost-item row' + (v ? ' is-' + v.k : '') + '" data-id="' + esc(c.id) + '"><span class="cost-cat row-lead" title="' + cat[1] + '">' + cat[2] + '</span><div class="cost-item-main">'
         + '<span class="cost-item-desc">' + esc(c.description) + '</span>'
         + '<span class="cost-item-who">' + who + '</span></div>'
         + right + '<span class="row-chevron" aria-hidden="true">›</span></div>';
