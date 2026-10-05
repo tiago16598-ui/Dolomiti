@@ -2358,6 +2358,10 @@ html.offline .vote-btn{opacity:0.6;}
 .legend .dot.neutral{background:#F4F5F2; box-shadow:inset 0 0 0 1.5px #9AA39D;}
 /* Paragens secundárias: tom neutro também no roteiro */
 .stop-card.row.custom .row-lead{background:var(--fill); color:var(--ink-soft);}
+
+/* ───── Destino da viagem: sugestões enquanto se escreve ───── */
+#fDestBox .place-list{margin-top:10px;}
+#fDestBox .place-status{margin:10px 4px 0;}
 </style>
 </head>
 <body>
@@ -3127,12 +3131,16 @@ html.offline .vote-btn{opacity:0.6;}
     var color = editing ? trip.cover_color : COVERS[TRIPS.length % COVERS.length];
     var coverUrl = editing ? trip.cover_url : null;
     var pendingFile = null, shortOk = '', timed = editing && !!trip.timed;
+    // The destination chosen from the list: its text and where it is on the map.
+    var picked = editing && trip.destination && trip.lat != null ? { text: trip.destination, lat: trip.lat, lng: trip.lng } : null;
+    var destSeq = 0;
     var html = ''
       + '<div class="field"><label class="field-label" for="fName">Nome</label>'
       +   '<input class="field-input" id="fName" type="text" placeholder="Ex.: Açores com a família" value="' + esc(editing ? trip.name : '') + '"></div>'
       + '<div class="field"><label class="field-label" for="fDest">Destino</label>'
-      +   '<input class="field-input" id="fDest" type="text" placeholder="Ex.: São Miguel, Açores" value="' + esc(editing ? trip.destination : '') + '">'
-      +   '<div class="field-hint">Serve para centrar o mapa e encontrar os locais que adicionares.</div></div>'
+      +   '<input class="field-input" id="fDest" type="text" enterkeyhint="search" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="Começa a escrever: Açores, Dolomitas…" value="' + esc(editing ? trip.destination : '') + '">'
+      +   '<div id="fDestBox"></div>'
+      +   '<div class="field-hint" id="fDestHint">' + (editing && trip.destination && trip.lat != null ? 'O mapa está centrado neste destino.' : 'Escreve e escolhe o destino na lista. É o que centra o mapa e ajuda a encontrar os locais.') + '</div></div>'
       + '<div class="field-row">'
       +   '<div class="field"><label class="field-label" for="fStart">Início</label><input class="field-input" id="fStart" type="date" value="' + esc(editing ? trip.start_date : today) + '"></div>'
       +   '<div class="field"><label class="field-label" for="fEnd">Fim</label><input class="field-input" id="fEnd" type="date" value="' + esc(editing ? trip.end_date : today) + '"></div>'
@@ -3183,6 +3191,41 @@ html.offline .vote-btn{opacity:0.6;}
           timed = b.dataset.v === '1';
           body.querySelectorAll('#fTimed button').forEach(function(x){ x.classList.toggle('selected', x === b); });
         });
+        var dIn = body.querySelector('#fDest'), dBox = body.querySelector('#fDestBox'), dHint = body.querySelector('#fDestHint'), dList = [], dTimer = null;
+        // Suggestions follow what is being typed; a short pause after each key keeps the requests few.
+        function destSuggest(){
+          var q = dIn.value.trim(), my = ++destSeq;
+          if (q.length < 2 || (picked && picked.text === q)){ dBox.innerHTML = ''; return; }
+          if (OFFLINE){ dBox.innerHTML = '<div class="place-status">Sem ligação: não é possível procurar destinos.</div>'; return; }
+          if (!dBox.innerHTML) dBox.innerHTML = '<div class="place-status">A procurar…</div>';
+          suggestPlaces(q).then(function(list){
+            if (my !== destSeq) return;
+            dList = list;
+            dBox.innerHTML = list.length
+              ? '<div class="place-list">' + list.map(function(r, i){
+                  return '<button type="button" class="place-result" data-i="' + i + '"><span class="place-name">' + esc(r.name) + '</span>'
+                    + (r.where ? '<span class="place-where">' + esc(r.where) + '</span>' : '') + '</button>';
+                }).join('') + '</div>'
+              : '<div class="place-status">Nenhum destino com esse nome. Experimenta outro ou junta o país.</div>';
+          }, function(){
+            if (my === destSeq) dBox.innerHTML = '<div class="place-status">Não foi possível procurar. Verifica a ligação à internet.</div>';
+          });
+        }
+        dIn.addEventListener('input', function(){
+          if (picked && picked.text !== dIn.value.trim()){ picked = null; dHint.textContent = 'Escolhe o destino na lista para centrar o mapa.'; }
+          clearTimeout(dTimer); dTimer = setTimeout(destSuggest, 300);
+        });
+        dIn.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); clearTimeout(dTimer); destSuggest(); } });
+        dBox.addEventListener('click', function(e){
+          var row = closest(e, '.place-result'); if (!row) return;
+          var r = dList[Number(row.dataset.i)], parts = r.where ? r.where.split(',').map(function(p){ return p.trim(); }) : [];
+          var country = parts.length ? parts[parts.length - 1] : '';
+          var text = r.name + (country && country.toLowerCase() !== r.name.toLowerCase() ? ', ' + country : '');
+          picked = { text: text, lat: r.lat, lng: r.lng };
+          clearTimeout(dTimer); destSeq++;
+          dIn.value = text; dBox.innerHTML = '';
+          dHint.textContent = 'O mapa vai ficar centrado neste destino.';
+        });
         var del = body.querySelector('#fDelete');
         if (del && !isOwner(trip)) del.remove();
         else if (del) del.addEventListener('click', function(){ deleteTrip(trip); });
@@ -3193,6 +3236,11 @@ html.offline .vote-btn{opacity:0.6;}
         var dest = body.querySelector('#fDest').value.trim();
         var start = body.querySelector('#fStart').value, end = body.querySelector('#fEnd').value;
         if (!name){ sheetError('Dá um nome à viagem.'); return false; }
+        // The destination has to come from the list, so the map always knows where to go.
+        // (A trip made before this rule keeps its destination until someone changes it.)
+        var destKept = editing && dest === (trip.destination || '');
+        if (!dest && !destKept){ sheetError('Escreve o destino e escolhe-o na lista.'); return false; }
+        if (dest && !destKept && !(picked && picked.text === dest)){ sheetError('Escolhe o destino na lista de sugestões.'); return false; }
         if (!start || !end){ sheetError('Escolhe a data de início e de fim.'); return false; }
         if (end < start){ sheetError('A data de fim tem de ser igual ou posterior à de início.'); return false; }
         var n = diffDays(end, start) + 1;
@@ -3206,10 +3254,7 @@ html.offline .vote-btn{opacity:0.6;}
         var fields = { name: name, destination: dest, start_date: start, end_date: end, cover_color: color, cover_url: coverUrl, timed: timed };
         var steps = Promise.resolve();
         if (pendingFile) steps = steps.then(function(){ return uploadFile(pendingFile, 'capa'); }).then(function(url){ fields.cover_url = url; });
-        if (dest && (!editing || dest !== trip.destination || trip.lat == null)){
-          steps = steps.then(function(){ return geocode(dest); }).then(function(c){ fields.lat = c ? c.lat : null; fields.lng = c ? c.lng : null; });
-        } else if (!dest){ fields.lat = null; fields.lng = null; }
-
+        if (picked && picked.text === dest){ fields.lat = picked.lat; fields.lng = picked.lng; }
         return steps.then(function(){
           if (!editing){
             fields.id = uid();
@@ -3233,6 +3278,10 @@ html.offline .vote-btn{opacity:0.6;}
             renderTripChrome(); renderRoteiro(); renderBookings(); destroyMap();
             if ($('screen-mapa').classList.contains('active')) initMap();
           });
+        }).catch(function(err){
+          if (!err || !err.destino) throw err;
+          sheetError('Não encontrámos «' + dest + '» no mapa. Procura e escolhe o destino da lista, ou carrega outra vez em «' + (editing ? 'Concluído' : 'Criar') + '» para continuar sem centrar o mapa.');
+          return false;
         });
       }
     });
@@ -4201,6 +4250,30 @@ html.offline .vote-btn{opacity:0.6;}
         });
       });
   }
+  // Places while typing. Photon (OpenStreetMap data, made for search-as-you-type) answers first;
+  // if it cannot be reached, the regular place search is used instead.
+  // near: results around there come first. any: also streets and addresses (for stops); otherwise only towns, regions, countries.
+  function suggestPlaces(query, near, any){
+    var url = 'https://photon.komoot.io/api/?limit=8&q=' + encodeURIComponent(query);
+    if (near && near.lat != null && near.lng != null) url += '&lat=' + Number(near.lat).toFixed(4) + '&lon=' + Number(near.lng).toFixed(4);
+    return fetch(url)
+      .then(function(r){ if (!r.ok) throw new Error('photon'); return r.json(); })
+      .then(function(d){
+        if (!d || !Array.isArray(d.features)) throw new Error('photon');
+        var seen = {}, out = [];
+        d.features.forEach(function(f){
+          var p = f.properties || {}, c = f.geometry && f.geometry.coordinates;
+          if (!p.name || !c || c.length < 2 || (!any && (p.type === 'house' || p.type === 'street'))) return;
+          var where = [];
+          [p.city, p.county, p.state, p.country].forEach(function(x){ if (x && x !== p.name && where.indexOf(x) < 0) where.push(x); });
+          var key = p.name + '|' + where.join(',');
+          if (seen[key]) return; seen[key] = true;
+          out.push({ name: p.name, where: where.join(', '), lat: Number(c[1]), lng: Number(c[0]) });
+        });
+        return out.slice(0, 5);
+      })
+      .catch(function(){ return searchPlaces(query, near); });
+  }
   function createStop(name, lat, lng, day){
     var hasPlan = S.stops.some(function(x){ return !x.is_custom; });
     // In a brand-new trip the first stops are the plan itself; later additions are "yours".
@@ -4209,43 +4282,44 @@ html.offline .vote-btn{opacity:0.6;}
     save('POST', TB.stops, [{ id: s.id, trip_id: TRIP.id, day: s.day, name: name, period: s.period, description: '', warning: '', is_custom: s.is_custom, lat: lat, lng: lng }]);
   }
   function addStop(day){
-    var trip = TRIP, results = [], seq = 0;
+    var trip = TRIP, results = [], seq = 0, timer = null;
     openSheet({
-      title: day < 0 ? 'Adicionar ideia' : 'Adicionar localização', saveLabel: 'Procurar',
+      title: day < 0 ? 'Adicionar ideia' : 'Adicionar localização', hideSave: true,
       html: '<div class="field"><label class="field-label" for="pQuery">Procurar local</label>'
-        + '<input class="field-input" id="pQuery" type="search" enterkeyhint="search" autocomplete="off" placeholder="Nome do sítio ou morada">'
-        + '<div class="field-hint">Escreve o nome, carrega em «Procurar» e escolhe o resultado certo.</div></div>'
+        + '<input class="field-input" id="pQuery" type="search" enterkeyhint="search" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="Nome do sítio ou morada">'
+        + '<div class="field-hint">Começa a escrever e escolhe o resultado certo.</div></div>'
         + '<div id="pResults"></div>',
       onOpen: function(body){
         var input = body.querySelector('#pQuery'), box = body.querySelector('#pResults');
+        function manualRow(q){ return '<button type="button" class="place-result manual" data-i="manual"><span class="place-name">Adicionar «' + esc(q) + '» sem ponto no mapa</span></button>'; }
+        // Suggestions follow what is being typed, with places near the trip first.
+        function suggest(){
+          var q = input.value.trim(), my = ++seq;
+          if (q.length < 2){ box.innerHTML = ''; return; }
+          if (!box.innerHTML) box.innerHTML = '<div class="place-status">A procurar…</div>';
+          suggestPlaces(q, trip, true).then(function(list){
+            if (my !== seq) return;
+            results = list;
+            box.innerHTML = list.length
+              ? '<div class="place-list">' + list.map(function(r, i){
+                  return '<button type="button" class="place-result" data-i="' + i + '"><span class="place-name">' + esc(r.name) + '</span>'
+                    + (r.where ? '<span class="place-where">' + esc(r.where) + '</span>' : '') + '</button>';
+                }).join('') + manualRow(q) + '</div>'
+              : '<div class="place-status">Nenhum resultado. Experimenta outro nome ou junta a localidade.</div><div class="place-list">' + manualRow(q) + '</div>';
+          }, function(){
+            if (my !== seq) return;
+            box.innerHTML = '<div class="place-status">Não foi possível procurar. Verifica a ligação à internet.</div><div class="place-list">' + manualRow(q) + '</div>';
+          });
+        }
         input.focus();
-        input.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); $('sheetSave').click(); } });
+        input.addEventListener('input', function(){ clearTimeout(timer); timer = setTimeout(suggest, 300); });
+        input.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); clearTimeout(timer); suggest(); } });
         box.addEventListener('click', function(e){
           var row = closest(e, '.place-result'); if (!row || TRIP !== trip) return;
+          clearTimeout(timer); seq++;
           if (row.dataset.i === 'manual') createStop(input.value.trim(), null, null, day);
           else { var r = results[Number(row.dataset.i)]; createStop(r.name, r.lat, r.lng, day); }
           closeSheet();
-        });
-      },
-      onSave: function(body){
-        var q = body.querySelector('#pQuery').value.trim(), box = body.querySelector('#pResults'), my = ++seq;
-        if (!q){ sheetError('Escreve o nome do local.'); return false; }
-        box.innerHTML = '<div class="place-status">A procurar…</div>';
-        function manualRow(){ return '<button type="button" class="place-result manual" data-i="manual"><span class="place-name">Adicionar «' + esc(q) + '» sem ponto no mapa</span></button>'; }
-        return searchPlaces(q, trip).then(function(list){
-          if (my !== seq) return false;
-          results = list;
-          box.innerHTML = (list.length
-            ? '<div class="field-label">Resultados</div><div class="place-list">' + list.map(function(r, i){
-                return '<button type="button" class="place-result" data-i="' + i + '"><span class="place-name">' + esc(r.name) + '</span>'
-                  + (r.where ? '<span class="place-where">' + esc(r.where) + '</span>' : '') + '</button>';
-              }).join('') + manualRow() + '</div>'
-            : '<div class="place-status">Nenhum resultado. Experimenta outro nome ou junta a localidade.</div><div class="place-list">' + manualRow() + '</div>');
-          return false;
-        }).catch(function(){
-          if (my !== seq) return false;
-          box.innerHTML = '<div class="place-status">Não foi possível procurar. Verifica a ligação à internet.</div><div class="place-list">' + manualRow() + '</div>';
-          return false;
         });
       }
     });
