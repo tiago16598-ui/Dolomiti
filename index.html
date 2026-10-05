@@ -2400,7 +2400,7 @@ html[lang="it"] .day-base-pill::before{content:'Notte a: ';}
     <text class="sp-slogan" x="134" y="390">THE JOURNEY IS THE DESTINATION</text>
   </svg>
 </div>
-<script>(function(){var s=document.getElementById('splash'),r=document.documentElement,m=document.querySelector('meta[name="theme-color"]');if(!s)return;r.classList.add('splashing');if(m)m.setAttribute('content','#131814');setTimeout(function(){r.classList.remove('splashing');r.classList.add('splash-reveal');s.className='out';if(m)m.setAttribute('content',r.getAttribute('data-theme')==='dark'?'#121512':'#F4F5F2');setTimeout(function(){r.classList.remove('splash-reveal');if(s.parentNode)s.parentNode.removeChild(s)},1000)},3000)})();</script>
+<script>(function(){var s=document.getElementById('splash'),r=document.documentElement,m=document.querySelector('meta[name="theme-color"]');if(!s)return;try{var n=performance.getEntriesByType('navigation')[0];if(n?n.type==='reload':!!sessionStorage.getItem('viagens_pos')){s.parentNode.removeChild(s);return}}catch(e){}r.classList.add('splashing');if(m)m.setAttribute('content','#131814');setTimeout(function(){r.classList.remove('splashing');r.classList.add('splash-reveal');s.className='out';if(m)m.setAttribute('content',r.getAttribute('data-theme')==='dark'?'#121512':'#F4F5F2');setTimeout(function(){r.classList.remove('splash-reveal');if(s.parentNode)s.parentNode.removeChild(s)},1000)},3000)})();</script>
 <div class="device">
 
 
@@ -3667,16 +3667,44 @@ I18N.watch();
     tab.addEventListener('click', function(){ activateTab(tab.dataset.target); });
   });
 
+  /* ---------- a refresh (pulling the page down) keeps the person where they were ---------- */
+  // (Where the browser cannot say how the page was opened, a position saved in this same tab is taken as a refresh.)
+  var RELOADED = (function(){ try { var n = performance.getEntriesByType('navigation')[0]; return n ? n.type === 'reload' : true; } catch (e) { return true; } })();
+  var POS = null, pendingTop = null;
+  if (RELOADED){ try { POS = JSON.parse(sessionStorage.getItem('viagens_pos') || 'null'); } catch (e) {} }
+  function savePos(){
+    try {
+      if (!SESSION){ sessionStorage.removeItem('viagens_pos'); return; }
+      var a = TRIP ? activeScreen() : '', scr = TRIP ? $(a) : document.querySelector('.home-scroll');
+      sessionStorage.setItem('viagens_pos', JSON.stringify({ trip: TRIP ? TRIP.id : '', tab: a, day: currentDay, pane: $('paneCostBalance').hidden ? 'list' : 'balance', top: scr ? scr.scrollTop : 0 }));
+    } catch (e) {}
+  }
+  window.addEventListener('pagehide', savePos);
+  document.addEventListener('visibilitychange', function(){ if (document.visibilityState === 'hidden') savePos(); });
+  // The scroll position is put back once the content is there (and again when fresh data replaces it).
+  function applyTop(last){
+    var p = pendingTop; if (!p) return;
+    if (last) pendingTop = null;
+    if (p.el && p.top > 0) p.el.scrollTop = p.top;
+  }
   function openTrip(trip){
     commitUndo(); TRIP = trip; S = emptyState(); currentDay = 0; destroyMap(); showCostPane('list'); costFilter = 'all';
     // Open on today's date when the trip is under way.
     var todayIdx = diffDays(isoDate(new Date()), trip.start_date);
     if (todayIdx >= 0 && todayIdx < tripDays(trip)) currentDay = todayIdx;
+    var pos = POS && POS.trip === trip.id ? POS : null; POS = null;
+    if (pos && pos.day >= 0 && pos.day < tripDays(trip)) currentDay = pos.day;
     $('viewHome').hidden = true; $('viewTrip').hidden = false;
     var cachedNow = cacheGet('viagens_trip_' + trip.id);
     if (cachedNow) S = Object.assign(emptyState(), cachedNow); else LOADING = true;
-    activateTab('screen-roteiro');
+    activateTab(pos && SUBTITLES[pos.tab] ? pos.tab : 'screen-roteiro');
     renderAll();
+    if (pos){
+      if (pos.pane === 'balance') showCostPane('balance');
+      pendingTop = { el: $(activeScreen()), top: Number(pos.top) || 0 };
+      applyTop(); requestAnimationFrame(function(){ applyTop(); });
+      setTimeout(function(){ applyTop(true); }, 4000);
+    }
     fetchTrip(trip);
     ensureTz(trip);
     if (LIVE.on && trip.timed && todayIndex() >= 0) startLive(true);
@@ -3710,7 +3738,7 @@ I18N.watch();
       st.settlements = r[8].map(function(x){ x.amount = Number(x.amount); return x; });
       st.votes = (r[9] || []).map(function(x){ return { stop_id: x.stop_id, user_id: x.user_id, vote: Number(x.vote) }; });
       st.members = (r[10] || []).map(function(x){ return { user_id: x.user_id, display_name: x.display_name || '' }; });
-      LOADING = false; S = st; cacheState(); renderAll();
+      LOADING = false; S = st; cacheState(); renderAll(); applyTop(true);
     }).catch(function(err){
       if (!TRIP || TRIP.id !== trip.id) return;
       LOADING = false; renderAll();
@@ -5777,9 +5805,13 @@ I18N.watch();
     $('viewAuth').hidden = true;
     TRIPS = cacheGet('viagens_lista') || [];
     sortTrips(); renderHome(); route();
+    var homeTop = POS && !POS.trip && !TRIP ? Number(POS.top) || 0 : 0, homeEl = document.querySelector('.home-scroll');
+    if (homeTop && homeEl) homeEl.scrollTop = homeTop;
     return ensureProfile().catch(function(){}).then(function(){ return SESSION ? loadTrips() : null; }).then(function(){
       if (!SESSION) return;
       route(); processInvite();
+      if (homeTop && homeEl && !TRIP) homeEl.scrollTop = homeTop;
+      POS = null;
     });
   }
 
