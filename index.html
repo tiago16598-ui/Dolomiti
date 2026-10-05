@@ -2282,7 +2282,73 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
 .install-actions{display:flex; align-items:center; gap:14px; margin-top:12px;}
 .install-actions .primary-btn{width:auto; flex:1; min-height:46px;}
 .install-actions .text-btn{flex:none; padding:0 6px;}
-#authInstall{margin:28px 0 0;}
+#authInstall{margin:-12px 0 24px;}
+
+/* ───── Ver a palavra-passe ───── */
+.pw-wrap{position:relative;}
+.pw-wrap .field-input{padding-right:54px;}
+.pw-toggle{position:absolute; right:2px; top:50%; transform:translateY(-50%); width:48px; height:48px; border:none; background:none; color:var(--ink-soft); cursor:pointer; padding:0; display:flex; align-items:center; justify-content:center;}
+.pw-toggle svg{width:22px; height:22px;}
+.pw-toggle .eye-off, .pw-toggle.on .eye-on{display:none;}
+.pw-toggle.on .eye-off{display:block;}
+.pw-toggle.on{color:var(--teal);}
+
+/* ───── Plano com horas ───── */
+.day-clock{margin:0 16px 18px; padding:14px 14px 12px; border-radius:18px; background:var(--strip);}
+.day-clock.bad{background:var(--rose-soft);}
+.day-clock.tight{background:var(--amber-soft);}
+.clock-row{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px 12px;}
+.clock-start{display:flex; align-items:center; gap:10px; font-size:14px; font-weight:600; color:var(--ink-soft);}
+.clock-start input{font:inherit; font-size:16px; font-weight:700; color:var(--ink); background:var(--paper); border:none; border-radius:100px; min-height:40px; padding:0 14px; font-variant-numeric:tabular-nums;}
+.clock-sun{display:flex; align-items:center; gap:6px; font-size:14px; color:var(--ink-soft); white-space:nowrap;}
+.clock-sun .ic{width:18px; height:18px; color:var(--amber-deep);}
+.clock-verdict{margin-top:12px; font-size:14px; line-height:1.45; color:var(--ink);}
+.clock-verdict strong{display:block; font-size:16px; font-weight:800; letter-spacing:-0.02em;}
+.day-clock.bad .clock-verdict strong{color:var(--rose-deep);}
+.clock-fix{display:flex; flex-direction:column; gap:8px; margin-top:12px;}
+.clock-fix-label{font-size:13px; font-weight:600; color:var(--ink-soft);}
+.clock-fix-btn{font:inherit; font-size:15px; font-weight:600; text-align:left; color:var(--ink); background:var(--paper); border:none; border-radius:14px; min-height:44px; padding:10px 14px; cursor:pointer;}
+.clock-fix-btn:active{opacity:0.7;}
+.clock-live-btn{display:flex; align-items:center; justify-content:center; gap:8px; width:100%; margin-top:12px; min-height:44px; border:none; border-radius:14px; background:var(--paper); color:var(--teal); font:inherit; font-size:15px; font-weight:600; cursor:pointer;}
+.clock-live-btn .ic{width:18px; height:18px;}
+.clock-live{display:flex; align-items:center; gap:10px; margin-top:12px; padding:8px 6px 8px 14px; border-radius:14px; background:var(--paper); font-size:14px; line-height:1.35; color:var(--ink);}
+.clock-live .live-text{flex:1; min-width:0; font-weight:600;}
+.clock-live.late .live-text{color:var(--rose-deep);}
+.live-dot{flex:none; width:10px; height:10px; border-radius:50%; background:var(--teal); animation:livePulse 1.8s ease-in-out infinite;}
+.clock-live.late .live-dot{background:var(--rose);}
+@keyframes livePulse{0%,100%{opacity:1; transform:scale(1);} 50%{opacity:0.35; transform:scale(0.8);}}
+@media (prefers-reduced-motion: reduce){.live-dot{animation:none;}}
+.row-lead.est{background:none; box-shadow:inset 0 0 0 1.5px var(--rule); color:var(--ink); font-size:12px;}
+.row-lead.est.slip{box-shadow:inset 0 0 0 1.5px var(--rose); color:var(--rose-deep);}
+.row-lead.here{background:var(--teal); color:var(--on-teal);}
+.row-lead.done{background:var(--teal-soft); color:var(--teal);}
+.stop-stay{color:var(--ink-soft);}
+html.offline .clock-fix, html.offline #dayStart{pointer-events:none;}
+html.offline .clock-fix{display:none;}
+
+.clock-reorder{display:flex; align-items:center; gap:12px; width:100%; margin-top:12px; padding:10px 14px; min-height:52px; border:none; border-radius:14px; background:var(--paper); color:var(--ink); font:inherit; text-align:left; cursor:pointer;}
+.clock-reorder .ic{flex:none; width:22px; height:22px; color:var(--teal);}
+.clock-reorder-text{display:flex; flex-direction:column; font-size:13px; line-height:1.35; color:var(--ink-soft);}
+.clock-reorder-text strong{font-size:15px; font-weight:700; color:var(--teal);}
+.clock-reorder:active{opacity:0.7;}
+.clock-order{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:10px; padding-left:2px; font-size:14px; color:var(--ink-soft);}
+html.offline .clock-reorder, html.offline .clock-order .text-btn{display:none;}
+
+/* ───── Votos nas ideias (discretos: a ideia é o principal) ───── */
+.idea-votes{display:flex; align-items:center; gap:2px; margin:4px 0 0 -8px;}
+.vote-btn{display:flex; align-items:center; gap:4px; min-height:36px; min-width:36px; justify-content:center; padding:0 8px; border:none; background:none; color:var(--ink-faint); font:inherit; font-size:13px; font-weight:600; font-variant-numeric:tabular-nums; cursor:pointer; border-radius:100px;}
+.vote-btn .ic{width:17px; height:17px;}
+.vote-btn.down .ic{transform:scaleY(-1);}
+.vote-btn.up.on{color:var(--teal);}
+.vote-btn.down.on{color:var(--rose-deep);}
+.vote-btn.on .ic{stroke-width:2.3;}
+.vote-btn:active, .vote-who-btn:active{opacity:0.6;}
+.vote-who-btn{white-space:nowrap; flex:none; margin-left:6px; min-height:36px; padding:0 6px; border:none; background:none; color:var(--ink-faint); font:inherit; font-size:13px; cursor:pointer; text-decoration:underline; text-underline-offset:3px;}
+.idea-who{margin-top:0; font-size:13px;}
+.idea-votes .idea-day-select{margin:0 0 0 auto; min-height:36px; width:auto; max-width:40%; flex:none; padding:0 2px 0 8px; border:none; border-radius:0; background:none; box-shadow:none; color:var(--teal); font:inherit; font-size:13px; font-weight:600; text-align:right; text-align-last:right; cursor:pointer; -webkit-appearance:none; appearance:none;}
+html.offline .vote-btn{opacity:0.6;}
+#sheetSave.icon-close{display:flex; align-items:center; justify-content:center; width:44px; min-width:44px; height:44px; padding:0; color:var(--ink-soft);}
+#sheetSave.icon-close svg{width:22px; height:22px;}
 </style>
 </head>
 <body>
@@ -2310,6 +2376,7 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
   <!-- ============ ENTRAR ============ -->
   <div class="view auth-view" id="viewAuth" hidden>
     <div class="auth-scroll">
+      <div class="install-card" id="authInstall" hidden></div>
       <div class="auth-brand">
         <div class="auth-mark" aria-hidden="true"><svg viewBox="0 0 100 100"><polygon points="50,24 80,74 20,74" fill="#B8523E"/></svg></div>
         <h1 class="auth-name">Hit The Road</h1>
@@ -2332,7 +2399,7 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
         </div>
         <div class="field">
           <label class="field-label" for="authPass">Palavra-passe</label>
-          <input class="field-input" id="authPass" type="password" autocomplete="current-password">
+          <div class="pw-wrap"><input class="field-input" id="authPass" type="password" autocomplete="current-password"><button type="button" class="pw-toggle" aria-label="Mostrar palavra-passe" aria-pressed="false"><svg class="eye-on" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.500 12S6 5.500 12 5.500 21.500 12 21.500 12 18 18.500 12 18.500 2.500 12 2.500 12Z"/><circle cx="12" cy="12" r="3"/></svg><svg class="eye-off" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 16M9.900 5.800A9.600 9.600 0 0 1 12 5.500c6 0 9.500 6.500 9.500 6.500a17 17 0 0 1-2.800 3.600M6.300 7.400A16.500 16.500 0 0 0 2.500 12S6 18.500 12 18.500a9.300 9.300 0 0 0 4.200-1M9.900 9.900a3 3 0 0 0 4.200 4.200"/></svg></button></div>
           <div class="field-hint" id="authPassHint" hidden>Pelo menos 6 caracteres.</div>
         </div>
         <div class="field-error" id="authError" role="alert" hidden></div>
@@ -2340,7 +2407,6 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
         <button type="submit" class="primary-btn" id="authSubmit">Entrar</button>
       </form>
       <button type="button" class="text-btn" id="authForgot">Esqueci-me da palavra-passe</button>
-      <div class="install-card" id="authInstall" hidden></div>
     </div>
   </div>
 
@@ -2504,7 +2570,7 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
   var BUCKET = 'dolomiti-files';
   var TB = {
     trips: 'trips', days: 'trip_days', notes: 'trip_day_notes', bookings: 'trip_bookings', tips: 'trip_tips',
-    stops: 'dolomiti_stops', checklist: 'dolomiti_reservations', costs: 'dolomiti_costs', settlements: 'trip_settlements', attachments: 'dolomiti_booking_attachments'
+    stops: 'dolomiti_stops', checklist: 'dolomiti_reservations', costs: 'dolomiti_costs', settlements: 'trip_settlements', votes: 'trip_votes', attachments: 'dolomiti_booking_attachments'
   };
 
   /* ---------- helpers ---------- */
@@ -2519,6 +2585,8 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
   function autoGrow(el){ el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
 
   var ICON_PATHS = {
+    thumb: '<path d="M7.500 10.500v9.500M7.500 10.500l3.800-7a2.200 2.200 0 0 1 2.200 2.200v3.800h4.700a2 2 0 0 1 2 2.400l-1.100 5.900a2 2 0 0 1-2 1.700H7.500M7.500 20H5a1.500 1.500 0 0 1-1.500-1.500V12A1.500 1.500 0 0 1 5 10.500h2.500"/>',
+    swap: '<path d="M7 4v15M7 19l-3.500-3.500M7 19l3.500-3.500M17 20V5M17 5l-3.500 3.500M17 5l3.500 3.500"/>',
     bed: '<path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6M3 18h18M6 10V7a2 2 0 0 1 2-2h3v5"/>',
     car: '<path d="M5 16v2M19 16v2M3.5 16.5v-4l2-5.5h13l2 5.5v4ZM3.5 12.5h17"/><circle cx="7.5" cy="14.5" r="0.6"/><circle cx="16.5" cy="14.5" r="0.6"/>',
     fork: '<path d="M7 3v8M4.5 3v4.5a2.5 2.5 0 0 0 5 0V3M7 11v10M17 3c-2 1.5-3 4-3 7h3ZM17 3v18"/>',
@@ -2575,10 +2643,12 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
         + '<div class="field-hint">Fica guardado neste telemóvel.</div></div>'
         + (canInstall() ? '<div class="field"><span class="field-label">Instalar</span>'
             + (installEvent ? '<button type="button" class="primary-btn" id="setInstall">Instalar a app neste telemóvel</button>' : '')
-            + '<div class="field-hint">' + (installEvent ? 'Fica com ícone próprio, abre em ecrã inteiro e funciona sem ligação.' : 'No Safari, toca em Partilhar e escolhe «Adicionar ao ecrã principal».') + '</div></div>' : '')
+            + '<div class="field-hint">' + esc(installHint()) + '</div></div>' : '')
+        + '<button type="button" class="danger-btn keep" id="setInvite">Tenho um link de convite</button>'
         + '<button type="button" class="danger-btn keep" id="setPass">Mudar palavra-passe</button>'
         + '<button type="button" class="danger-btn" id="setOut">Terminar sessão</button>',
       onOpen: function(body){
+        body.querySelector('#setInvite').addEventListener('click', function(){ closeSheet(); openInviteSheet(); });
         var inst = body.querySelector('#setInstall');
         if (inst) inst.addEventListener('click', function(){ closeSheet(); doInstall(); });
         body.querySelector('#setName').addEventListener('click', function(){ closeSheet(); openNameSheet(); });
@@ -2845,7 +2915,7 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
   var S = emptyState();
   var currentDay = 0;
   var map = null, mapLayers = [];
-  function emptyState(){ return { days: {}, notes: {}, stops: [], checklist: [], bookings: [], attachments: [], costs: [], tips: [], settlements: [] }; }
+  function emptyState(){ return { days: {}, starts: {}, orders: {}, notes: {}, stops: [], checklist: [], bookings: [], attachments: [], costs: [], tips: [], settlements: [], votes: [], members: [] }; }
   function cacheGet(key){ try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
   function cacheSet(key, val){ try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
   function cacheState(){ if (TRIP) cacheSet('viagens_trip_' + TRIP.id, S); }
@@ -2868,6 +2938,12 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
     $('sheetTitle').textContent = opts.title;
     sheetAuto = !!opts.autosave; sheetDirty = false;
     $('sheetSave').textContent = sheetAuto ? 'Concluído' : (opts.saveLabel || 'Guardar');
+    // A window that only shows something closes with a cross instead of a word.
+    $('sheetSave').classList.toggle('icon-close', !!opts.closeIcon);
+    if (opts.closeIcon){
+      $('sheetSave').innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
+      $('sheetSave').setAttribute('aria-label', 'Fechar');
+    } else $('sheetSave').removeAttribute('aria-label');
     $('sheetCancel').hidden = sheetAuto;
     $('sheetSave').disabled = false;
     $('sheetSave').classList.toggle('danger', !!opts.danger);
@@ -3041,7 +3117,7 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
     var today = isoDate(new Date());
     var color = editing ? trip.cover_color : COVERS[TRIPS.length % COVERS.length];
     var coverUrl = editing ? trip.cover_url : null;
-    var pendingFile = null, shortOk = '';
+    var pendingFile = null, shortOk = '', timed = editing && !!trip.timed;
     var html = ''
       + '<div class="field"><label class="field-label" for="fName">Nome</label>'
       +   '<input class="field-input" id="fName" type="text" placeholder="Ex.: Açores com a família" value="' + esc(editing ? trip.name : '') + '"></div>'
@@ -3052,6 +3128,10 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
       +   '<div class="field"><label class="field-label" for="fStart">Início</label><input class="field-input" id="fStart" type="date" value="' + esc(editing ? trip.start_date : today) + '"></div>'
       +   '<div class="field"><label class="field-label" for="fEnd">Fim</label><input class="field-input" id="fEnd" type="date" value="' + esc(editing ? trip.end_date : today) + '"></div>'
       + '</div>'
+      + '<div class="field"><span class="field-label">Plano com horas</span><div class="segmented" id="fTimed">'
+      +   '<button type="button" data-v="0" class="' + (timed ? '' : 'selected') + '">Desligado</button>'
+      +   '<button type="button" data-v="1" class="' + (timed ? 'selected' : '') + '">Ligado</button></div>'
+      +   '<div class="field-hint">Calcula a que horas chegam a cada paragem, compara com o pôr do sol e avisa quando o dia não cabe.</div></div>'
       + '<div class="field"><span class="field-label">Capa</span><div class="swatches" id="fSwatches">'
       +   COVERS.map(function(c){ return '<button type="button" class="swatch' + (c === color ? ' selected' : '') + '" data-color="' + c + '" style="background:' + COVER_HEX[c] + '" aria-label="Cor ' + c + '"></button>'; }).join('')
       + '</div>'
@@ -3089,6 +3169,11 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
           coverUrl = null; pendingFile = null; rm.hidden = true;
           body.querySelector('#fCoverText').textContent = 'Escolher foto de capa';
         });
+        body.querySelector('#fTimed').addEventListener('click', function(e){
+          var b = closest(e, 'button'); if (!b) return;
+          timed = b.dataset.v === '1';
+          body.querySelectorAll('#fTimed button').forEach(function(x){ x.classList.toggle('selected', x === b); });
+        });
         var del = body.querySelector('#fDelete');
         if (del && !isOwner(trip)) del.remove();
         else if (del) del.addEventListener('click', function(){ deleteTrip(trip); });
@@ -3109,7 +3194,7 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
           return false;
         }
 
-        var fields = { name: name, destination: dest, start_date: start, end_date: end, cover_color: color, cover_url: coverUrl };
+        var fields = { name: name, destination: dest, start_date: start, end_date: end, cover_color: color, cover_url: coverUrl, timed: timed };
         var steps = Promise.resolve();
         if (pendingFile) steps = steps.then(function(){ return uploadFile(pendingFile, 'capa'); }).then(function(url){ fields.cover_url = url; });
         if (dest && (!editing || dest !== trip.destination || trip.lat == null)){
@@ -3133,6 +3218,9 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
             sortTrips(); cacheSet('viagens_lista', TRIPS); renderHome();
             if (n < oldN) clampToDays(n);
             if (currentDay > n - 1) currentDay = n - 1;
+            if ('lat' in fields) trip.tz = null;
+            if (!trip.timed) pauseLive();
+            ensureTz(trip);
             renderTripChrome(); renderRoteiro(); renderBookings(); destroyMap();
             if ($('screen-mapa').classList.contains('active')) initMap();
           });
@@ -3214,7 +3302,7 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
     var id = m ? decodeURIComponent(m[1]) : null;
     var trip = id ? TRIPS.filter(function(t){ return t.id === id; })[0] : null;
     if (!trip){
-      commitUndo(); TRIP = null; destroyMap(); updateFab();
+      commitUndo(); TRIP = null; destroyMap(); pauseLive(); updateFab();
       $('viewTrip').hidden = true; $('viewHome').hidden = false;
       document.title = 'Hit The Road';
       return;
@@ -3308,24 +3396,28 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
     activateTab('screen-roteiro');
     renderAll();
     fetchTrip(trip);
+    ensureTz(trip);
+    if (LIVE.on && trip.timed && todayIndex() >= 0) startLive(true);
   }
   // (Re)load everything about one trip from the server.
   function fetchTrip(trip){
     var q = '?trip_id=eq.' + encodeURIComponent(trip.id);
     Promise.all([
-      api('GET', TB.days + q + '&select=day,title'),
+      api('GET', TB.days + q + '&select=day,title,start_time,saved_order'),
       api('GET', TB.notes + q + '&select=day,text'),
-      api('GET', TB.stops + q + '&select=id,day,name,period,description,warning,is_custom,lat,lng,visit_time,sort_order&order=created_at.asc'),
+      api('GET', TB.stops + q + '&select=id,day,name,period,description,warning,is_custom,lat,lng,visit_time,sort_order,duration_min&order=created_at.asc'),
       api('GET', TB.checklist + q + '&select=id,day,title,done&order=created_at.asc'),
       api('GET', TB.bookings + q + '&select=id,kind,title,details,first_night,last_night,lat,lng,created_at&order=created_at.asc'),
       api('GET', TB.attachments + q + '&select=id,base_id,url,label&order=created_at.asc'),
       api('GET', TB.costs + q + '&select=id,description,amount,paid_by,category,split_with&order=created_at.asc'),
       api('GET', TB.tips + q + '&select=id,tag,title,body&order=created_at.asc'),
-      api('GET', TB.settlements + q + '&select=id,from_person,to_person,amount,paid_on,recorded_by&order=created_at.asc')
+      api('GET', TB.settlements + q + '&select=id,from_person,to_person,amount,paid_on,recorded_by&order=created_at.asc'),
+      api('GET', TB.votes + q + '&select=stop_id,user_id,vote').catch(function(err){ if (netFail(err)) throw err; return []; }),
+      rpc('trip_member_list', { p_trip: trip.id }).catch(function(err){ if (netFail(err)) throw err; return []; })
     ]).then(function(r){
       if (!TRIP || TRIP.id !== trip.id) return;
       var st = emptyState();
-      r[0].forEach(function(x){ st.days[x.day] = x.title || ''; });
+      r[0].forEach(function(x){ st.days[x.day] = x.title || ''; if (x.start_time) st.starts[x.day] = x.start_time; if (Array.isArray(x.saved_order) && x.saved_order.length) st.orders[x.day] = x.saved_order; });
       r[1].forEach(function(x){ st.notes[x.day] = x.text || ''; });
       st.stops = r[2].map(function(x){ x.day = Number(x.day); x.description = x.description || ''; x.warning = x.warning || ''; x.is_custom = !!x.is_custom; return x; });
       st.checklist = r[3].map(function(x){ x.day = Number(x.day); x.done = !!x.done; return x; });
@@ -3334,6 +3426,8 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
       st.costs = r[6].map(function(x){ x.amount = Number(x.amount); return x; });
       st.tips = r[7];
       st.settlements = r[8].map(function(x){ x.amount = Number(x.amount); return x; });
+      st.votes = (r[9] || []).map(function(x){ return { stop_id: x.stop_id, user_id: x.user_id, vote: Number(x.vote) }; });
+      st.members = (r[10] || []).map(function(x){ return { user_id: x.user_id, display_name: x.display_name || '' }; });
       LOADING = false; S = st; cacheState(); renderAll();
     }).catch(function(err){
       if (!TRIP || TRIP.id !== trip.id) return;
@@ -3544,6 +3638,12 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
     return save('POST', TB.notes + '?on_conflict=trip_id,day',
       [{ trip_id: TRIP.id, day: day, text: text, updated_at: new Date().toISOString() }], 'resolution=merge-duplicates,return=minimal');
   }
+  function saveDayStart(day, time){
+    return save('POST', TB.days + '?on_conflict=trip_id,day', [{ trip_id: TRIP.id, day: day, start_time: time }], 'resolution=merge-duplicates,return=minimal');
+  }
+  function saveDayOrder(day, snap){
+    return save('POST', TB.days + '?on_conflict=trip_id,day', [{ trip_id: TRIP.id, day: day, saved_order: snap }], 'resolution=merge-duplicates,return=minimal');
+  }
   function saveDayTitle(day, title){
     return save('POST', TB.days + '?on_conflict=trip_id,day', [{ trip_id: TRIP.id, day: day, title: title }], 'resolution=merge-duplicates,return=minimal');
   }
@@ -3560,13 +3660,23 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
   var WARN_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 2.5 20h19Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 10v4.5M12 17.2v.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
   var PERIOD_ICON = { am: 'sun', pm: 'sunset', travel: 'car' };
   var GRIP_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></g></svg>';
-  function stopCard(s, num, grip){
-    var per = periodOf(s);
+  function stopCard(s, num, grip, row){
+    var per = periodOf(s), lead, extra = '';
+    if (row && row.done) lead = '<span class="row-lead done">' + ic('check') + '</span>';
+    else if (s.visit_time) lead = '<span class="row-lead strong">' + esc(s.visit_time) + '</span>';
+    else if (row && row.here) lead = '<span class="row-lead here">' + ic('pin') + '</span>';
+    else if (row) lead = '<span class="row-lead est' + (row.slip > 5 ? ' slip' : '') + '">' + fmtHM(row.arr) + '</span>';
+    else lead = '<span class="row-lead">' + (num ? num : ic('pin')) + '</span>';
+    if (row && !row.done){
+      extra = '<span class="row-sub stop-stay">' + (row.here ? 'Estão aqui · saída ' + fmtHM(row.dep) : (row.stay > 0 ? fmtMin(row.stay) + ' no local' : 'Só de passagem'))
+        + (row.fixed != null && row.wait > 10 && !row.here ? ' · chegam ' + fmtMin(row.wait) + ' antes' : '') + '</span>'
+        + (row.late > 5 ? '<span class="stop-warn late">' + WARN_ICON + '<span>Chegada prevista às ' + fmtHM(row.arr) + ', ' + fmtMin(row.late) + ' depois da hora marcada</span></span>' : '');
+    }
     return '<div class="stop-card row ' + per + (s.is_custom ? ' custom' : '') + '" data-id="' + esc(s.id) + '">'
       + '<button class="stop-main" aria-label="Editar ' + esc(s.name) + '">'
-      +   '<span class="row-lead' + (s.visit_time ? ' strong' : '') + '">' + (s.visit_time ? esc(s.visit_time) : (num ? num : ic('pin'))) + '</span>'
+      +   lead
       +   '<span class="row-text"><span class="row-title stop-name">' + esc(s.name) + '</span>'
-      +   (s.description ? '<span class="row-sub stop-desc">' + esc(s.description) + '</span>' : '')
+      +   (s.description ? '<span class="row-sub stop-desc">' + esc(s.description) + '</span>' : '') + extra
       +   (s.warning ? '<span class="stop-warn">' + WARN_ICON + '<span>' + esc(s.warning) + '</span></span>' : '')
       +   '</span>'
       + '</button>'
@@ -3574,17 +3684,17 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
       + (grip ? '<button class="stop-drag" aria-label="Arrastar para mudar a ordem">' + GRIP_ICON + '</button>' : '')
       + '</div>';
   }
-  function wrapStop(s, legHtml, num, grip){
-    return '<div class="stop-wrap ' + periodOf(s) + '" data-id="' + esc(s.id) + '" data-group="' + (s.is_custom ? 'c' : 'p') + ':' + periodOf(s) + '">' + (legHtml || '') + stopCard(s, num, grip) + '</div>';
+  function wrapStop(s, legHtml, num, grip, row){
+    return '<div class="stop-wrap ' + periodOf(s) + '" data-id="' + esc(s.id) + '" data-group="' + (s.is_custom ? 'c' : 'p') + ':' + periodOf(s) + '">' + (legHtml || '') + stopCard(s, num, grip, row) + '</div>';
   }
   // One sub-section per period, so a stop never has to carry its own "Manhã / Tarde" tag.
-  function withPeriodHeads(list, legOf, numbered){
+  function withPeriodHeads(list, legOf, numbered, rowOf){
     var last = null, size = {};
     list.forEach(function(s){ var p = periodOf(s); size[p] = (size[p] || 0) + 1; });
     return list.map(function(s, i){
       var p = periodOf(s), head = p !== last ? '<div class="tl-period ' + p + '">' + ic(PERIOD_ICON[p]) + '<span>' + PERIOD[p] + '</span></div>' : '';
       last = p;
-      return head + wrapStop(s, legOf && legOf[s.id], numbered ? i + 1 : 0, size[p] > 1);
+      return head + wrapStop(s, legOf && legOf[s.id], numbered ? i + 1 : 0, size[p] > 1, rowOf && rowOf[s.id]);
     }).join('');
   }
   // Driving route of a day: lodging → planned stops in order → lodging.
@@ -3610,14 +3720,424 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
       if (p.id) legOf[p.id] = html; else tail = html;
     });
     function count(n){ return n + (n === 1 ? ' paragem' : ' paragens'); }
+    var clock = '', rowOf = null;
+    if (TRIP.timed && planned.length){
+      var live = LIVE.on && currentDay === todayIndex();
+      var sc = (live && liveSchedule(currentDay)) || daySchedule(currentDay);
+      rowOf = {};
+      sc.rows.forEach(function(r){ rowOf[r.s.id] = r; });
+      (sc.done || []).forEach(function(id){ rowOf[id] = { done: true }; });
+      clock = clockHtml(currentDay, sc, live);
+      lastLivePaint = Date.now();
+    }
     box.innerHTML = '<section class="card day-sec main"><div class="card-head"><h3>Plano do dia</h3>' + (planned.length ? '<span class="sec-count" id="planCount" data-n="' + count(planned.length) + '">' + count(planned.length) + '</span>' : '') + '</div>'
-      + (planned.length ? '<div class="timeline">' + withPeriodHeads(planned, legOf, true) + tail + '</div>'
+      + clock
+      + (planned.length ? '<div class="timeline">' + withPeriodHeads(planned, legOf, true, rowOf) + tail + '</div>'
           : '<div class="row-empty">Sem paragens planeadas para este dia. Usa o botão «+» para juntar a primeira.</div>')
       + '</section>'
       + (added.length ? '<section class="card day-sec secondary"><div class="card-head"><h3>Paragens secundárias</h3><span class="sec-count">' + count(added.length) + '</span></div>'
           + '<div class="timeline plain">' + withPeriodHeads(added) + '</div></section>' : '');
     fillLegs(pts);
   }
+
+  /* ============================================================
+     PLANO COM HORAS — a que horas se chega a cada paragem e se o dia cabe
+     ============================================================ */
+  var DEF_START = '09:00', DEF_STAY = 60;
+  var STAYS = [[0, 'Só de passagem'], [15, '15 min'], [30, '30 min'], [45, '45 min'], [60, '1 h'], [90, '1 h 30'], [120, '2 h'], [180, '3 h'], [240, '4 h'], [360, '6 h']];
+  function pad2(n){ return String(n).padStart(2, '0'); }
+  function hm(str){ var m = /^(\d{1,2}):(\d{2})/.exec(str || ''); return m ? Number(m[1]) * 60 + Number(m[2]) : null; }
+  function fmtHM(min){ var d = ((Math.round(min) % 1440) + 1440) % 1440; return pad2(Math.floor(d / 60)) + ':' + pad2(d % 60); }
+  function fmtMin(min){ return fmtDur(Math.round(min) * 60); }
+  function stayOf(s, over){
+    if (over && over.stay && over.stay[s.id] != null) return over.stay[s.id];
+    return s.duration_min != null ? Number(s.duration_min) : (periodOf(s) === 'travel' ? 0 : DEF_STAY);
+  }
+  // Wall clock at the destination (the phone may still be in another time zone while planning).
+  function wallParts(date){
+    try {
+      if (TRIP && TRIP.tz){
+        var o = {};
+        new Intl.DateTimeFormat('en-GB', { timeZone: TRIP.tz, hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
+          .formatToParts(date).forEach(function(x){ o[x.type] = x.value; });
+        return { min: Number(o.hour) * 60 + Number(o.minute), iso: o.year + '-' + o.month + '-' + o.day };
+      }
+    } catch (e) {}
+    return { min: date.getHours() * 60 + date.getMinutes(), iso: isoDate(date) };
+  }
+  function nowWall(){ return wallParts(new Date()).min; }
+  // Sunrise and sunset (NOAA approximation), in minutes after midnight UTC. null where the sun does not set or rise.
+  function sunUTC(iso, lat, lng){
+    var p = iso.split('-').map(Number), n = Math.floor((Date.UTC(p[0], p[1] - 1, p[2]) - Date.UTC(p[0], 0, 0)) / 86400000);
+    var g = 2 * Math.PI / 365 * (n - 1);
+    var eq = 229.18 * (0.000075 + 0.001868 * Math.cos(g) - 0.032077 * Math.sin(g) - 0.014615 * Math.cos(2 * g) - 0.040849 * Math.sin(2 * g));
+    var dec = 0.006918 - 0.399912 * Math.cos(g) + 0.070257 * Math.sin(g) - 0.006758 * Math.cos(2 * g) + 0.000907 * Math.sin(2 * g) - 0.002697 * Math.cos(3 * g) + 0.00148 * Math.sin(3 * g);
+    var la = lat * Math.PI / 180, cosH = (Math.cos(90.833 * Math.PI / 180) - Math.sin(la) * Math.sin(dec)) / (Math.cos(la) * Math.cos(dec));
+    if (cosH > 1 || cosH < -1) return null;
+    var H = Math.acos(cosH) * 180 / Math.PI;
+    return { rise: 720 - 4 * (lng + H) - eq, set: 720 - 4 * (lng - H) - eq };
+  }
+  function tripCoords(d){
+    var pts = d != null ? dayRoute(d) : [];
+    if (pts.length) return pts[0];
+    if (TRIP.lat != null && TRIP.lng != null) return { lat: TRIP.lat, lng: TRIP.lng };
+    var any = S.stops.filter(hasCoords)[0] || S.bookings.filter(hasCoords)[0];
+    return any ? { lat: any.lat, lng: any.lng } : null;
+  }
+  function sunOf(d){
+    var c = tripCoords(d); if (!c) return null;
+    var iso = isoDate(dayDate(TRIP, d)), su = sunUTC(iso, c.lat, c.lng); if (!su) return null;
+    var p = iso.split('-').map(Number), base = Date.UTC(p[0], p[1] - 1, p[2]);
+    return { rise: wallParts(new Date(base + su.rise * 60000)).min, set: wallParts(new Date(base + su.set * 60000)).min };
+  }
+  // The destination's time zone is looked up once and kept with the trip.
+  function ensureTz(trip){
+    if (!trip || !trip.timed || trip.tz || OFFLINE) return;
+    var c = trip.lat != null && trip.lng != null ? { lat: trip.lat, lng: trip.lng } : (TRIP === trip ? tripCoords(null) : null);
+    if (!c) return;
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=' + c.lat.toFixed(3) + '&longitude=' + c.lng.toFixed(3) + '&current=temperature_2m&timezone=auto')
+      .then(function(r){ if (!r.ok) throw new Error('tz'); return r.json(); })
+      .then(function(d){
+        if (!d || !d.timezone || trip.tz) return;
+        trip.tz = d.timezone; cacheSet('viagens_lista', TRIPS);
+        save('PATCH', TB.trips + '?id=eq.' + encodeURIComponent(trip.id), { tz: trip.tz });
+        if (TRIP === trip) renderStops();
+      }).catch(function(){});
+  }
+  // Is the day too long? Lateness to a fixed hour and stops that end after sunset both count.
+  function judge(sc){
+    var set = sc.sun ? sc.sun.set : null, lastDay = null, worst = null;
+    sc.rows.forEach(function(r){
+      if (r.late > 5 && (!worst || r.late > worst.late)) worst = r;
+      // A stop with a fixed hour around or after sunset (a dinner) is meant to happen in the dark.
+      if (!(set != null && r.fixed != null && r.fixed >= set - 30)) lastDay = r;
+    });
+    sc.lastDay = lastDay; sc.worst = worst;
+    sc.margin = set != null && lastDay ? set - lastDay.dep : null;
+    sc.over = Math.max(worst ? worst.late : 0, sc.margin != null && sc.margin < 0 ? -sc.margin : 0);
+    sc.status = !sc.rows.length ? 'empty' : (sc.unknown ? 'pending' : (sc.over > 0 ? 'bad' : (sc.margin != null && sc.margin < 30 ? 'tight' : 'ok')));
+    return sc;
+  }
+  // over: { start: 'HH:MM', stay: { stopId: minutes }, skip: stopId } — to try out an adjustment before applying it.
+  function daySchedule(d, over){
+    over = over || {};
+    var stops = sortStops(S.stops.filter(function(s){ return s.day === d && !s.is_custom && s.id !== over.skip; }));
+    var pts = dayRoute(d), legs = LEGS[routeKey(pts)], at = {};
+    pts.forEach(function(p, i){ if (p.id) at[p.id] = i; });
+    var start = hm(over.start || S.starts[d]); if (start == null) start = hm(DEF_START);
+    var t = start, rows = [];
+    stops.forEach(function(s){
+      var i = at[s.id], drive = i > 0 && legs && legs[i - 1] ? legs[i - 1][0] / 60 : 0;
+      var arr = t + drive, fixed = hm(s.visit_time), wait = 0, late = 0;
+      if (fixed != null){ if (arr <= fixed){ wait = fixed - arr; arr = fixed; } else late = arr - fixed; }
+      var stay = stayOf(s, over);
+      rows.push({ s: s, arr: arr, dep: arr + stay, drive: drive, wait: wait, late: late, fixed: fixed, stay: stay });
+      t = arr + stay;
+    });
+    var last = pts[pts.length - 1], back = rows.length && last && last.lodging && legs && legs[pts.length - 2] ? legs[pts.length - 2][0] / 60 : null;
+    return judge({ day: d, start: start, rows: rows, back: back, home: back != null ? t + back : null, homeName: back != null ? last.label : '', sun: sunOf(d), unknown: pts.length >= 2 && !legs });
+  }
+
+  /* ---------- ao vivo: onde o grupo vai, pela localização deste telemóvel ---------- */
+  var LIVE = { on: lsGet('viagens_live') === '1', watch: null, timer: null, pos: null, eta: null, etaTry: 0, busy: false, err: '' };
+  var lastLivePaint = 0;
+  function meters(a, b){
+    var R = 6371000, r = Math.PI / 180, dLat = (b.lat - a.lat) * r, dLng = (b.lng - a.lng) * r;
+    var h = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    return 2 * R * Math.asin(Math.sqrt(h));
+  }
+  function liveKey(d){ return 'viagens_live_' + TRIP.id + '_' + isoDate(dayDate(TRIP, d)); }
+  function liveState(d){ var st = cacheGet(liveKey(d)); return st && st.arr && st.dep ? st : { arr: {}, dep: {} }; }
+  // Arrivals and departures are read off the position: inside a stop's circle = arrived, well outside again = left.
+  function trackLive(){
+    var d = TRIP ? todayIndex() : -1; if (d < 0 || !LIVE.pos) return false;
+    var st = liveState(d), now = nowWall(), changed = false, R = 250 + Math.min(LIVE.pos.acc || 0, 150);
+    S.stops.forEach(function(s){
+      if (s.day !== d || s.is_custom || !hasCoords(s)) return;
+      var m = meters(LIVE.pos, s);
+      if (m <= R && st.arr[s.id] == null){ st.arr[s.id] = now; changed = true; }
+      if (st.arr[s.id] != null && st.dep[s.id] == null && m > R * 1.8){ st.dep[s.id] = now; changed = true; }
+    });
+    if (changed) cacheSet(liveKey(d), st);
+    return changed;
+  }
+  function refreshEta(target){
+    var p = LIVE.pos, e = LIVE.eta;
+    if (LIVE.busy || OFFLINE || !p) return;
+    if (e && e.id === target.id && Date.now() - e.at < 240000 && meters(p, e) < 800) return;
+    if (Date.now() - LIVE.etaTry < 60000 && !(e && e.id !== target.id)) return;
+    LIVE.busy = true; LIVE.etaTry = Date.now();
+    fetch('https://router.project-osrm.org/route/v1/driving/' + p.lng.toFixed(5) + ',' + p.lat.toFixed(5) + ';' + Number(target.lng).toFixed(5) + ',' + Number(target.lat).toFixed(5) + '?overview=false')
+      .then(function(r){ if (!r.ok) throw new Error('eta'); return r.json(); })
+      .then(function(d){
+        var rt = d.routes && d.routes[0]; if (!rt) return;
+        var sec = Number(rt.duration);
+        if (!isFinite(sec)) sec = (rt.legs || []).reduce(function(a, l){ return a + Number(l.duration || 0); }, 0);
+        if (isFinite(sec) && sec > 0) LIVE.eta = { id: target.id, sec: sec, at: Date.now(), lat: p.lat, lng: p.lng };
+      })
+      .catch(function(){})
+      .then(function(){ LIVE.busy = false; livePaint(true); });
+  }
+  // Minutes of driving from where the phone is to a stop: the road time when known, otherwise a guess from the distance.
+  function liveDrive(target){
+    var guess = meters(LIVE.pos, target) * 1.35 / 1000 / 55 * 60;
+    if (!hasCoords(target)) return 0;
+    refreshEta(target);
+    var e = LIVE.eta;
+    if (e && e.id === target.id) return Math.max(e.sec / 60 - (Date.now() - e.at) / 60000, guess * 0.5, 0);
+    return guess;
+  }
+  function liveSchedule(d, over){
+    var base = daySchedule(d, over);
+    if (!LIVE.pos || !base.rows.length) return null;
+    var st = liveState(d), now = nowWall(), rows = base.rows, lastArr = -1, cur = -1;
+    rows.forEach(function(r, i){ if (st.arr[r.s.id] != null) lastArr = i; });
+    if (lastArr >= 0 && st.dep[rows[lastArr].s.id] == null) cur = lastArr;
+    var out = [], t, next, idle = false;
+    if (cur >= 0){
+      var c = rows[cur], a = st.arr[c.s.id], dep = Math.max(now, a + c.stay);
+      out.push({ s: c.s, arr: a, dep: dep, drive: 0, wait: 0, late: c.fixed != null && a > c.fixed ? a - c.fixed : 0, fixed: c.fixed, stay: c.stay, here: true, plan: c.arr, planDep: c.dep, slip: dep - c.dep });
+      t = dep; next = cur + 1;
+    } else {
+      next = lastArr + 1;
+      var pts = dayRoute(d), away = pts.length && pts[0].lodging ? meters(LIVE.pos, pts[0]) > 600 : false;
+      // Before the planned start and still at the lodging: nothing is late yet.
+      idle = lastArr < 0 && now < base.start && !away;
+      t = idle ? base.start : now;
+    }
+    for (var i = next; i < rows.length; i++){
+      var r = rows[i], drive = i === next && cur < 0 && !idle ? liveDrive(r.s) : r.drive;
+      var arr = t + drive, wait = 0, late = 0;
+      if (r.fixed != null){ if (arr <= r.fixed){ wait = r.fixed - arr; arr = r.fixed; } else late = arr - r.fixed; }
+      out.push({ s: r.s, arr: arr, dep: arr + r.stay, drive: drive, wait: wait, late: late, fixed: r.fixed, stay: r.stay, plan: r.arr, planDep: r.dep, slip: arr - r.arr });
+      t = arr + r.stay;
+    }
+    var sc = judge({ day: d, start: base.start, rows: out, back: base.back, home: base.back != null && out.length ? t + base.back : null, homeName: base.homeName, sun: base.sun, unknown: base.unknown });
+    sc.live = true; sc.idle = idle;
+    sc.done = rows.slice(0, cur >= 0 ? cur : next).map(function(r){ return r.s.id; });
+    sc.cur = cur >= 0 ? out[0] : null;
+    sc.next = out[cur >= 0 ? 1 : 0] || null;
+    sc.delay = sc.cur ? sc.cur.slip : (sc.next ? sc.next.slip : 0);
+    return sc;
+  }
+  function livePaint(force){
+    if (!LIVE.on || !TRIP || !TRIP.timed) return;
+    if (trackLive()) force = true;      // an arrival or a departure always shows at once
+    if (currentDay !== todayIndex() || activeScreen() !== 'screen-roteiro' || drag || !$('sheet').hidden) return;
+    if (document.activeElement && document.activeElement.id === 'dayStart') return;
+    if (!force && Date.now() - lastLivePaint < 15000) return;
+    renderStops();
+  }
+  function startLive(quiet){
+    if (!navigator.geolocation){ if (!quiet) toast('Este telemóvel não dá a localização ao browser.'); return; }
+    LIVE.on = true; LIVE.err = ''; lsSet('viagens_live', '1');
+    if (LIVE.watch == null){
+      LIVE.watch = navigator.geolocation.watchPosition(function(p){
+        var first = !LIVE.pos;
+        LIVE.pos = { lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy, at: Date.now() }; LIVE.err = '';
+        livePaint(first || Date.now() - lastLivePaint > 15000);
+      }, function(err){
+        if (err && err.code === 1){ stopLive(); toast('Sem autorização para usar a localização. Ativa-a nas definições do browser para acompanhar ao vivo.'); }
+        else { LIVE.err = 'Sem sinal de localização.'; livePaint(true); }
+      }, { enableHighAccuracy: true, maximumAge: 20000, timeout: 30000 });
+    }
+    if (!LIVE.timer) LIVE.timer = setInterval(function(){ livePaint(false); }, 30000);
+    if (TRIP && !quiet) renderStops();
+  }
+  // Leaving the trip stops the GPS but keeps the choice for next time.
+  function pauseLive(){
+    if (LIVE.watch != null){ try { navigator.geolocation.clearWatch(LIVE.watch); } catch (e) {} LIVE.watch = null; }
+    if (LIVE.timer){ clearInterval(LIVE.timer); LIVE.timer = null; }
+    LIVE.pos = null; LIVE.eta = null; LIVE.err = '';
+  }
+  function stopLive(){ pauseLive(); LIVE.on = false; lsSet('viagens_live', '0'); if (TRIP) renderStops(); }
+
+  /* ---------- reordenar: a ordem que acaba o dia mais cedo, sempre com volta atrás ---------- */
+  var MATRIX = {}, matrixTry = {}, reorderMemo = { k: '', v: null };
+  function loadMatrix(key, n){
+    if (MATRIX[key] || OFFLINE || Date.now() - (matrixTry[key] || 0) < 60000) return;
+    matrixTry[key] = Date.now();
+    var trip = TRIP;
+    fetch('https://router.project-osrm.org/table/v1/driving/' + key + '?annotations=duration')
+      .then(function(r){ if (!r.ok) throw new Error('table'); return r.json(); })
+      .then(function(d){
+        if (!d.durations || d.durations.length !== n) return;
+        if (Object.keys(MATRIX).length > 40) MATRIX = {};
+        MATRIX[key] = d.durations;
+        if (TRIP === trip && TRIP.timed && !drag && $('sheet').hidden) renderStops();
+      }).catch(function(){});
+  }
+  // Tries every order of the day's stops (up to 8) with the road times between all of them.
+  // "Viagem" stops stay first, fixed hours are respected, and the lodging is where the day starts and ends.
+  function reorderIdea(d, sc){
+    if (sc.live || sc.unknown || S.orders[d]) return null;
+    var planned = sortStops(S.stops.filter(function(s){ return s.day === d && !s.is_custom; }));
+    if (planned.some(function(s){ return !hasCoords(s); })) return null;
+    var head = planned.filter(function(s){ return periodOf(s) === 'travel'; }), mov = planned.filter(function(s){ return periodOf(s) !== 'travel'; });
+    var n = mov.length; if (n < 2 || n > 8) return null;
+    var route = dayRoute(d), first = route[0] && route[0].lodging ? route[0] : null, last = route.length > 1 && route[route.length - 1].lodging ? route[route.length - 1] : null;
+    var from = head.length ? head[head.length - 1] : first;
+    var pts = (from ? [from] : []).concat(mov).concat(last ? [last] : []), key = routeKey(pts), M = MATRIX[key];
+    if (!M){ loadMatrix(key, pts.length); return null; }
+    var off = from ? 1 : 0, endI = last ? pts.length - 1 : -1, t0 = sc.start;
+    if (head.length) sc.rows.forEach(function(r){ if (r.s.id === head[head.length - 1].id) t0 = r.dep; });
+    var stay = mov.map(function(s){ return stayOf(s); }), fixed = mov.map(function(s){ return hm(s.visit_time); });
+    var memoK = TRIP.id + '|' + d + '|' + key + '|' + t0 + '|' + stay.join(',') + '|' + fixed.join(',');
+    if (reorderMemo.k === memoK) return reorderMemo.v;
+    function cost(a, b){ var v = M[a] && M[a][b]; return v == null ? 1e7 : v / 60; }
+    function run(order){
+      var t = t0, prev = from ? 0 : -1, lastFixed = -1, drive = 0, arrs = [];
+      for (var k = 0; k < n; k++){
+        var i = order[k], dr = prev >= 0 ? cost(prev, i + off) : 0, arr = t + dr;
+        drive += dr;
+        if (fixed[i] != null){
+          if (fixed[i] < lastFixed) return null;
+          lastFixed = fixed[i];
+          if (arr <= fixed[i]) arr = fixed[i]; else if (arr - fixed[i] > 5) return null;
+        }
+        arrs.push(arr); t = arr + stay[i]; prev = i + off;
+      }
+      if (endI >= 0){ var b = cost(prev, endI); drive += b; t += b; }
+      return { end: t, drive: drive, arrs: arrs, order: order.slice() };
+    }
+    var ids = mov.map(function(_, i){ return i; }), cur = run(ids), best = cur, used = [], order = [];
+    (function walk(){
+      if (order.length === n){
+        var r = run(order);
+        if (r && (!best || r.end < best.end - 0.5 || (Math.abs(r.end - best.end) <= 0.5 && r.drive < best.drive - 0.5))) best = r;
+        return;
+      }
+      for (var i = 0; i < n; i++){ if (used[i]) continue; used[i] = true; order.push(i); walk(); order.pop(); used[i] = false; }
+    })();
+    var idea = null;
+    if (best && best !== cur && (!cur || cur.end - best.end >= 15)){
+      idea = { ids: best.order.map(function(i){ return mov[i].id; }), arrs: best.arrs, gain: cur ? cur.end - best.end : null, saved: cur ? cur.drive - best.drive : 0 };
+    }
+    reorderMemo = { k: memoK, v: idea };
+    return idea;
+  }
+  // A manual change of order or period makes that the person's own order again.
+  function forgetOrder(d){
+    if (!S.orders[d]) return;
+    delete S.orders[d]; cacheState(); saveDayOrder(d, null);
+  }
+  function applyReorder(d){
+    var idea = reorderIdea(d, daySchedule(d)); if (!idea) return;
+    var snap = S.stops.filter(function(s){ return s.day === d && !s.is_custom; }).map(function(s){
+      return { id: s.id, period: periodOf(s), sort_order: s.sort_order == null ? null : s.sort_order };
+    });
+    S.orders[d] = snap; saveDayOrder(d, snap);
+    idea.ids.forEach(function(id, k){
+      // Arrivals before 12:30 go under "Manhã", the rest under "Tarde".
+      var s = findStop(id), per = idea.arrs[k] < 750 ? 'am' : 'pm', f = {};
+      if (per !== periodOf(s)) f.period = per;
+      if (s.sort_order !== k + 1) f.sort_order = k + 1;
+      if (Object.keys(f).length){ for (var x in f) s[x] = f[x]; patchStop(s.id, f); }
+    });
+    stopsChanged();
+    toast('Paragens reordenadas. Podes repor a tua ordem no cartão do dia.');
+  }
+  function revertOrder(d){
+    var snap = S.orders[d]; if (!snap) return;
+    snap.forEach(function(o){
+      var s = findStop(o.id), f = {}; if (!s || s.day !== d || s.is_custom) return;
+      if (o.period !== periodOf(s)) f.period = o.period;
+      if ((o.sort_order == null ? null : o.sort_order) !== (s.sort_order == null ? null : s.sort_order)) f.sort_order = o.sort_order == null ? null : o.sort_order;
+      if (Object.keys(f).length){ for (var x in f) s[x] = f[x]; patchStop(s.id, f); }
+    });
+    delete S.orders[d]; saveDayOrder(d, null);
+    stopsChanged();
+    toast('Ordem reposta.');
+  }
+
+  /* ---------- o que se vê no plano do dia ---------- */
+  function delayText(min){
+    if (min > 5) return fmtMin(min) + ' de atraso';
+    if (min < -5) return fmtMin(-min) + ' adiantados';
+    return 'dentro do plano';
+  }
+  function verdict(sc){
+    var set = sc.sun ? sc.sun.set : null, last = sc.lastDay, parts = [];
+    if (sc.status === 'pending') return ['A calcular…', 'A ir buscar os tempos de condução entre as paragens.'];
+    if (sc.status === 'bad'){
+      if (sc.margin != null && sc.margin < 0) parts.push('«' + last.s.name + '» acaba às ' + fmtHM(last.dep) + ', ' + fmtMin(-sc.margin) + ' depois do pôr do sol');
+      if (sc.worst) parts.push('chegam a «' + sc.worst.s.name + '» ' + fmtMin(sc.worst.late) + ' depois da hora marcada (' + fmtHM(sc.worst.fixed) + ')');
+      var txt = parts.join('; ');
+      return ['O dia não cabe', txt.charAt(0).toUpperCase() + txt.slice(1) + '.'];
+    }
+    var end = last ? 'A última paragem acaba às ' + fmtHM(last.dep) : '';
+    if (sc.status === 'tight') return ['Dia apertado', end + ', só ' + fmtMin(Math.max(sc.margin, 0)) + ' antes do pôr do sol.'];
+    return ['O dia cabe', end + (sc.margin != null ? ', ' + fmtMin(sc.margin) + ' antes do pôr do sol.' : '.')];
+  }
+  // Ways out when the day does not fit, each one checked before it is offered.
+  function fixes(d, sc){
+    if (sc.status !== 'bad') return [];
+    var out = [], need = Math.ceil(sc.over / 5) * 5;
+    function fits(over){ var t = (sc.live && liveSchedule(d, over)) || daySchedule(d, over); return t.status !== 'bad'; }
+    if (!sc.live){
+      var ns = sc.start - need;
+      if (ns >= 300 && fits({ start: fmtHM(ns) })) out.push({ k: 'start', v: fmtHM(ns), label: 'Sair às ' + fmtHM(ns) + ' em vez de ' + fmtHM(sc.start) });
+    }
+    var long = sc.rows.filter(function(r){ return !r.here && r.stay - need >= 15; }).sort(function(a, b){ return b.stay - a.stay; })[0];
+    if (long){ var st = {}; st[long.s.id] = long.stay - need; if (fits({ stay: st })) out.push({ k: 'stay', id: long.s.id, v: long.stay - need, label: 'Ficar ' + fmtMin(long.stay - need) + ' em «' + long.s.name + '» em vez de ' + fmtMin(long.stay) }); }
+    var drop = sc.rows.filter(function(r){ return !r.here && r.fixed == null; }).pop();
+    if (drop && sc.rows.length > 1) out.push({ k: 'drop', id: drop.s.id, label: 'Passar «' + drop.s.name + '» para as Ideias' });
+    return out;
+  }
+  function clockHtml(d, sc, live){
+    var v = verdict(sc), today = d === todayIndex(), fx = fixes(d, sc), h = '<div class="day-clock ' + sc.status + '">';
+    h += '<div class="clock-row"><label class="clock-start"><span>Saída</span><input type="time" id="dayStart" value="' + fmtHM(sc.start) + '"></label>'
+      + (sc.sun ? '<span class="clock-sun">' + ic('sunset') + 'Pôr do sol ' + fmtHM(sc.sun.set) + '</span>' : '') + '</div>';
+    h += '<div class="clock-verdict" id="clockVerdict"><strong>' + v[0] + '</strong><span>' + esc(v[1]) + (sc.home != null ? ' Regresso a ' + esc(sc.homeName) + ' por volta das ' + fmtHM(sc.home) + '.' : '') + '</span></div>';
+    if (S.orders[d]) h += '<div class="clock-order"><span>Ordem sugerida</span><button type="button" class="text-btn" id="orderUndo">Repor a minha ordem</button></div>';
+    else {
+      var idea = reorderIdea(d, sc);
+      if (idea) h += '<button type="button" class="clock-reorder" id="orderGo">' + ic('swap') + '<span class="clock-reorder-text"><strong>Reordenar as paragens</strong><span>'
+        + (idea.gain != null ? 'O dia acaba ' + fmtMin(idea.gain) + ' mais cedo' : 'Passa a cumprir as horas marcadas')
+        + (idea.saved >= 5 ? ', com menos ' + fmtMin(idea.saved) + ' de estrada.' : '.') + '</span></span></button>';
+    }
+    if (fx.length) h += '<div class="clock-fix"><span class="clock-fix-label">Para caber</span>' + fx.map(function(f){
+      return '<button type="button" class="clock-fix-btn" data-k="' + f.k + '" data-id="' + esc(f.id || '') + '" data-v="' + esc(f.v == null ? '' : f.v) + '">' + esc(f.label) + '</button>';
+    }).join('') + '</div>';
+    if (today){
+      if (!LIVE.on) h += '<button type="button" class="clock-live-btn" id="liveStart">' + ic('pin') + 'Acompanhar ao vivo</button>';
+      else {
+        var txt;
+        if (!sc.live) txt = LIVE.err || 'À procura da tua localização…';
+        else if (sc.cur) txt = 'Em «' + sc.cur.s.name + '» · saída às ' + fmtHM(sc.cur.dep) + ' · ' + delayText(sc.delay);
+        else if (sc.idle) txt = 'Saída prevista às ' + fmtHM(sc.start) + '.';
+        else if (sc.next) txt = 'A caminho de «' + sc.next.s.name + '» · chegada às ' + fmtHM(sc.next.arr) + ' · ' + delayText(sc.delay);
+        else txt = 'Paragens de hoje concluídas.';
+        h += '<div class="clock-live' + (sc.live && sc.delay > 5 ? ' late' : '') + '"><span class="live-dot" aria-hidden="true"></span><span class="live-text" id="liveText">' + esc(txt) + '</span><button type="button" class="text-btn" id="liveStop">Parar</button></div>';
+      }
+    }
+    return h + '</div>';
+  }
+  $('dayPanel').addEventListener('change', function(e){
+    if (e.target.id !== 'dayStart') return;
+    if (readOnly()){ renderStops(); return; }
+    var d = currentDay, v = e.target.value || null;
+    if (v) S.starts[d] = v; else delete S.starts[d];
+    cacheState(); saveDayStart(d, v); renderStops();
+  });
+  $('dayPanel').addEventListener('click', function(e){
+    if (closest(e, '#orderGo')){ if (!readOnly()) applyReorder(currentDay); return; }
+    if (closest(e, '#orderUndo')){ if (!readOnly()) revertOrder(currentDay); return; }
+    if (closest(e, '#liveStart')){ startLive(); return; }
+    if (closest(e, '#liveStop')){ stopLive(); return; }
+    var b = closest(e, '.clock-fix-btn'); if (!b || readOnly()) return;
+    var d = currentDay, s = b.dataset.id ? findStop(b.dataset.id) : null;
+    if (b.dataset.k === 'start'){
+      S.starts[d] = b.dataset.v; cacheState(); saveDayStart(d, b.dataset.v); renderStops();
+      toast('Saída passou para as ' + b.dataset.v + '.');
+    } else if (b.dataset.k === 'stay' && s){
+      s.duration_min = Number(b.dataset.v); patchStop(s.id, { duration_min: s.duration_min }); stopsChanged();
+      toast('«' + s.name + '» fica com ' + fmtMin(s.duration_min) + '.');
+    } else if (b.dataset.k === 'drop' && s){
+      s.day = -1; s.sort_order = null; patchStop(s.id, { day: -1, sort_order: null }); stopsChanged();
+      toast('«' + s.name + '» passou para as ideias, no separador Notas.');
+    }
+  });
 
   /* ---------- driving times between consecutive stops (OSRM) ---------- */
   var LEGS = cacheGet('viagens_legs') || {};
@@ -3650,7 +4170,9 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
         var keys = Object.keys(LEGS);
         if (keys.length > 150) LEGS = {};
         LEGS[key] = legs; cacheSet('viagens_legs', LEGS);
-        if (TRIP === trip && currentDay === day && routeKey(dayRoute(day)) === key) paintLegs(legs);
+        if (TRIP === trip && currentDay === day && routeKey(dayRoute(day)) === key){
+          if (TRIP.timed && !drag) renderStops(); else paintLegs(legs);
+        }
       }).catch(function(){});
   }
   function findStop(id){ return S.stops.filter(function(s){ return s.id === id; })[0]; }
@@ -3741,6 +4263,11 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
         +   '<div class="field"><label class="field-label" for="eDay">Dia</label><select class="field-input" id="eDay">' + dayOpts + '</select></div>'
         +   '<div class="field"><label class="field-label" for="eTime">Hora (opcional)</label><input class="field-input" id="eTime" type="time" value="' + esc(s.visit_time || '') + '"></div>'
         + '</div>'
+        + (TRIP.timed ? '<div class="field"><label class="field-label" for="eStay">Tempo no local</label><select class="field-input" id="eStay">'
+            + '<option value=""' + (s.duration_min == null ? ' selected' : '') + '>Sugerido (' + (per === 'travel' ? 'só de passagem' : fmtMin(DEF_STAY)) + ')</option>'
+            + STAYS.map(function(o){ return '<option value="' + o[0] + '"' + (s.duration_min != null && Number(s.duration_min) === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('')
+            + (s.duration_min != null && !STAYS.some(function(o){ return o[0] === Number(s.duration_min); }) ? '<option value="' + Number(s.duration_min) + '" selected>' + fmtMin(s.duration_min) + '</option>' : '')
+            + '</select><div class="field-hint">Serve para calcular as horas das paragens seguintes. Se puseres uma hora marcada acima, a app avisa quando o plano não permite lá chegar.</div></div>' : '')
         + '<div class="field"><label class="field-label" for="eDesc">Descrição</label><textarea class="field-input" id="eDesc" placeholder="O que fazer, quanto tempo, por onde ir…">' + esc(s.description) + '</textarea></div>'
         + '<div class="field"><label class="field-label" for="eWarn">Aviso</label><input class="field-input" id="eWarn" type="text" placeholder="Ex.: reserva obrigatória, chegar cedo" value="' + esc(s.warning) + '"></div>'
         + '<div class="field"><span class="field-label">Tipo</span>' + seg('eKind', [['p', 'Plano do dia'], ['c', 'Secundária']], custom ? 'c' : 'p')
@@ -3765,7 +4292,12 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
         if (desc !== s.description) f.description = desc;
         if (warn !== s.warning) f.warning = warn;
         if (custom !== !!s.is_custom) f.is_custom = custom;
-        if ('day' in f || 'period' in f || 'is_custom' in f) f.sort_order = null;
+        var stayEl = body.querySelector('#eStay');
+        if (stayEl){
+          var stay = stayEl.value === '' ? null : Number(stayEl.value);
+          if (stay !== (s.duration_min == null ? null : Number(s.duration_min))) f.duration_min = stay;
+        }
+        if ('day' in f || 'period' in f || 'is_custom' in f){ f.sort_order = null; forgetOrder(s.day); }
         if (!Object.keys(f).length) return;
         for (var k in f) s[k] = f[k];
         patchStop(s.id, f); stopsChanged();
@@ -3877,6 +4409,7 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
     var w = drag.wrap, moved = drag.moved; drag = null;
     w.classList.remove('dragging'); w.style.transform = ''; swipedAt = Date.now();
     if (!moved) return;
+    forgetOrder(currentDay);
     var group = w.dataset.group, n = 0;
     Array.prototype.forEach.call(w.parentNode.children, function(el){
       if (!el.classList.contains('stop-wrap') || el.dataset.group !== group) return;
@@ -4612,17 +5145,84 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
   /* ============================================================
      NOTAS (practical tips)
      ============================================================ */
-  function renderIdeas(){
+  /* ---------- votos nas ideias: quem quer e quem dispensa ---------- */
+  function votesOf(id){
+    var me = SESSION ? SESSION.user.id : '', up = [], down = [], mine = 0;
+    S.votes.forEach(function(v){
+      if (v.stop_id !== id) return;
+      (v.vote > 0 ? up : down).push(v.user_id);
+      if (v.user_id === me) mine = v.vote;
+    });
+    return { up: up, down: down, mine: mine };
+  }
+  function voterName(uid){
+    if (SESSION && uid === SESSION.user.id) return 'tu';
+    var m = S.members.filter(function(x){ return x.user_id === uid; })[0];
+    return m && m.display_name ? m.display_name : 'alguém';
+  }
+  function voterList(ids){ return ids.map(voterName).sort(function(a, b){ return a === 'tu' ? -1 : (b === 'tu' ? 1 : a.localeCompare(b)); }).join(', '); }
+  // The order only changes when the list is opened again, so a row never jumps away under the finger.
+  var ideaOrder = null;
+  function renderIdeas(keep){
     var box = $('ideasList'); if (!box || !TRIP) return;
-    var ideas = S.stops.filter(function(s){ return s.day < 0; }), n = tripDays(TRIP), opts = '<option value="-1">Mover para um dia…</option>';
+    var ideas = S.stops.filter(function(s){ return s.day < 0; }), n = tripDays(TRIP), opts = '<option value="-1">Pôr num dia</option>';
     for (var i = 0; i < n; i++) opts += '<option value="' + i + '">' + shortLabel(TRIP, i) + '</option>';
     $('ideasCount').textContent = ideas.length || '';
+    var tally = {};
+    ideas.forEach(function(s, i){ var v = votesOf(s.id); v.i = i; tally[s.id] = v; });
+    if (keep && ideaOrder){
+      ideas.sort(function(a, b){
+        var x = ideaOrder.indexOf(a.id), y = ideaOrder.indexOf(b.id);
+        return (x < 0 ? 1e6 + tally[a.id].i : x) - (y < 0 ? 1e6 + tally[b.id].i : y);
+      });
+    } else {
+      ideas.sort(function(a, b){
+        var x = tally[a.id], y = tally[b.id];
+        return (y.up.length - y.down.length) - (x.up.length - x.down.length) || y.up.length - x.up.length || x.i - y.i;
+      });
+    }
+    ideaOrder = ideas.map(function(s){ return s.id; });
     box.innerHTML = ideas.length ? ideas.map(function(s){
+      var v = tally[s.id], split = v.up.length && v.down.length;
       return '<div class="idea-item row" data-id="' + esc(s.id) + '"><span class="row-lead">' + ic('pin') + '</span><div class="idea-main row-text"><span class="row-title idea-name">' + esc(s.name) + '</span>'
         + (s.description ? '<span class="row-sub idea-desc">' + esc(s.description) + '</span>' : '')
-        + '<select class="idea-day-select" aria-label="Mover para um dia">' + opts + '</select></div>'
+        + '<div class="idea-votes">'
+        +   '<button type="button" class="vote-btn up' + (v.mine > 0 ? ' on' : '') + '" data-v="1" aria-pressed="' + (v.mine > 0) + '" aria-label="Quero ir a ' + esc(s.name) + '">' + ic('thumb') + '<span>' + (v.up.length || '') + '</span></button>'
+        +   '<button type="button" class="vote-btn down' + (v.mine < 0 ? ' on' : '') + '" data-v="-1" aria-pressed="' + (v.mine < 0) + '" aria-label="Dispenso ' + esc(s.name) + '">' + ic('thumb') + '<span>' + (v.down.length || '') + '</span></button>'
+        +   (v.up.length || v.down.length ? '<button type="button" class="vote-who-btn">Quem votou</button>' : '')
+        +   '<select class="idea-day-select" aria-label="Pôr num dia do roteiro">' + opts + '</select>'
+        + '</div></div>'
         + '<button class="stop-remove idea-remove" aria-label="Remover">×</button></div>';
     }).join('') : '<div class="row-empty">Sem ideias guardadas. Usa o botão «+» para juntar sítios que ainda não têm dia.</div>';
+  }
+  // Who voted what on one idea: looked up on request, never in the way.
+  function openVotesSheet(stop){
+    var v = votesOf(stop.id);
+    function group(title, ids){
+      if (!ids.length) return '';
+      var names = ids.map(voterName).sort(function(a, b){ return a === 'tu' ? -1 : (b === 'tu' ? 1 : a.localeCompare(b)); });
+      return '<div class="field"><span class="field-label">' + title + ' (' + ids.length + ')</span><div class="member-list">'
+        + names.map(function(n){
+            var shown = n === 'tu' ? (myName() || 'Tu') + ' (tu)' : n.charAt(0).toUpperCase() + n.slice(1);
+            return '<div class="member-row"><span class="member-avatar">' + esc(initial(shown)) + '</span><span class="member-name">' + esc(shown) + '</span></div>';
+          }).join('') + '</div></div>';
+    }
+    openSheet({
+      title: stop.name, autosave: true, offlineOk: true, closeIcon: true, onSave: function(){},
+      html: '<div id="votesBox">' + (group('Querem', v.up) + group('Dispensam', v.down) || '<div class="row-empty">Ainda ninguém votou nesta ideia.</div>') + '</div>'
+    });
+  }
+  function castVote(stopId, vote){
+    var me = SESSION.user.id, cur = votesOf(stopId).mine;
+    S.votes = S.votes.filter(function(v){ return !(v.stop_id === stopId && v.user_id === me); });
+    if (cur === vote){
+      // Tapping the same thumb again takes the vote back.
+      save('DELETE', TB.votes + '?stop_id=eq.' + encodeURIComponent(stopId) + '&user_id=eq.' + encodeURIComponent(me));
+    } else {
+      S.votes.push({ stop_id: stopId, user_id: me, vote: vote });
+      save('POST', TB.votes + '?on_conflict=stop_id,user_id', [{ trip_id: TRIP.id, stop_id: stopId, user_id: me, vote: vote }], 'resolution=merge-duplicates,return=minimal');
+    }
+    cacheState(); renderIdeas(true);
   }
   $('ideasList').addEventListener('change', function(e){
     if (!e.target.classList.contains('idea-day-select')) return;
@@ -4633,6 +5233,10 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
     toast('«' + s.name + '» passou para ' + shortLabel(TRIP, d) + '.');
   });
   $('ideasList').addEventListener('click', function(e){
+    var wb = closest(e, '.vote-who-btn');
+    if (wb){ var ws = findStop(closest(e, '.idea-item').dataset.id); if (ws) openVotesSheet(ws); return; }
+    var vb = closest(e, '.vote-btn');
+    if (vb){ if (!readOnly()) castVote(closest(e, '.idea-item').dataset.id, Number(vb.dataset.v)); return; }
     if (!closest(e, '.idea-remove') || readOnly()) return;
     var s = findStop(closest(e, '.idea-item').dataset.id); if (!s) return;
     deleteStop(s);
@@ -4745,7 +5349,8 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
         authNote('authInfo', 'Enviámos um email para ' + email + '. Abre o link para confirmares a conta e depois entra aqui.');
         return;
       }
-      setSession(d); $('authPass').value = '';
+      setSession(d); $('authPass').value = ''; $('authPass').type = 'password';
+      var eye = document.querySelector('#viewAuth .pw-toggle'); if (eye){ eye.classList.remove('on'); eye.setAttribute('aria-pressed', 'false'); eye.setAttribute('aria-label', 'Mostrar palavra-passe'); }
       if (mode !== 'up') return start();
       return rpc('set_my_name', { p_name: name }).then(function(n){ setProfile(n); }, function(){}).then(start);
     }).catch(function(err){ authNote('authError', authMsg(err)); }).then(function(){ btn.disabled = false; });
@@ -4767,14 +5372,26 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
       }
     });
   });
+  // The eye inside a password field shows or hides what was typed.
+  var PW_TOGGLE = '<button type="button" class="pw-toggle" aria-label="Mostrar palavra-passe" aria-pressed="false"><svg class="eye-on" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.500 12S6 5.500 12 5.500 21.500 12 21.500 12 18 18.500 12 18.500 2.500 12 2.500 12Z"/><circle cx="12" cy="12" r="3"/></svg><svg class="eye-off" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 16M9.900 5.800A9.600 9.600 0 0 1 12 5.500c6 0 9.500 6.500 9.500 6.500a17 17 0 0 1-2.800 3.600M6.300 7.400A16.500 16.500 0 0 0 2.500 12S6 18.500 12 18.500a9.300 9.300 0 0 0 4.200-1M9.900 9.900a3 3 0 0 0 4.200 4.200"/></svg></button>';
+  document.addEventListener('click', function(e){
+    var b = closest(e, '.pw-toggle'); if (!b) return;
+    var input = b.parentNode.querySelector('input'); if (!input) return;
+    var show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    b.classList.toggle('on', show);
+    b.setAttribute('aria-pressed', show ? 'true' : 'false');
+    b.setAttribute('aria-label', show ? 'Esconder palavra-passe' : 'Mostrar palavra-passe');
+    input.focus();
+  });
   function openPasswordSheet(recovering){
     openSheet({
       title: 'Nova palavra-passe', saveLabel: 'Guardar',
       html: (recovering ? '<div class="field-hint" style="margin:0 0 16px">Escolhe a nova palavra-passe para ' + esc(SESSION.user.email) + '.</div>' : '')
         + '<div class="field"><label class="field-label" for="pwNew">Nova palavra-passe</label>'
-        + '<input class="field-input" id="pwNew" type="password" autocomplete="new-password"><div class="field-hint">Pelo menos 6 caracteres.</div></div>'
+        + '<div class="pw-wrap"><input class="field-input" id="pwNew" type="password" autocomplete="new-password">' + PW_TOGGLE + '</div><div class="field-hint">Pelo menos 6 caracteres.</div></div>'
         + '<div class="field"><label class="field-label" for="pwAgain">Repete a palavra-passe</label>'
-        + '<input class="field-input" id="pwAgain" type="password" autocomplete="new-password"></div>',
+        + '<div class="pw-wrap"><input class="field-input" id="pwAgain" type="password" autocomplete="new-password">' + PW_TOGGLE + '</div></div>',
       onOpen: function(body){ body.querySelector('#pwNew').focus(); },
       onSave: function(body){
         var a = body.querySelector('#pwNew').value, b = body.querySelector('#pwAgain').value;
@@ -4869,6 +5486,23 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
         location.hash = '#/v/' + encodeURIComponent(tripId);
         toast('Entraste na viagem' + (t ? ' «' + t.name + '»' : '') + '.');
       });
+    });
+  }
+  // For when the link cannot open the app itself (an installed app on the iPhone): paste it here.
+  function openInviteSheet(){
+    openSheet({
+      title: 'Link de convite', saveLabel: 'Entrar na viagem',
+      html: '<div class="field"><label class="field-label" for="iLink">Cola aqui o link que recebeste</label>'
+        + '<input class="field-input" id="iLink" type="text" autocomplete="off" autocapitalize="off" placeholder="https://…/#/convite/…">'
+        + '<div class="field-hint">No WhatsApp, mantém o dedo sobre a mensagem, escolhe «Copiar» e cola aqui.</div></div>',
+      onOpen: function(body){ body.querySelector('#iLink').focus(); },
+      onSave: function(body){
+        var v = body.querySelector('#iLink').value.trim();
+        var m = /convite\/([A-Za-z0-9]+)/.exec(v) || /^([A-Za-z0-9]{16,})$/.exec(v);
+        if (!m){ sheetError('Esse link não parece um convite. Copia a mensagem inteira e cola outra vez.'); return false; }
+        setInvite(m[1]);
+        return function(){ processInvite(); };
+      }
     });
   }
   var joining = false;
@@ -4995,7 +5629,15 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
   function isStandalone(){ return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true; }
   function isIOS(){ return /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
   // Android offers an install prompt; on the iPhone the person has to do it from Safari's share menu.
-  function canInstall(){ return !isStandalone() && (!!installEvent || isIOS()); }
+  function isAndroid(){ return /android/i.test(navigator.userAgent); }
+  // On a phone the offer is always there: with a button when the browser allows it, with the steps when it does not
+  // (iPhone, or a link opened inside another app such as WhatsApp).
+  function canInstall(){ return !isStandalone() && (!!installEvent || isIOS() || isAndroid()); }
+  function installHint(){
+    if (installEvent) return 'Fica com ícone próprio, abre em ecrã inteiro e funciona sem ligação.';
+    if (isIOS()) return 'Abre esta página no Safari, toca em Partilhar e escolhe «Adicionar ao ecrã principal».';
+    return 'Abre esta página no Chrome, toca no menu ⋮ e escolhe «Instalar app» ou «Adicionar ao ecrã principal».';
+  }
   function renderInstall(){
     // Before signing in the offer sits on the sign-in screen; afterwards, on the list of trips.
     var box = SESSION ? $('installCard') : $('authInstall'), other = SESSION ? $('authInstall') : $('installCard');
@@ -5004,7 +5646,7 @@ html.offline #viewTrip textarea, html.offline #viewTrip input{caret-color:transp
     box.hidden = !show;
     if (!show){ box.innerHTML = ''; return; }
     box.innerHTML = '<div class="install-text"><strong>Instala a app no telemóvel</strong>'
-      + (installEvent ? 'Fica com ícone próprio, abre em ecrã inteiro e funciona sem ligação.' : 'No Safari, toca em Partilhar e escolhe «Adicionar ao ecrã principal».') + '</div>'
+      + esc(installHint()) + '</div>'
       + '<div class="install-actions">' + (installEvent ? '<button type="button" class="primary-btn" id="installGo">Instalar</button>' : '')
       + '<button type="button" class="text-btn" id="installHide">' + (installEvent ? 'Agora não' : 'Percebi') + '</button></div>';
   }
